@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useRecords } from '../store/recordsStore';
 import { useAuth } from '../auth/AuthContext';
 import { can, canView, canStudentEdit, isFinalApproved } from '../auth/roles';
-import { ToeicRecord } from '../types';
+import { ToeicRecord, SimpleStatus } from '../types';
 import { PROFESSORS } from '../data/seed';
 import PageHeader from '../components/ui/PageHeader';
 import Badge from '../components/ui/Badge';
@@ -13,26 +13,136 @@ import HistoryList from '../components/HistoryList';
 import { Table, THead, Th, Td, TableEmpty } from '../components/ui/Table';
 import { FieldGroup, Input, Select } from '../components/ui/Field';
 import { useToast } from '../components/ui/Toast';
-import { Plus, Eye, Info } from 'lucide-react';
+import { Plus, Info, RotateCcw } from 'lucide-react';
 
 const MIN_SCORE = 700;
 const readyForFirst = (r: ToeicRecord) => r.status === '접수' || r.status === '검토중' || r.status === '반려';
 const readyForFinal = (r: ToeicRecord) => r.status === '1차 승인' || r.status === '검토중';
 
+const GRADES = ['2학년', '3학년', '4학년'];
+const STATUSES: SimpleStatus[] = ['접수', '1차 승인', '최종 승인', '검토중', '승인', '반려'];
+
+interface SearchFilter {
+  grade: string;       // '' = 전체
+  studentId: string;   // partial match
+  name: string;        // partial match
+  status: string;      // '' = 전체
+  dateFrom: string;    // 응시일자 시작일
+  dateTo: string;      // 응시일자 종료일
+}
+
+const EMPTY_FILTER: SearchFilter = {
+  grade: '', studentId: '', name: '', status: '', dateFrom: '', dateTo: '',
+};
+
 export default function ToeicView() {
-  const { state } = useRecords();
+  const { state, dispatch } = useRecords();
   const { user } = useAuth();
+  const { toast } = useToast();
   const [createOpen, setCreateOpen] = useState(false);
   const [detail, setDetail] = useState<ToeicRecord | null>(null);
+  const [filter, setFilter] = useState<SearchFilter>(EMPTY_FILTER);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
-  const rows = useMemo(
+  const visibleRows = useMemo(
     () => state.toeic.filter((r) => (user ? canView(user, r) : false)).slice().sort((a, b) => (a.lastUpdate < b.lastUpdate ? 1 : -1)),
     [state.toeic, user],
   );
+
+  const filteredRows = useMemo(() => {
+    return visibleRows.filter((r) => {
+      if (filter.grade && r.grade !== filter.grade) return false;
+      if (filter.studentId && !r.studentId.includes(filter.studentId.trim())) return false;
+      if (filter.name && !r.name.includes(filter.name.trim())) return false;
+      if (filter.status && r.status !== filter.status) return false;
+      if (filter.dateFrom && r.testDate < filter.dateFrom) return false;
+      if (filter.dateTo && r.testDate > filter.dateTo) return false;
+      return true;
+    });
+  }, [visibleRows, filter]);
+
   if (!user) return null;
   const current = detail ? state.toeic.find((r) => r.id === detail.id) ?? null : null;
 
   const title = user.role === 'STUDENT' ? '토익 정보 입력' : user.role === 'PROFESSOR' ? '토익 목록' : user.role === 'STAFF' ? '토익 관리자 코멘트' : '토익 최종승인';
+
+  const isProfessor = user.role === 'PROFESSOR';
+  const isHead = user.role === 'HEAD';
+  const showBatchBar = isProfessor || isHead;
+
+  // 체크박스 토글
+  const toggleRow = useCallback((id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const allChecked = filteredRows.length > 0 && filteredRows.every((r) => selected.has(r.id));
+  const someChecked = filteredRows.some((r) => selected.has(r.id)) && !allChecked;
+
+  const toggleAll = useCallback(() => {
+    if (allChecked) setSelected(new Set());
+    else setSelected(new Set(filteredRows.map((r) => r.id)));
+  }, [allChecked, filteredRows]);
+
+  // 일괄 1차 승인 (PROFESSOR)
+  const batchApproveFirst = () => {
+    const checked = filteredRows.filter((r) => selected.has(r.id));
+    if (checked.length === 0) { toast('선택된 건이 없습니다.', 'error'); return; }
+    const ineligible = checked.filter((r) => !readyForFirst(r));
+    if (ineligible.length > 0) {
+      const first = ineligible[0].studentId;
+      const rest = ineligible.length - 1;
+      toast(`미만족 건 존재: 학번 ${first}${rest > 0 ? ` 외 ${rest}건` : ''}`, 'error');
+      return;
+    }
+    const actor = { name: user.name, role: user.role };
+    checked.forEach((r) => dispatch({ type: 'APPROVE_TOEIC_PROFESSOR', id: r.id, actor }));
+    toast(`${checked.length}건 일괄 1차 승인했습니다.`);
+    setSelected(new Set());
+  };
+
+  // 일괄 최종 승인 (HEAD)
+  const batchApproveFinal = () => {
+    const checked = filteredRows.filter((r) => selected.has(r.id));
+    if (checked.length === 0) { toast('선택된 건이 없습니다.', 'error'); return; }
+    const ineligible = checked.filter((r) => !readyForFinal(r));
+    if (ineligible.length > 0) {
+      const first = ineligible[0].studentId;
+      const rest = ineligible.length - 1;
+      toast(`미만족 건 존재: 학번 ${first}${rest > 0 ? ` 외 ${rest}건` : ''}`, 'error');
+      return;
+    }
+    const actor = { name: user.name, role: user.role };
+    checked.forEach((r) => dispatch({ type: 'APPROVE_TOEIC_FINAL_HEAD', id: r.id, actor }));
+    toast(`${checked.length}건 일괄 최종 승인했습니다.`);
+    setSelected(new Set());
+  };
+
+  // 일괄 승인 취소 (HEAD) — 최종 승인된 건만 취소 가능
+  const batchCancel = () => {
+    const checked = filteredRows.filter((r) => selected.has(r.id));
+    if (checked.length === 0) { toast('선택된 건이 없습니다.', 'error'); return; }
+    const ineligible = checked.filter((r) => !isFinalApproved(r));
+    if (ineligible.length > 0) {
+      const first = ineligible[0].studentId;
+      const rest = ineligible.length - 1;
+      toast(`미만족 건 존재: 학번 ${first}${rest > 0 ? ` 외 ${rest}건` : ''}`, 'error');
+      return;
+    }
+    const actor = { name: user.name, role: user.role };
+    checked.forEach((r) => dispatch({ type: 'CANCEL_TOEIC', id: r.id, actor }));
+    toast(`${checked.length}건 일괄 승인 취소했습니다.`, 'info');
+    setSelected(new Set());
+  };
+
+  const resetFilter = () => {
+    setFilter(EMPTY_FILTER);
+    setSelected(new Set());
+  };
 
   return (
     <div>
@@ -43,32 +153,134 @@ export default function ToeicView() {
         <p>성적표 유효기간(응시일 +2년)과 성적 기준({MIN_SCORE}점 이상)을 확인합니다. 담당교수 1차 승인 후 학과장이 최종 승인합니다.</p>
       </div>
 
+      {/* 검색바 */}
+      <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-4 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <FieldGroup label="학년">
+            <Select value={filter.grade} onChange={(e) => setFilter({ ...filter, grade: e.target.value })}>
+              <option value="">전체</option>
+              {GRADES.map((g) => <option key={g}>{g}</option>)}
+            </Select>
+          </FieldGroup>
+          <FieldGroup label="학번">
+            <Input
+              type="text"
+              value={filter.studentId}
+              onChange={(e) => setFilter({ ...filter, studentId: e.target.value })}
+              placeholder="학번 검색"
+            />
+          </FieldGroup>
+          <FieldGroup label="이름">
+            <Input
+              type="text"
+              value={filter.name}
+              onChange={(e) => setFilter({ ...filter, name: e.target.value })}
+              placeholder="이름 검색"
+            />
+          </FieldGroup>
+          <FieldGroup label="진행상태">
+            <Select value={filter.status} onChange={(e) => setFilter({ ...filter, status: e.target.value })}>
+              <option value="">전체</option>
+              {STATUSES.map((s) => <option key={s}>{s}</option>)}
+            </Select>
+          </FieldGroup>
+          <FieldGroup label="응시일자 (시작)">
+            <Input
+              type="date"
+              value={filter.dateFrom}
+              onChange={(e) => setFilter({ ...filter, dateFrom: e.target.value })}
+            />
+          </FieldGroup>
+          <FieldGroup label="응시일자 (종료)">
+            <Input
+              type="date"
+              value={filter.dateTo}
+              onChange={(e) => setFilter({ ...filter, dateTo: e.target.value })}
+            />
+          </FieldGroup>
+        </div>
+        <div className="flex justify-end mt-3">
+          <Button variant="secondary" size="sm" onClick={resetFilter}>
+            <RotateCcw size={14} /> 초기화
+          </Button>
+        </div>
+      </div>
+
+      {/* 일괄 승인/취소 버튼 영역 */}
+      {showBatchBar && (
+        <div className="flex items-center gap-2 mb-3">
+          {isProfessor && (
+            <Button variant="success" size="sm" onClick={batchApproveFirst} disabled={selected.size === 0}>
+              일괄 1차 승인 ({selected.size})
+            </Button>
+          )}
+          {isHead && (
+            <>
+              <Button variant="success" size="sm" onClick={batchApproveFinal} disabled={selected.size === 0}>
+                일괄 최종 승인 ({selected.size})
+              </Button>
+              <Button variant="secondary" size="sm" onClick={batchCancel} disabled={selected.size === 0}>
+                일괄 승인 취소 ({selected.size})
+              </Button>
+            </>
+          )}
+          {selected.size > 0 && (
+            <span className="text-xs text-slate-500">{selected.size}건 선택됨</span>
+          )}
+        </div>
+      )}
+
       <Table>
         <THead>
-          <Th>학번</Th><Th>이름</Th><Th>담당교수</Th><Th>응시일</Th><Th>수험번호</Th><Th>TOTAL</Th><Th>유효기간</Th><Th>진행상태</Th><Th>최종 승인일</Th><Th></Th>
+          {showBatchBar && (
+            <Th className="w-10">
+              <input
+                type="checkbox"
+                checked={allChecked}
+                ref={(el) => { if (el) el.indeterminate = someChecked; }}
+                onChange={toggleAll}
+                className="w-4 h-4 rounded border-slate-300"
+              />
+            </Th>
+          )}
+          <Th>학년</Th><Th>학번</Th><Th>이름</Th><Th>생년월일</Th><Th>응시일자</Th><Th>수험번호</Th><Th>TOTAL</Th><Th>발급번호</Th><Th>진행상태</Th><Th>최종 승인일</Th>
         </THead>
         <tbody data-testid="toeic-tbody">
-          {rows.length === 0 ? (
-            <TableEmpty colSpan={10} message="입력된 토익 성적이 없습니다." />
+          {filteredRows.length === 0 ? (
+            <TableEmpty colSpan={showBatchBar ? 12 : 11} message="검색 결과가 없습니다." />
           ) : (
-            rows.map((r) => (
-              <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+            filteredRows.map((r) => (
+              <tr
+                key={r.id}
+                className="border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer select-none"
+                onDoubleClick={() => setDetail(r)}
+              >
+                {showBatchBar && (
+                  <Td className="w-10" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selected.has(r.id)}
+                      onChange={() => toggleRow(r.id)}
+                      className="w-4 h-4 rounded border-slate-300"
+                    />
+                  </Td>
+                )}
+                <Td className="text-slate-600">{r.grade}</Td>
                 <Td className="text-slate-600">{r.studentId}</Td>
                 <Td className="text-slate-800 font-medium">{r.name}</Td>
-                <Td className="text-slate-600">{r.professor}</Td>
+                <Td className="text-slate-600">{r.birthDate || '-'}</Td>
                 <Td className="text-slate-600">{r.testDate}</Td>
                 <Td className="text-slate-600">{r.testNumber}</Td>
                 <Td className="text-slate-800 font-semibold">{r.totalScore}</Td>
-                <Td className="text-slate-500 text-xs">{r.validUntil}</Td>
+                <Td className="text-slate-600">{r.issueNumber || '-'}</Td>
                 <Td><Badge status={r.status} /></Td>
                 <Td className="text-slate-500 text-xs">{r.finalApprovalDate || '-'}</Td>
-                <Td><Button variant="ghost" size="sm" onClick={() => setDetail(r)}><Eye size={14} /> 상세</Button></Td>
               </tr>
             ))
           )}
         </tbody>
       </Table>
-      <p className="text-sm text-slate-500 mt-3">총 {rows.length}건</p>
+      <p className="text-sm text-slate-500 mt-3">총 {filteredRows.length}건</p>
 
       {createOpen && <CreateModal onClose={() => setCreateOpen(false)} />}
       {current && <DetailModal record={current} onClose={() => setDetail(null)} />}
@@ -131,12 +343,16 @@ function DetailModal({ record, onClose }: { record: ToeicRecord; onClose: () => 
   return (
     <Modal open onClose={onClose} title={`토익 성적 · ${record.name}`} width="max-w-2xl">
       <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm mb-4">
-        <Row k="학번" v={record.studentId} /><Row k="생년월일" v={record.birthDate || '-'} />
-        <Row k="응시일자" v={record.testDate} /><Row k="수험번호" v={record.testNumber} />
+        <Row k="학년" v={record.grade} />
+        <Row k="학번" v={record.studentId} />
+        <Row k="생년월일" v={record.birthDate || '-'} />
+        <Row k="응시일자" v={record.testDate} />
+        <Row k="수험번호" v={record.testNumber} />
         <Row k="담당교수" v={record.professor} />
         <Row k="TOTAL" v={<span className={belowStd ? 'text-red-600 font-semibold' : 'font-semibold'}>{record.totalScore}점 {belowStd && '(기준 미달)'}</span>} />
         <Row k="발급번호" v={record.issueNumber || '-'} />
-        <Row k="유효기간" v={record.validUntil} /><Row k="진행상태" v={<Badge status={record.status} />} />
+        <Row k="유효기간" v={record.validUntil} />
+        <Row k="진행상태" v={<Badge status={record.status} />} />
       </div>
 
       <div className="flex flex-wrap gap-2 border-t border-slate-200 pt-4">
