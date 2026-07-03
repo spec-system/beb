@@ -71,6 +71,7 @@ const dept = (
     status,
     teamMembers: opts.teamMembers ?? [],
     reportFile: opts.reportFile ?? null,
+    posterSubmitted: opts.posterSubmitted ?? (Boolean(opts.reportFile) && status !== '보고서 접수'),
     professorComment: opts.professorComment ?? '',
     finalApprovalDate: opts.finalApprovalDate ?? '',
     adminComment: opts.adminComment ?? '',

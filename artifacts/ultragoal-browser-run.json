@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "kind": "browser-automation",
+  "steps": [
+    {
+      "name": "professor all-view assigned actions only",
+      "status": "passed",
+      "data": {
+        "rowCount": 7,
+        "approvePlanButtons": 0
+      }
+    },
+    {
+      "name": "staff admin remarks summary and edit",
+      "status": "passed",
+      "data": {
+        "headerHasRemarks": true,
+        "commentSaved": true
+      }
+    },
+    {
+      "name": "integrated detail all types",
+      "status": "passed",
+      "data": {
+        "detailButtons": 17
+      }
+    },
+    {
+      "name": "poster gate disables and enables",
+      "status": "passed",
+      "data": {
+        "disabledBefore": true,
+        "disabledAfter": false
+      }
+    }
+  ],
+  "createdAt": "2026-07-03T14:55:05.403Z"
+}

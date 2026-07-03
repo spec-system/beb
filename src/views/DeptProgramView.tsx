@@ -45,11 +45,11 @@ export default function DeptProgramView() {
 
       <Table>
         <THead>
-          <Th>제목</Th><Th>학번</Th><Th>이름</Th><Th>학기</Th><Th>인정시간</Th><Th>담당교수</Th><Th>진행상태</Th><Th>최종 승인일</Th><Th></Th>
+          <Th>제목</Th><Th>학번</Th><Th>이름</Th><Th>학기</Th><Th>인정시간</Th><Th>담당교수</Th><Th>진행상태</Th><Th>비고</Th><Th>최종 승인일</Th><Th></Th>
         </THead>
         <tbody data-testid="dept-tbody">
           {rows.length === 0 ? (
-            <TableEmpty colSpan={9} message="등록된 학과내 비교과가 없습니다." />
+            <TableEmpty colSpan={10} message="등록된 학과내 비교과가 없습니다." />
           ) : (
             rows.map((r) => (
               <tr key={r.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
@@ -60,6 +60,7 @@ export default function DeptProgramView() {
                 <Td className="text-slate-600">{r.recognizedHours}h</Td>
                 <Td className="text-slate-600">{r.professor}</Td>
                 <Td><Badge status={r.status} /></Td>
+                <Td className="max-w-[160px] truncate text-xs text-slate-500"><span title={r.adminComment || ''}>{r.adminComment || '-'}</span></Td>
                 <Td className="text-slate-500 text-xs">{r.finalApprovalDate || '-'}</Td>
                 <Td>
                   <Button variant="ghost" size="sm" onClick={() => setDetail(r)} data-testid={`dept-detail-${r.id}`}><Eye size={14} /> 상세</Button>
@@ -120,6 +121,7 @@ function CreateModal({ onClose }: { onClose: () => void }) {
         recognizedHours: Number(hours) || 0,
         teamMembers: team,
         reportFile: null,
+        posterSubmitted: false,
         professorComment: '',
         finalApprovalDate: '',
         adminComment: '',
@@ -147,9 +149,10 @@ function CreateModal({ onClose }: { onClose: () => void }) {
             </Select>
           </FieldGroup>
           <FieldGroup label="담당교수">
-            <Select value={professor} onChange={(e) => setProfessor(e.target.value)}>
-              {PROFESSORS.map((p) => <option key={p}>{p}</option>)}
-            </Select>
+            <Input list="dept-professor-options" value={professor} onChange={(e) => setProfessor(e.target.value)} placeholder="교수명 검색 또는 직접입력" />
+            <datalist id="dept-professor-options">
+              {PROFESSORS.map((p) => <option key={p} value={p} />)}
+            </datalist>
           </FieldGroup>
           <FieldGroup label="인정시간">
             <Input type="number" value={hours} onChange={(e) => setHours(e.target.value)} />
@@ -186,13 +189,16 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
   const { dispatch } = useRecords();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [comment, setComment] = useState('');
+  const [adminComment, setAdminComment] = useState(record.adminComment);
+  const [professorComment, setProfessorComment] = useState(record.professorComment);
   const [reject, setReject] = useState(false);
   const [cancel, setCancel] = useState(false);
   const actor = user ? { name: user.name, role: user.role } : null;
   if (!user || !actor) return null;
 
   const isOwnerStudent = record.studentId === user.studentId;
+  const latestRejectReason = [...record.history].reverse().find((h) => h.step === '반려' && h.reason)?.reason;
+  const hasPoster = Boolean(record.posterSubmitted);
 
   const act = (fn: () => void, msg: string) => { fn(); toast(msg); };
 
@@ -222,11 +228,18 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
             {(record.status === '계획서 승인' || record.status === '반려') && can(user, 'submit_report', record) && isOwnerStudent ? (
               <FileDropField
                 value={record.reportFile}
+                accept="application/pdf"
                 hint="서명 페이지 1장 + 발표포스터 1장 합본 PDF"
-                onSelect={(file) => act(
-                  () => dispatch({ type: 'SUBMIT_REPORT', id: record.id, file, actor }),
-                  '보고서를 제출했습니다. (보고서 접수)',
-                )}
+                onSelect={(file) => {
+                  if (!file.name.toLowerCase().endsWith('.pdf')) {
+                    toast('결과보고서는 단일 PDF 파일만 업로드할 수 있습니다.', 'error');
+                    return;
+                  }
+                  act(
+                    () => dispatch({ type: 'SUBMIT_REPORT', id: record.id, file, actor }),
+                    '보고서를 제출했습니다. (보고서 접수)',
+                  );
+                }}
               />
             ) : record.reportFile ? (
               <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
@@ -235,6 +248,12 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
             ) : (
               <p className="text-xs text-slate-400">아직 보고서가 제출되지 않았습니다.</p>
             )}
+          </div>
+
+          <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 space-y-2">
+            <Row k="보고서 파일" v={record.reportFile ? `${record.reportFile.name} · ${Math.round(record.reportFile.size / 1024)}KB` : '미제출'} />
+            <Row k="포스터 확인" v={hasPoster ? '확인됨' : '미확인'} />
+            <Row k="최신 반려사유" v={latestRejectReason || '-'} />
           </div>
 
           {/* 액션 버튼 (역할 게이팅) */}
@@ -246,8 +265,18 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
               </Button>
             )}
             {record.status === '보고서 접수' && can(user, 'approve_report', record) && (
-              <Button variant="success" size="sm" data-testid="approve-report"
-                onClick={() => act(() => dispatch({ type: 'APPROVE_REPORT_PROFESSOR', id: record.id, comment, actor }), '보고서를 담당승인했습니다.')}>
+              <label className="flex w-full items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={hasPoster}
+                  onChange={(e) => act(() => dispatch({ type: 'SET_POSTER_SUBMITTED', id: record.id, checked: e.target.checked, actor }), e.target.checked ? '포스터 제출을 확인했습니다.' : '포스터 제출 확인을 해제했습니다.')}
+                />
+                결과보고서 첫 페이지 포스터 제출 여부 확인
+              </label>
+            )}
+            {record.status === '보고서 접수' && can(user, 'approve_report', record) && (
+              <Button variant="success" size="sm" data-testid="approve-report" disabled={!hasPoster}
+                onClick={() => act(() => dispatch({ type: 'APPROVE_REPORT_PROFESSOR', id: record.id, comment: professorComment, actor }), '보고서를 담당승인했습니다.')}>
                 보고서 담당승인
               </Button>
             )}
@@ -271,14 +300,14 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
               <div className="w-full mt-2">
                 <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">행정실 코멘트</p>
                 <div className="flex gap-2">
-                  <Input value={comment} onChange={(e) => setComment(e.target.value)} placeholder="비고 코멘트 입력" />
-                  <Button size="sm" onClick={() => act(() => dispatch({ type: 'SET_ADMIN_COMMENT', domain: 'dept', id: record.id, comment, actor }), '코멘트를 저장했습니다.')}>저장</Button>
+                  <Input value={adminComment} onChange={(e) => setAdminComment(e.target.value)} placeholder="비고 코멘트 입력" />
+                  <Button size="sm" onClick={() => act(() => dispatch({ type: 'SET_ADMIN_COMMENT', domain: 'dept', id: record.id, comment: adminComment, actor }), '코멘트를 저장했습니다.')}>저장</Button>
                 </div>
               </div>
             )}
             {record.status === '보고서 접수' && can(user, 'approve_report', record) && (
               <div className="w-full">
-                <Textarea rows={2} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="담당교수 코멘트 (선택)" />
+                <Textarea rows={2} value={professorComment} onChange={(e) => setProfessorComment(e.target.value)} placeholder="담당교수 코멘트 (선택)" />
               </div>
             )}
           </div>

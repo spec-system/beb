@@ -6,6 +6,9 @@ import { AnyRecord, ProgramType } from '../types';
 import PageHeader from '../components/ui/PageHeader';
 import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
+import Modal from '../components/ui/Modal';
+import HistoryList from '../components/HistoryList';
+import { Eye } from 'lucide-react';
 import { TableEmpty } from '../components/ui/Table';
 import { FieldGroup, Input, Select } from '../components/ui/Field';
 import { matchText } from '../utils/filters';
@@ -20,7 +23,9 @@ interface Row {
   semester: string;
   programType: ProgramType;
   status: string;
+  adminComment: string;
   lastUpdate: string;
+  record: AnyRecord;
 }
 
 type SortKey =
@@ -61,6 +66,7 @@ function searchBlob(row: Row) {
     row.semester,
     row.programType,
     row.status,
+    row.adminComment,
     row.lastUpdate.replace('T', ' '),
   ].join(' ');
 }
@@ -169,6 +175,7 @@ export default function IntegratedView() {
   const [types, setTypes] = useState<string[]>([]);
   const [statuses, setStatuses] = useState<string[]>([]);
   const [sort, setSort] = useState<SortKey>('latest-desc');
+  const [detail, setDetail] = useState<AnyRecord | null>(null);
 
   const all: Row[] = useMemo(() => {
     const merged: AnyRecord[] = [...state.dept, ...state.toeic, ...state.volunteer];
@@ -184,7 +191,9 @@ export default function IntegratedView() {
         semester: r.semester,
         programType: r.programType,
         status: r.status,
+        adminComment: r.adminComment,
         lastUpdate: r.lastUpdate,
+        record: r,
       }));
   }, [state, user]);
 
@@ -311,11 +320,13 @@ export default function IntegratedView() {
               <th className="px-3 py-2 whitespace-nowrap">학기</th>
               <th className="px-3 py-2 whitespace-nowrap">비교과 종류</th>
               <th className="px-3 py-2 whitespace-nowrap">진행상태</th>
+              <th className="px-3 py-2 whitespace-nowrap">비고</th>
+              <th className="px-3 py-2 whitespace-nowrap"></th>
             </tr>
           </thead>
           <tbody data-testid="integrated-tbody">
             {rows.length === 0 ? (
-              <TableEmpty colSpan={7} message="조건에 맞는 데이터가 없습니다." />
+              <TableEmpty colSpan={9} message="조건에 맞는 데이터가 없습니다." />
             ) : (
               rows.map((r, index) => (
                 <tr key={`${r.programType}-${r.id}`} className={`border-b border-slate-200 transition-colors hover:bg-blue-50/60 ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/70'}`}>
@@ -326,12 +337,87 @@ export default function IntegratedView() {
                   <td className="px-3 py-2 text-slate-700">{r.semester}</td>
                   <td className="px-3 py-2 text-slate-800">{r.programType}</td>
                   <td className="px-3 py-2"><Badge status={r.status} /></td>
+                  <td className="max-w-[160px] truncate px-3 py-2 text-xs text-slate-500"><span title={r.adminComment}>{r.adminComment || '-'}</span></td>
+                  <td className="px-3 py-2"><Button variant="ghost" size="sm" onClick={() => setDetail(r.record)}><Eye size={14} /> 상세</Button></td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
       </div>
+      {detail && <IntegratedDetailModal record={detail} onClose={() => setDetail(null)} />}
+    </div>
+  );
+}
+
+
+function IntegratedDetailModal({ record, onClose }: { record: AnyRecord; onClose: () => void }) {
+  const latestRejectReason = [...record.history].reverse().find((h) => h.step === '반려' && h.reason)?.reason;
+  const title = record.programType === '학과내 비교과'
+    ? record.title
+    : record.programType === '전공연계봉사활동'
+      ? record.title
+      : `토익 성적 · ${record.name}`;
+
+  return (
+    <Modal open onClose={onClose} title={title} width="max-w-3xl">
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="space-y-3 text-sm">
+          <DetailRow k="학생" v={`${record.name} (${record.studentId}) · ${record.grade}`} />
+          <DetailRow k="구분" v={record.programType} />
+          <DetailRow k="학기" v={`${record.year} ${record.semester}`} />
+          <DetailRow k="담당교수" v={record.professor} />
+          <DetailRow k="진행상태" v={<Badge status={record.status} />} />
+          <DetailRow k="최신 반려사유" v={latestRejectReason || '-'} />
+          {record.adminComment && <DetailRow k="행정실 코멘트" v={record.adminComment} />}
+
+          {record.programType === '학과내 비교과' && (
+            <>
+              <DetailRow k="인정시간" v={`${record.recognizedHours}시간`} />
+              <DetailRow k="팀원" v={record.teamMembers.length ? record.teamMembers.map((m) => `${m.name}(${m.studentId})`).join(', ') : '없음'} />
+              <div>
+                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">계획서</p>
+                <p className="text-sm text-slate-700 bg-slate-50 rounded-lg p-3 border border-slate-200 whitespace-pre-wrap">{record.plan}</p>
+              </div>
+              <DetailRow k="담당교수 코멘트" v={record.professorComment || '-'} />
+              <DetailRow k="보고서 파일" v={record.reportFile ? `${record.reportFile.name} · ${Math.round(record.reportFile.size / 1024)}KB` : '미제출'} />
+              <DetailRow k="포스터 확인" v={record.posterSubmitted ? '확인됨' : '미확인'} />
+            </>
+          )}
+
+          {record.programType === '토익' && (
+            <>
+              <DetailRow k="응시일자" v={record.testDate} />
+              <DetailRow k="수험번호" v={record.testNumber} />
+              <DetailRow k="TOTAL" v={`${record.totalScore}점`} />
+              <DetailRow k="발급번호" v={record.issueNumber || '-'} />
+              <DetailRow k="유효기간" v={record.validUntil} />
+            </>
+          )}
+
+          {record.programType === '전공연계봉사활동' && (
+            <>
+              <DetailRow k="인정시간" v={`${record.recognizedHours}시간`} />
+              <DetailRow k="누적시간" v={`${record.accumulatedHours}시간`} />
+              <DetailRow k="인증서" v={record.certFile ? `${record.certFile.name} · ${Math.round(record.certFile.size / 1024)}KB` : '미제출'} />
+            </>
+          )}
+        </div>
+
+        <div>
+          <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">전체 진행 이력</p>
+          <HistoryList history={record.history} />
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function DetailRow({ k, v }: { k: string; v: React.ReactNode }) {
+  return (
+    <div className="flex gap-2">
+      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider w-24 shrink-0 pt-0.5">{k}</span>
+      <span className="text-sm text-slate-700">{v}</span>
     </div>
   );
 }

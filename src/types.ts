@@ -75,6 +75,7 @@ export interface DeptProgramRecord extends RecordBase {
   status: DeptStatus;
   teamMembers: TeamMember[];
   reportFile: FileMeta | null; // 보고서 PDF (파일메타만)
+  posterSubmitted: boolean;     // 결과보고서 첫 페이지 포스터 제출 확인
   professorComment: string;
   finalApprovalDate: string;
 }

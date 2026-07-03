@@ -42,6 +42,7 @@ export type Action =
   | { type: 'CREATE_DEPT'; payload: Omit<DeptProgramRecord, 'id' | 'history' | 'status' | 'lastUpdate'>; actor: Actor }
   | { type: 'APPROVE_PLAN'; id: string; actor: Actor }
   | { type: 'SUBMIT_REPORT'; id: string; file: FileMeta; actor: Actor }
+  | { type: 'SET_POSTER_SUBMITTED'; id: string; checked: boolean; actor: Actor }
   | { type: 'APPROVE_REPORT_PROFESSOR'; id: string; comment?: string; actor: Actor }
   | { type: 'APPROVE_FINAL_HEAD'; id: string; actor: Actor }
   | { type: 'REJECT_DEPT'; id: string; reason: string; actor: Actor }
@@ -108,12 +109,18 @@ function reducer(state: RecordsState, action: Action): RecordsState {
     case 'SUBMIT_REPORT':
       return mutDept(state, action.id, (r) =>
         r.status === '계획서 승인' || r.status === '반려'
-          ? { ...r, status: '보고서 접수', reportFile: action.file, history: [...r.history, entry('보고서 접수', action.actor)] }
+          ? { ...r, status: '보고서 접수', reportFile: action.file, posterSubmitted: false, history: [...r.history, entry('보고서 접수', action.actor)] }
+          : r,
+      );
+    case 'SET_POSTER_SUBMITTED':
+      return mutDept(state, action.id, (r) =>
+        r.status === '보고서 접수'
+          ? { ...r, posterSubmitted: action.checked, history: [...r.history, entry(action.checked ? '포스터 제출 확인' : '포스터 제출 확인 해제', action.actor)] }
           : r,
       );
     case 'APPROVE_REPORT_PROFESSOR':
       return mutDept(state, action.id, (r) =>
-        r.status === '보고서 접수'
+        r.status === '보고서 접수' && Boolean(r.posterSubmitted)
           ? { ...r, status: '보고서 담당승인', professorComment: action.comment ?? r.professorComment, history: [...r.history, entry('보고서 담당승인', action.actor)] }
           : r,
       );
@@ -214,13 +221,25 @@ function touch<T extends { lastUpdate: string }>(r: T): T {
   return { ...r, lastUpdate: now() };
 }
 function mutDept(state: RecordsState, id: string, fn: (r: DeptProgramRecord) => DeptProgramRecord): RecordsState {
-  return { ...state, dept: state.dept.map((r) => (r.id === id ? touch(fn(r)) : r)) };
+  return { ...state, dept: state.dept.map((r) => {
+    if (r.id !== id) return r;
+    const next = fn(r);
+    return next === r ? r : touch(next);
+  }) };
 }
 function mutToeic(state: RecordsState, id: string, fn: (r: ToeicRecord) => ToeicRecord): RecordsState {
-  return { ...state, toeic: state.toeic.map((r) => (r.id === id ? touch(fn(r)) : r)) };
+  return { ...state, toeic: state.toeic.map((r) => {
+    if (r.id !== id) return r;
+    const next = fn(r);
+    return next === r ? r : touch(next);
+  }) };
 }
 function mutVol(state: RecordsState, id: string, fn: (r: VolunteerRecord) => VolunteerRecord): RecordsState {
-  return { ...state, volunteer: state.volunteer.map((r) => (r.id === id ? touch(fn(r)) : r)) };
+  return { ...state, volunteer: state.volunteer.map((r) => {
+    if (r.id !== id) return r;
+    const next = fn(r);
+    return next === r ? r : touch(next);
+  }) };
 }
 
 interface RecordsCtx {

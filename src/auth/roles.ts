@@ -32,7 +32,7 @@ export function canView(user: User, record: AnyRecord): boolean {
     case 'STUDENT':
       return record.studentId === user.studentId;
     case 'PROFESSOR':
-      return record.professor === user.name;
+      return true;
     case 'HEAD':
     case 'STAFF':
       return true;
