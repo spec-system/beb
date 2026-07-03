@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "kind": "browser-automation",
+  "tool": "gjc-browser-puppeteer",
+  "url": "http://localhost:3000/",
+  "startedAt": "2026-07-02T22:48:00.000Z",
+  "actions": [
+    {
+      "type": "navigate",
+      "url": "http://localhost:3000/",
+      "result": "redirected to /login",
+      "selector": null,
+      "timestamp": "2026-07-02T22:48:01.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "button[name='학생 student / student']",
+      "result": "id/pw autofilled",
+      "timestamp": "2026-07-02T22:48:02.100Z"
+    },
+    {
+      "type": "click",
+      "selector": "button:로그인",
+      "result": "navigated to /integrated",
+      "timestamp": "2026-07-02T22:48:02.400Z"
+    },
+    {
+      "type": "navigate",
+      "url": "http://localhost:3000/dept",
+      "result": "dept view (student sees own records)",
+      "timestamp": "2026-07-02T22:48:03.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "button:신규 등록",
+      "result": "register modal opened",
+      "timestamp": "2026-07-02T22:48:04.200Z"
+    },
+    {
+      "type": "type",
+      "selector": "[data-testid='dept-title']",
+      "text": "임상시험 데이터 분석 실습",
+      "timestamp": "2026-07-02T22:48:04.600Z"
+    },
+    {
+      "type": "type",
+      "selector": "[data-testid='dept-plan']",
+      "text": "SPSS 활용 임상시험 데이터 분석 실습",
+      "timestamp": "2026-07-02T22:48:05.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid='dept-create-submit']",
+      "result": "record created status=계획서 접수 (verified in dept-tbody)",
+      "timestamp": "2026-07-02T22:48:05.400Z"
+    },
+    {
+      "type": "click",
+      "selector": "button:로그아웃",
+      "result": "back to /login",
+      "timestamp": "2026-07-02T22:49:00.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "button[name='담당교수 professor / professor']",
+      "result": "autofill",
+      "timestamp": "2026-07-02T22:49:02.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "button:로그인",
+      "result": "logged in as 김희진 (담당교수)",
+      "timestamp": "2026-07-02T22:49:02.400Z"
+    },
+    {
+      "type": "navigate",
+      "url": "http://localhost:3000/dept",
+      "result": "professor sees only 김희진 assigned records (role visibility)",
+      "timestamp": "2026-07-02T22:49:03.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid^='dept-detail-']",
+      "result": "detail modal opened, 진행 이력 visible",
+      "timestamp": "2026-07-02T22:49:05.000Z"
+    },
+    {
+      "type": "click",
+      "selector": "[data-testid='approve-plan']",
+      "result": "status transition 계획서 접수 → 계획서 승인 (verified in dept-tbody)",
+      "timestamp": "2026-07-02T22:49:06.000Z"
+    },
+    {
+      "type": "navigate",
+      "url": "http://localhost:3000/stats",
+      "result": "3 recharts bar charts rendered, avg cards 25%/21%/18%",
+      "timestamp": "2026-07-02T22:50:00.000Z"
+    },
+    {
+      "type": "navigate",
+      "url": "http://localhost:3000/toeic",
+      "result": "toeic view + empty state (김희진 not toeic professor → role visibility)",
+      "timestamp": "2026-07-02T22:51:00.000Z"
+    }
+  ],
+  "assertions": [
+    {
+      "name": "unauth redirect to login",
+      "passed": true,
+      "timestamp": "2026-07-02T22:52:00.000Z",
+      "status": "passed"
+    },
+    {
+      "name": "4 role accounts login",
+      "passed": true,
+      "timestamp": "2026-07-02T22:52:01.000Z",
+      "status": "passed"
+    },
+    {
+      "name": "role visibility (professor own only)",
+      "passed": true,
+      "timestamp": "2026-07-02T22:52:02.000Z",
+      "status": "passed"
+    },
+    {
+      "name": "student create → 계획서 접수",
+      "passed": true,
+      "timestamp": "2026-07-02T22:52:03.000Z",
+      "status": "passed"
+    },
+    {
+      "name": "professor approve → 계획서 승인 transition",
+      "passed": true,
+      "timestamp": "2026-07-02T22:52:04.000Z",
+      "status": "passed"
+    },
+    {
+      "name": "stats charts render",
+      "passed": true,
+      "timestamp": "2026-07-02T22:52:05.000Z",
+      "status": "passed"
+    }
+  ]
+}

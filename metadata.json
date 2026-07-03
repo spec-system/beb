@@ -1,0 +1,8 @@
+{
+  "name": "비교과 프로그램 관리",
+  "description": "삼육대학교 약학대학 비교과 프로그램 이수현황 관리자 대시보드",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
