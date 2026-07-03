@@ -169,7 +169,11 @@ function reducer(state: RecordsState, action: Action): RecordsState {
       return { ...state, volunteer: [rec, ...state.volunteer] };
     }
     case 'UPLOAD_CERT':
-      return mutVol(state, action.id, (r) => ({ ...r, certFile: action.file, history: [...r.history, entry('인증서 업로드', action.actor)] }));
+      return mutVol(state, action.id, (r) =>
+        r.status === '접수' || r.status === '검토중' || r.status === '반려'
+          ? { ...r, certFile: action.file, history: [...r.history, entry('인증서 업로드', action.actor)] }
+          : r,
+      );
     case 'APPROVE_VOLUNTEER_PROFESSOR':
       return mutVol(state, action.id, (r) =>
         r.status === '접수' || r.status === '반려' || r.status === '검토중'

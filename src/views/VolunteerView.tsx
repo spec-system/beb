@@ -135,7 +135,7 @@ function DetailModal({ record, onClose }: { record: VolunteerRecord; onClose: ()
 
       <div className="mb-4">
         <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">봉사 인증서</p>
-        {can(user, 'submit_report', record) && isOwnerStudent && !isFinalApproved(record) ? (
+        {can(user, 'submit_report', record) && isOwnerStudent && readyForFirst(record) ? (
           <FileDropField
             value={record.certFile}
             accept="application/pdf,image/*"
