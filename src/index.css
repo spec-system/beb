@@ -3,13 +3,15 @@
 @layer base {
   body {
     font-family: "Gulim", "Dotum", "Malgun Gothic", sans-serif !important;
-    background-color: #e9ecef !important; /* 윈도우/행정 표준 단색 회색 바닥 */
-    background-image: none !important;
-    font-size: 12px;
-    letter-spacing: -0.05em;
+    background-color: #ffffff !important;
+    color: #333333 !important;
+    font-size: 11px !important; /* SU-WINGs 특유의 매우 좁고 빽빽한 폰트 사이즈 */
+    letter-spacing: -0.06em;
+    margin: 0;
+    padding: 0;
   }
   
-  /* 극도로 직관적인 간결함을 위해 입체감/둥글기/그라데이션 원천 제거 */
+  /* 모든 입체 효과나 모던한 둥글기 일체 제거 */
   *, *::before, *::after {
     border-radius: 0px !important;
     box-shadow: none !important;
@@ -18,202 +20,167 @@
   }
 }
 
-/* 완전 평면 사각 창 */
-.win7-window {
-  background: #ffffff;
-  border: 1px solid #1a251e;
-  position: relative;
+/* SU-WINGs 레이아웃 테마 색상 */
+.su-header-blue {
+  background-color: #2b5597; /* SU-WINGs 메인 파란색 */
+  border-bottom: 2px solid #1a3c73;
 }
 
-/* 완전 평면 상단바 */
-.win7-titlebar {
-  background: #e9ecef;
-  border-bottom: 1px solid #1a251e;
-  color: #1a251e;
-  font-weight: bold;
-}
-
-.win7-titlebar-mil {
-  background: #2b352e; /* 단색 국방그린 */
-  border-bottom: 1px solid #18201a;
-  color: #ffffff;
-  font-weight: bold;
-}
-
-/* 플랫 버튼 */
-.win7-btn {
-  font-family: "Gulim", "Dotum", sans-serif;
-  border-radius: 0px !important;
-  font-weight: bold !important;
-  outline: none;
-}
-
-/* 단색 블루 버튼 */
-.win7-btn-primary {
-  background: #2b4c6f !important;
-  border: 1px solid #1c334a !important;
-  color: #ffffff !important;
-}
-.win7-btn-primary:hover {
-  background: #396491 !important;
-}
-
-/* 단색 회색 버튼 */
-.win7-btn-secondary {
-  background: #ffffff !important;
-  border: 1px solid #888888 !important;
-  color: #333333 !important;
-}
-.win7-btn-secondary:hover {
-  background: #f1f3f5 !important;
-}
-
-/* 단색 국방그린 버튼 */
-.win7-btn-success {
-  background: #3d4f41 !important;
-  border: 1px solid #28342a !important;
-  color: #ffffff !important;
-}
-.win7-btn-success:hover {
-  background: #4e6553 !important;
-}
-
-/* 단색 적색 버튼 */
-.win7-btn-danger {
-  background: #a93232 !important;
-  border: 1px solid #752323 !important;
-  color: #ffffff !important;
-}
-.win7-btn-danger:hover {
-  background: #c33d3d !important;
-}
-
-/* 닫기 버튼 */
-.win7-close-btn {
-  background: #a93232;
-  border: 1px solid #752323;
+.su-header-tab {
+  background-color: #4b74b7;
   color: white;
-  width: 20px;
-  height: 20px;
+  border: 1px solid #1a3c73;
+  border-bottom: none;
+}
+
+.su-header-tab-active {
+  background-color: #ffffff;
+  color: #1b3c67;
+  border: 1px solid #1a3c73;
+  border-bottom: 1px solid #ffffff;
+  font-weight: bold;
+}
+
+/* SU-WINGs 우측 상단 플랫 버튼 */
+.su-btn-gray {
+  background-color: #e1e1e1;
+  border: 1px solid #adadad;
+  color: #333333;
+  font-size: 10px;
+  padding: 1px 4px;
+}
+.su-btn-gray:hover {
+  background-color: #d1d1d1;
+}
+
+.su-btn-blue {
+  background-color: #1a3c73;
+  border: 1px solid #11284d;
+  color: white;
+  font-weight: bold;
+  font-size: 11px;
+}
+.su-btn-blue:hover {
+  background-color: #2a5293;
+}
+
+/* 탐색기 폴더 트리 스타일 */
+.su-tree-menu {
+  font-size: 11px;
+  color: #333;
+}
+.su-tree-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 9px;
+  gap: 3px;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+.su-tree-item:hover {
+  background-color: #e2ecf7;
+  color: #1b3c67;
+}
+.su-tree-item-active {
+  background-color: #b9d2ec;
+  color: #1b3c67;
   font-weight: bold;
 }
 
-/* 기울기 및 입체감 없는 1px 솔리드 결재 뱃지 */
-.stamp-badge {
-  display: inline-block;
-  padding: 1px 4px;
-  font-family: "Dotum", "Gulim", sans-serif;
-  font-weight: bold;
-  font-size: 11px;
-  text-align: center;
-  border: 1px solid;
-  border-radius: 0px !important;
-  transform: none !important;
-  white-space: nowrap;
-}
-.stamp-red {
-  color: #a93232;
-  border-color: #a93232;
-  background-color: #fff5f5;
-}
-.stamp-blue {
-  color: #2b4c6f;
-  border-color: #2b4c6f;
-  background-color: #f3f7fa;
-}
-.stamp-green {
-  color: #3d4f41;
-  border-color: #3d4f41;
-  background-color: #f3f5f3;
-}
-.stamp-orange {
-  color: #b56507;
-  border-color: #b56507;
-  background-color: #fffdf5;
-}
-
-/* 군대 서식 기본 테이블 */
-.mil-table {
-  border-collapse: collapse !important;
-  border: 1px solid #222222 !important;
+/* SU-WINGs 폼 그리드 (행정 서식 입력용 연청색 배경 테이블) */
+.su-form-table {
   width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid #2b5597;
+  border-bottom: 1px solid #cccccc;
 }
-.mil-table th {
-  background: #f1f3f5 !important; /* 초간결 회색 헤더 */
-  border: 1px solid #222222 !important;
-  color: #212529 !important;
+.su-form-table th {
+  background-color: #cfe2f3 !important; /* SU-WINGs 라벨 연청색 */
+  border: 1px solid #a6b9d0 !important;
+  color: #1b3c67 !important;
   font-weight: bold !important;
-  text-align: center !important;
+  text-align: right !important;
+  padding: 4px 8px !important;
   font-size: 11px;
-  padding: 5px 8px !important;
+  width: 120px;
 }
-.mil-table td {
-  border: 1px solid #222222 !important;
-  padding: 5px 8px !important;
+.su-form-table td {
+  border: 1px solid #a6b9d0 !important;
+  padding: 4px 8px !important;
   background-color: #ffffff;
   font-size: 11px;
 }
-.mil-table tr:nth-child(even) td {
-  background-color: #f8f9fa;
-}
-.mil-table tr:hover td {
-  background-color: #e9ecef !important;
-}
 
-/* 불필요한 마키/보안 워터마크 비활성화 */
-.leak-watermark {
-  display: none !important;
+/* SU-WINGs 데이터 그리드 (결과 표) */
+.su-grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid #2b5597;
+  border-bottom: 1px solid #999999;
 }
-.sec-ticker {
-  background: #f1f3f5;
-  border: 1px solid #222222;
-  padding: 3px 6px;
+.su-grid-table th {
+  background-color: #dce6f1 !important; /* 데이터 그리드 헤더 회청색 */
+  border: 1px solid #a6b9d0 !important;
+  color: #1b3c67 !important;
+  font-weight: bold !important;
+  text-align: center !important;
+  font-size: 11px;
+  padding: 4px 6px !important;
+}
+.su-grid-table td {
+  border: 1px solid #cccccc !important;
+  padding: 4px 6px !important;
+  background-color: #ffffff;
   font-size: 11px;
 }
-
-/* ==========================================
-   ★ 가독성(Readability) 및 명도대비 일괄 보정 규칙
-   ========================================== */
-
-/* 1. 슬레이트 회색 텍스트 계열을 진하게 강제 변경하여 흑백 고대비 확보 */
-.text-slate-400, .text-gray-400 {
-  color: #3f4e5f !important; /* 기본 연회색 -> 진회색 */
+.su-grid-table tr:nth-child(even) td {
+  background-color: #fafbfe;
 }
-.text-slate-500, .text-gray-500 {
-  color: #242c36 !important; /* 기본 미디움회색 -> 매우 짙은 회색 */
-}
-.text-slate-600, .text-gray-600 {
-  color: #11151a !important; /* 거의 검은색 */
-}
-.text-slate-700, .text-gray-700 {
-  color: #000000 !important; /* 칠흑색 */
-}
-.text-slate-800, .text-gray-800 {
-  color: #000000 !important;
-}
-.text-slate-900, .text-gray-900 {
-  color: #000000 !important;
+.su-grid-table tr:hover td {
+  background-color: #edf2fa !important;
 }
 
-/* 2. 어설픈 슬레이트 연그레이 배경 오버라이드 */
-.bg-slate-100, .bg-gray-100 {
-  background-color: #e9ecef !important; /* 메인 배경에 어울리는 회색 */
-}
-.bg-slate-50, .bg-gray-50 {
-  background-color: #f8f9fa !important; /* 폼 필터 영역에 어울리는 플랫 밝은 회색 */
+/* 필수 기재 항목 별표 */
+.su-required::before {
+  content: "* ";
+  color: #ff0000;
+  font-weight: bold;
 }
 
-/* 3. 모던 경계선 색상을 짙은 보더색으로 강제 교체하여 테두리 명확성 부여 */
-.border-slate-200, .border-gray-200 {
-  border-color: #a1a8b0 !important;
+/* SU-WINGs 탭바 */
+.su-tab-bar {
+  display: flex;
+  background-color: #ffffff;
+  border-bottom: 1px solid #adadad;
+  padding-left: 10px;
+  padding-top: 5px;
 }
-.border-slate-300, .border-gray-300 {
-  border-color: #717b85 !important;
+.su-tab {
+  padding: 3px 12px 2px 12px;
+  border: 1px solid #adadad;
+  border-bottom: none;
+  background-color: #f0f0f0;
+  color: #555555;
+  font-size: 11px;
+  margin-right: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
 }
-.border-slate-400, .border-gray-400 {
-  border-color: #222222 !important;
+.su-tab-active {
+  background-color: #ffffff;
+  border: 1px solid #2b5597;
+  border-bottom: 1px solid #ffffff;
+  color: #1b3c67;
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+  margin-bottom: -1px;
+}
+.su-tab-close {
+  color: #999;
+  font-weight: normal;
+}
+.su-tab-close:hover {
+  color: #ff0000;
 }

@@ -96,12 +96,10 @@ function compareRows(sort: SortKey, a: Row, b: Row) {
 }
 
 function MultiSelectDropdown({
-  label,
   options,
   selected,
   onChange,
 }: {
-  label: string;
   options: string[];
   selected: string[];
   onChange: (next: string[]) => void;
@@ -118,33 +116,31 @@ function MultiSelectDropdown({
   };
 
   return (
-    <FieldGroup label={label}>
-      <details className="group relative">
-        <summary className="flex h-9 cursor-pointer list-none items-center justify-between rounded border border-slate-300 bg-white px-3 text-sm text-slate-800 shadow-sm transition hover:border-blue-800">
-          <span className="truncate">{summary}</span>
-          <span className="text-[10px] text-blue-900 group-open:rotate-180">▼</span>
-        </summary>
-        <div className="absolute z-20 mt-1 w-56 rounded-md border border-slate-300 bg-white p-2 shadow-lg">
-          <label className="mb-1 flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm text-slate-700 hover:bg-slate-50">
-            <input type="checkbox" checked={allSelected} onChange={() => onChange([])} className="h-4 w-4 rounded border-slate-300 text-blue-900" />
-            전체
-          </label>
-          <div className="max-h-44 overflow-y-auto border-t border-slate-100 pt-1">
-            {options.map((option) => (
-              <label key={option} className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm text-slate-700 hover:bg-slate-50">
-                <input
-                  type="checkbox"
-                  checked={selected.includes(option)}
-                  onChange={() => toggle(option)}
-                  className="h-4 w-4 rounded border-slate-300 text-blue-900"
-                />
-                <span className="truncate">{option}</span>
-              </label>
-            ))}
-          </div>
+    <details className="group relative w-full">
+      <summary className="flex h-5 cursor-pointer list-none items-center justify-between border border-slate-400 bg-white px-2 py-0 text-[11px] text-slate-800">
+        <span className="truncate">{summary}</span>
+        <span className="text-[9px] text-[#2b5597] group-open:rotate-180">▼</span>
+      </summary>
+      <div className="absolute z-20 mt-1 w-44 border border-slate-400 bg-white p-1.5 shadow-md">
+        <label className="mb-0.5 flex cursor-pointer items-center gap-1.5 px-1 py-0.5 text-[11px] text-slate-800 hover:bg-[#edf2fa]">
+          <input type="checkbox" checked={allSelected} onChange={() => onChange([])} className="h-3 w-3 border-slate-400 text-blue-900" />
+          전체
+        </label>
+        <div className="max-h-36 overflow-y-auto border-t border-slate-200 pt-0.5">
+          {options.map((option) => (
+            <label key={option} className="flex cursor-pointer items-center gap-1.5 px-1 py-0.5 text-[11px] text-slate-800 hover:bg-[#edf2fa]">
+              <input
+                type="checkbox"
+                checked={selected.includes(option)}
+                onChange={() => toggle(option)}
+                className="h-3 w-3 border-slate-400 text-blue-900"
+              />
+              <span className="truncate">{option}</span>
+            </label>
+          ))}
         </div>
-      </details>
-    </FieldGroup>
+      </div>
+    </details>
   );
 }
 
@@ -244,71 +240,88 @@ export default function IntegratedView() {
   ];
 
   return (
-    <div className="-m-4 min-h-full bg-slate-100 p-4 md:-m-6 md:p-6">
-      <div className="mb-4 border-l-4 border-blue-900 bg-white px-5 py-4 shadow-sm ring-1 ring-slate-200">
-        <PageHeader title={title} sub={sub} />
+    <div className="p-1 font-mono text-[11px] bg-white">
+      {/* 바로가기 경로 및 제어 버튼바 */}
+      <div className="flex items-center justify-between border-b border-[#adadad] pb-2 mb-2 select-none">
+        <div className="flex items-center gap-1 text-[10px] text-[#666666]">
+          <span>🏠</span>
+          <span>&gt;</span>
+          <span>서비스</span>
+          <span>&gt;</span>
+          <span>학생</span>
+          <span>&gt;</span>
+          <span>비교과관리</span>
+          <span>&gt;</span>
+          <span className="font-bold text-[#1b3c67]">비교과 통합대장 조회</span>
+        </div>
+        <div className="flex gap-1">
+          <button className="su-btn-blue px-3 py-0.5 text-[11px]">Q 조회</button>
+          <button onClick={reset} className="su-btn-gray px-3 py-0.5 text-[11px]">초기화</button>
+        </div>
       </div>
 
-      <section className="mb-4 rounded-md border border-slate-300 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-2">
-          <div>
-            <h2 className="text-sm font-bold text-blue-950">조회 조건</h2>
-            <p className="text-xs text-slate-500">조건을 선택하면 목록에 즉시 반영됩니다.</p>
-          </div>
-          <span className="rounded bg-blue-900 px-2 py-1 text-xs font-semibold text-white">통합조회</span>
-        </div>
+      {/* SU-WINGs 연청색 격자형 조회 조건 테이블 */}
+      <div className="border border-[#a6b9d0] mb-3">
+        <table className="su-form-table">
+          <tbody>
+            <tr>
+              <th className="su-required">학년</th>
+              <td>
+                <MultiSelectDropdown options={GRADE_OPTIONS} selected={grades} onChange={setGrades} />
+              </td>
+              <th className="su-required">학번</th>
+              <td>
+                <MultiSelectDropdown options={admissionYearOptions} selected={admissionYears} onChange={setAdmissionYears} />
+              </td>
+              <th>연도 범위</th>
+              <td>
+                <div className="flex items-center gap-1">
+                  <Input value={yearFrom} onChange={(e) => setYearFrom(e.target.value)} placeholder="2024" className="w-16 h-5 p-1 text-xs" />
+                  <span>~</span>
+                  <Input value={yearTo} onChange={(e) => setYearTo(e.target.value)} placeholder="2026" className="w-16 h-5 p-1 text-xs" />
+                </div>
+              </td>
+              <th>검색(학번/성명)</th>
+              <td>
+                <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="학번, 이름, 상태 검색" className="w-full h-5 p-1 text-xs" />
+              </td>
+            </tr>
+            <tr>
+              <th className="su-required">학기</th>
+              <td>
+                <MultiSelectDropdown options={SEMESTER_OPTIONS} selected={semesters} onChange={setSemesters} />
+              </td>
+              <th className="su-required">비교과 종류</th>
+              <td>
+                <MultiSelectDropdown options={TYPE_OPTIONS} selected={types} onChange={setTypes} />
+              </td>
+              <th>진행상태</th>
+              <td>
+                <MultiSelectDropdown options={statusOptions} selected={statuses} onChange={setStatuses} />
+              </td>
+              <th>정렬 기준</th>
+              <td>
+                <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="w-full h-5 p-0 text-xs">
+                  <option value="latest-desc">최신순</option>
+                  <option value="latest-asc">오래된순</option>
+                  <option value="student-asc">학번 오름차순</option>
+                  <option value="student-desc">학번 내림차순</option>
+                  <option value="name-asc">이름 오름차순</option>
+                  <option value="name-desc">이름 내림차순</option>
+                  <option value="year-desc">활동연도 내림차순</option>
+                  <option value="year-asc">활동연도 오름차순</option>
+                </Select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div className="grid grid-cols-2 gap-3 px-4 py-3 md:grid-cols-4 xl:grid-cols-8">
-          <div className="col-span-2 xl:col-span-2">
-            <FieldGroup label="검색">
-              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="학번, 이름, 상태 검색" data-testid="filter-search" className="h-9" />
-            </FieldGroup>
-          </div>
-          <MultiSelectDropdown label="학년" options={GRADE_OPTIONS} selected={grades} onChange={setGrades} />
-          <MultiSelectDropdown label="학번" options={admissionYearOptions} selected={admissionYears} onChange={setAdmissionYears} />
-          <div className="col-span-2 md:col-span-2 xl:col-span-2">
-            <FieldGroup label="연도 범위">
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-                <Input value={yearFrom} onChange={(e) => setYearFrom(e.target.value)} placeholder="2024" inputMode="numeric" className="h-9" />
-                <span className="text-xs text-slate-400">~</span>
-                <Input value={yearTo} onChange={(e) => setYearTo(e.target.value)} placeholder="2026" inputMode="numeric" className="h-9" />
-              </div>
-            </FieldGroup>
-          </div>
-          <MultiSelectDropdown label="학기" options={SEMESTER_OPTIONS} selected={semesters} onChange={setSemesters} />
-          <MultiSelectDropdown label="비교과 종류" options={TYPE_OPTIONS} selected={types} onChange={setTypes} />
-          <MultiSelectDropdown label="진행상태" options={statusOptions} selected={statuses} onChange={setStatuses} />
-          <FieldGroup label="정렬">
-            <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} data-testid="sort-integrated" className="h-9">
-              <option value="latest-desc">최신순</option>
-              <option value="latest-asc">오래된순</option>
-              <option value="student-asc">학번 오름차순</option>
-              <option value="student-desc">학번 내림차순</option>
-              <option value="name-asc">이름 오름차순</option>
-              <option value="name-desc">이름 내림차순</option>
-              <option value="year-desc">활동연도 내림차순</option>
-              <option value="year-asc">활동연도 오름차순</option>
-            </Select>
-          </FieldGroup>
-        </div>
-
-        <div className="flex min-h-12 flex-wrap items-center gap-2 border-t border-slate-200 bg-slate-50 px-4 py-2">
-          <span className="mr-1 text-sm font-semibold text-slate-700">총 {rows.length}건</span>
-          {chips.length === 0 ? (
-            <span className="text-xs text-slate-500">선택된 필터가 없습니다.</span>
-          ) : (
-            chips.map((chip) => (
-              <React.Fragment key={chip.key}>
-                <FilterChip label={chip.label} onRemove={chip.onRemove} />
-              </React.Fragment>
-            ))
-          )}
-          <Button variant="secondary" size="sm" onClick={reset} className="ml-auto border-blue-900 text-blue-950">
-            초기화
-          </Button>
-        </div>
-      </section>
-
+      {/* 조회 결과 수량 지표 */}
+      <div className="flex items-center gap-2 mb-1.5">
+        <span className="text-[#1b3c67] font-black">● 조회 내역</span>
+        <span className="text-[10px] text-slate-700 bg-[#e1e6f2] px-1.5 py-0.5 border border-[#adadad] font-bold">{rows.length}건</span>
+      </div>
       <Table>
         <THead>
           <Th>학년</Th>

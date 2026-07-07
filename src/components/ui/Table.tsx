@@ -3,8 +3,8 @@ import EmptyState from './EmptyState';
 
 export function Table({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-auto border-2 border-slate-800 rounded bg-white shadow-md">
-      <table className="mil-table w-full border-collapse">{children}</table>
+    <div className="overflow-auto border border-[#999999] bg-white">
+      <table className="su-grid-table w-full border-collapse">{children}</table>
     </div>
   );
 }
