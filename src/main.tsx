@@ -6,6 +6,7 @@ import { RecordsProvider } from './store/recordsStore';
 import { AuthProvider } from './auth/AuthContext';
 import { SettingsProvider } from './store/settingsStore';
 import { ToastProvider } from './components/ui/Toast';
+import { BoardProvider } from './store/boardStore';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')!).render(
         <RecordsProvider>
           <SettingsProvider>
             <ToastProvider>
-              <App />
+              <BoardProvider>
+                <App />
+              </BoardProvider>
             </ToastProvider>
           </SettingsProvider>
         </RecordsProvider>

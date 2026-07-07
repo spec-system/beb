@@ -122,3 +122,21 @@ export interface VolunteerRecord extends RecordBase {
 }
 
 export type AnyRecord = DeptProgramRecord | ToeicRecord | VolunteerRecord;
+
+export interface BoardComment {
+  id: string;
+  postId: string;
+  content: string;
+  createdAt: string;
+  authorId: string; // 작성자 판별용 (익명 표시하되 본인글 삭제용)
+}
+
+export interface BoardPost {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  authorId: string; // 작성자 판별용 (익명 표시하되 본인글 삭제용)
+  views: number;
+  comments: BoardComment[];
+}

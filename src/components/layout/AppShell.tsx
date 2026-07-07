@@ -16,6 +16,7 @@ const ICONS = {
   volunteer: HeartHandshake,
   stats: BarChart3,
   settings: Settings,
+  board: MessageSquare,
 } satisfies Record<ViewKey, React.ComponentType<{ size?: number }>>;
 
 type NavItem = { key: ViewKey; to: string; label: string; icon: React.ComponentType<{ size?: number }> };
@@ -27,6 +28,7 @@ const roleNav = (role: Role): NavItem[] => {
       return [
         item('integrated', '/integrated', '내 현황'),
         item('submit', '/submit', '신청·제출'),
+        item('board', '/board', '익명 게시판'),
       ];
     case 'PROFESSOR':
       return [

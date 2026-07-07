@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Languages, HeartHandshake } from 'lucide-react';
+import { BookOpen, Languages, HeartHandshake, MessageSquare } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
 
 const CARDS = [
@@ -22,13 +22,19 @@ const CARDS = [
     description: '전공연계봉사활동을 등록하고 담당교수 서명 인증서를 업로드합니다.',
     icon: HeartHandshake,
   },
+  {
+    to: '/board',
+    title: '익명 게시판',
+    description: '비교과 및 대학 생활에 대해 자유롭고 익명으로 의견을 나누는 게시판입니다.',
+    icon: MessageSquare,
+  },
 ];
 
 export default function StudentSubmitView() {
   return (
     <div>
       <PageHeader title="신청·제출" sub="학생 제출 포털" />
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         {CARDS.map((card) => (
           <Link
             key={card.to}
