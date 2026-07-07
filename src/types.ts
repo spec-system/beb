@@ -60,6 +60,17 @@ export interface HistoryEntry {
   reason?: string;   // 반려/취소 사유
 }
 
+// 이메일 알림 목업 (승인/반려 이벤트 시 학생에게 발송된 것으로 기록)
+export interface EmailNotification {
+  id: string;
+  to: string;          // 수신 학번
+  toName: string;      // 수신 학생명
+  subject: string;
+  body: string;
+  createdAt: string;
+  read: boolean;
+}
+
 interface RecordBase {
   id: string;
   grade: string;

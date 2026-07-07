@@ -5,7 +5,7 @@ import { STUDENTS } from '../data/seed';
 import { accumulatedApprovedHours, volunteerPercent } from '../utils/volunteer';
 import PageHeader from '../components/ui/PageHeader';
 import { Table, THead, Th, Td } from '../components/ui/Table';
-import { FieldGroup, Select } from '../components/ui/Field';
+import { FieldGroup, Select, Input } from '../components/ui/Field';
 
 // 비교과 달성률: 최종 승인된 비교과 건수만 카운트(1건=25%, 4건 이상=100%)
 function deptPercent(approvedCount: number): number {
@@ -19,6 +19,7 @@ export default function StatsView() {
   const { state } = useRecords();
   const [grade, setGrade] = useState('전체');
   const [name, setName] = useState('전체');
+  const [studentQuery, setStudentQuery] = useState('');
 
   // 학생별 이수율 (최종 승인된 데이터만 집계, 검색 시점 기준)
   const perStudent = useMemo(() => {
@@ -45,6 +46,17 @@ export default function StatsView() {
 
   const gradeFiltered = grade === '전체' ? perStudent : perStudent.filter((s) => s.grade === grade);
   const filtered = name === '전체' ? gradeFiltered : gradeFiltered.filter((s) => s.name === name);
+  // 학생 검색 자동완성: '이름 (학번)' 또는 '이름' 입력 시 해당 학생 개인 통계로 이동
+  const onStudentSearch = (value: string) => {
+    setStudentQuery(value);
+    const q = value.trim();
+    if (!q) return;
+    const match = perStudent.find((s) => q === `${s.name} (${s.studentId})` || q === s.name || q === s.studentId);
+    if (match) {
+      setGrade(match.grade);
+      setName(match.name);
+    }
+  };
 
   // 개인 3영역 막대바 조건: 학년+이름 모두 선택되어 한 학생이 특정됨
   const individual = grade !== '전체' && name !== '전체' && filtered.length === 1 ? filtered[0] : null;
@@ -75,7 +87,23 @@ export default function StatsView() {
         title="비교과 프로그램 이수현황"
         sub="통계 화면"
         right={
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-end">
+            <div className="w-52">
+              <FieldGroup label="학생 검색">
+                <Input
+                  list="stats-student-options"
+                  value={studentQuery}
+                  onChange={(e) => onStudentSearch(e.target.value)}
+                  placeholder="이름 또는 학번 입력"
+                  data-testid="stats-search"
+                />
+                <datalist id="stats-student-options">
+                  {perStudent.map((s) => (
+                    <option key={s.studentId} value={`${s.name} (${s.studentId})`} />
+                  ))}
+                </datalist>
+              </FieldGroup>
+            </div>
             <div className="w-32">
               <FieldGroup label="학년 선택">
                 <Select value={grade} onChange={(e) => { setGrade(e.target.value); setName('전체'); }} data-testid="stats-grade">

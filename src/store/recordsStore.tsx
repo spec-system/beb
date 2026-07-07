@@ -8,6 +8,8 @@ import {
   Role,
   FileMeta,
   HistoryEntry,
+  EmailNotification,
+  AnyRecord,
 } from '../types';
 import { SEED_DEPT, SEED_TOEIC, SEED_VOLUNTEER } from '../data/seed';
 
@@ -17,19 +19,24 @@ export interface RecordsState {
   dept: DeptProgramRecord[];
   toeic: ToeicRecord[];
   volunteer: VolunteerRecord[];
+  notifications: EmailNotification[];
 }
 
 const initialSeed = (): RecordsState => ({
   dept: SEED_DEPT,
   toeic: SEED_TOEIC,
   volunteer: SEED_VOLUNTEER,
+  notifications: [],
 });
 
 function loadInitial(): RecordsState {
   if (typeof window === 'undefined') return initialSeed();
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as RecordsState;
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<RecordsState>;
+      return { ...initialSeed(), ...parsed, notifications: parsed.notifications ?? [] };
+    }
   } catch {
     /* ignore */
   }
@@ -63,6 +70,7 @@ export type Action =
   | { type: 'RESUBMIT_VOLUNTEER'; id: string; actor: Actor }
   | { type: 'SET_ADMIN_COMMENT'; domain: 'dept' | 'toeic' | 'volunteer'; id: string; comment: string; actor: Actor }
   | { type: 'SET_DOCUMENT_STATUS'; domain: 'dept' | 'volunteer'; id: string; kind: 'application' | 'result'; actor: Actor }
+  | { type: 'MARK_NOTIFICATIONS_READ' }
   | { type: 'RESET' };
 
 const now = () => new Date().toISOString().slice(0, 19);
@@ -87,9 +95,52 @@ const DEPT_PREV: Record<DeptStatus, DeptStatus | null> = {
 
 let seq = 1000;
 const nextId = (prefix: string) => `${prefix}${(seq += 1)}`;
+let notifSeq = 5000;
+const nextNotifId = () => `n${(notifSeq += 1)}`;
 const finalSimple = (status: SimpleStatus) => status === '최종 승인' || status === '승인';
 
+// 상태 전이 이벤트를 학생에게 보내는 목업 이메일 알림으로 변환
+function findRecord(state: RecordsState, id: string): AnyRecord | undefined {
+  return state.dept.find((r) => r.id === id) || state.toeic.find((r) => r.id === id) || state.volunteer.find((r) => r.id === id);
+}
+
+const NOTIFY_ACTIONS = new Set([
+  'APPROVE_PLAN', 'APPROVE_REPORT_PROFESSOR', 'APPROVE_FINAL_HEAD', 'REJECT_DEPT',
+  'APPROVE_TOEIC_PROFESSOR', 'APPROVE_TOEIC_FINAL_HEAD', 'REJECT_TOEIC',
+  'APPROVE_VOLUNTEER_PROFESSOR', 'APPROVE_VOLUNTEER_FINAL_HEAD', 'REJECT_VOLUNTEER',
+]);
+
+function programLabel(rec: AnyRecord): string {
+  if (rec.programType === '토익') return '토익 성적';
+  return (rec as DeptProgramRecord | VolunteerRecord).title || rec.programType;
+}
+
 function reducer(state: RecordsState, action: Action): RecordsState {
+  const next = coreReducer(state, action);
+  if ('id' in action && NOTIFY_ACTIONS.has(action.type)) {
+    const before = findRecord(state, action.id);
+    const after = findRecord(next, action.id);
+    if (before && after && before.status !== after.status) {
+      const rejected = (after.status as string) === '반려';
+      const reason = 'reason' in action ? action.reason : undefined;
+      const notif: EmailNotification = {
+        id: nextNotifId(),
+        to: after.studentId,
+        toName: after.name,
+        subject: `[비교과 알림] ${programLabel(after)} ${rejected ? '반려' : `상태 변경(${after.status})`}`,
+        body: rejected
+          ? `제출하신 '${programLabel(after)}' 건이 반려되었습니다.${reason ? ` 사유: ${reason}` : ''}`
+          : `제출하신 '${programLabel(after)}' 건의 진행 상태가 '${after.status}'(으)로 변경되었습니다.`,
+        createdAt: now(),
+        read: false,
+      };
+      return { ...next, notifications: [notif, ...next.notifications] };
+    }
+  }
+  return next;
+}
+
+function coreReducer(state: RecordsState, action: Action): RecordsState {
   switch (action.type) {
     case 'CREATE_DEPT': {
       const rec: DeptProgramRecord = {
@@ -226,6 +277,8 @@ function reducer(state: RecordsState, action: Action): RecordsState {
         history: [...r.history, entry(step, action.actor)],
       }));
     }
+    case 'MARK_NOTIFICATIONS_READ':
+      return { ...state, notifications: state.notifications.map((n) => (n.read ? n : { ...n, read: true })) };
     case 'RESET':
       return initialSeed();
     default:

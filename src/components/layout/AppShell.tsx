@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { canAccessView, ViewKey } from '../../auth/roles';
 import { ROLE_LABEL, Role } from '../../types';
-import { LayoutDashboard, BookOpen, Languages, HeartHandshake, BarChart3, LogOut, Menu, RotateCcw, ClipboardCheck, MessageSquare, Settings } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Languages, HeartHandshake, BarChart3, LogOut, Menu, RotateCcw, ClipboardCheck, MessageSquare, Settings, Bell } from 'lucide-react';
 import { useRecords } from '../../store/recordsStore';
 import { useToast } from '../ui/Toast';
 import { useSettings } from '../../store/settingsStore';
@@ -103,6 +103,7 @@ export default function AppShell() {
         {/* 사용자 정보 및 제어 단추 */}
         <div className="flex items-center gap-2 text-white">
           <span className="font-bold">{user.name} ({user.studentId ?? user.id})</span>
+          <NotificationBell />
           <button onClick={doLogout} className="su-btn-gray font-bold">로그아웃</button>
         </div>
       </header>
@@ -160,6 +161,71 @@ export default function AppShell() {
           </main>
         </div>
       </div>
+    </div>
+  );
+}
+function NotificationBell() {
+  const { user } = useAuth();
+  const { state, dispatch } = useRecords();
+  const [open, setOpen] = useState(false);
+  if (!user) return null;
+
+  // 학생은 본인 수신분만, 그 외(교수/학과장/행정실)는 전체 발송 이력 열람
+  const mine =
+    user.role === 'STUDENT'
+      ? state.notifications.filter((n) => n.to === user.studentId)
+      : state.notifications;
+  const unread = mine.filter((n) => !n.read).length;
+
+  const toggle = () => {
+    const willOpen = !open;
+    setOpen(willOpen);
+    if (willOpen && unread > 0) dispatch({ type: 'MARK_NOTIFICATIONS_READ' });
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={toggle}
+        className="su-btn-gray font-bold relative flex items-center gap-1"
+        data-testid="notif-bell"
+        aria-label="이메일 알림"
+      >
+        <Bell size={13} />
+        알림
+        {unread > 0 && (
+          <span
+            className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-red-600 text-white text-[10px] font-bold flex items-center justify-center"
+            data-testid="notif-count"
+          >
+            {unread}
+          </span>
+        )}
+      </button>
+      {open && (
+        <div
+          className="absolute right-0 top-8 z-50 w-80 max-h-96 overflow-auto border border-slate-500 bg-white text-slate-900 shadow-lg text-[12px]"
+          data-testid="notif-panel"
+        >
+          <div className="px-3 py-2 border-b border-slate-300 font-bold bg-[#e1e6f2] flex items-center justify-between">
+            <span>이메일 알림 ({mine.length})</span>
+            <button onClick={() => setOpen(false)} className="text-slate-500 hover:text-slate-800">✕</button>
+          </div>
+          {mine.length === 0 ? (
+            <div className="px-3 py-6 text-center text-slate-400">수신한 알림이 없습니다.</div>
+          ) : (
+            mine.map((n) => (
+              <div key={n.id} className="px-3 py-2 border-b border-slate-100">
+                <div className="font-bold text-slate-800">{n.subject}</div>
+                <div className="text-slate-600 mt-0.5">{n.body}</div>
+                <div className="text-[10px] text-slate-400 mt-1">
+                  받는사람: {n.toName}({n.to}) · {n.createdAt.replace('T', ' ')}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
