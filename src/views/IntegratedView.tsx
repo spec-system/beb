@@ -323,7 +323,7 @@ export default function IntegratedView() {
               </td>
               <th>정렬 기준</th>
               <td>
-                <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="w-full h-5 p-0 text-xs">
+                <Select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="w-full h-6 px-1 py-0 text-xs leading-none">
                   <option value="latest-desc">최신순</option>
                   <option value="latest-asc">오래된순</option>
                   <option value="student-asc">학번 오름차순</option>
