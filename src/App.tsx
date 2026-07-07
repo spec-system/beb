@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -13,6 +13,16 @@ import VolunteerView from './views/VolunteerView';
 import StatsView from './views/StatsView';
 import SettingsView from './views/SettingsView';
 import { canAccessView } from './auth/roles';
+
+const GalagaView = lazy(() => import('./views/GalagaView'));
+
+function GalagaRoute() {
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-slate-500">갈러그 게임을 불러오는 중입니다...</div>}>
+      <GalagaView />
+    </Suspense>
+  );
+}
 
 function HomeRedirect() {
   const { user } = useAuth();
@@ -37,8 +47,9 @@ export default function App() {
         <Route path="/volunteer" element={<ProtectedRoute view="volunteer"><VolunteerView /></ProtectedRoute>} />
         <Route path="/stats" element={<ProtectedRoute view="stats"><StatsView /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute view="settings"><SettingsView /></ProtectedRoute>} />
+        <Route path="/galaga" element={<ProtectedRoute view="galaga"><GalagaRoute /></ProtectedRoute>} />
+        <Route path="/galage" element={<ProtectedRoute view="galaga"><GalagaRoute /></ProtectedRoute>} />
       </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

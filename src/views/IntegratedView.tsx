@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useRecords } from '../store/recordsStore';
 import { useAuth } from '../auth/AuthContext';
 import { canView } from '../auth/roles';
@@ -8,7 +9,7 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import HistoryList from '../components/HistoryList';
-import { Eye } from 'lucide-react';
+import { Eye, Gamepad2, Rocket } from 'lucide-react';
 import { Table, THead, Th, Td, TableEmpty } from '../components/ui/Table';
 import { FieldGroup, Input, Select } from '../components/ui/Field';
 import { matchText } from '../utils/filters';
@@ -180,6 +181,33 @@ function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }
     </button>
   );
 }
+function StudentGalagaShortcut() {
+  return (
+    <Link
+      to="/galaga"
+      className="group mb-3 flex items-center justify-between gap-4 overflow-hidden rounded border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 shadow-sm transition-all hover:border-sky-400 hover:shadow-[0_0_24px_rgba(56,189,248,0.18)]"
+    >
+      <div className="flex items-center gap-3">
+        <div className="relative flex h-10 w-10 items-center justify-center rounded bg-sky-500/10 text-sky-300 ring-1 ring-sky-400/30">
+          <Gamepad2 size={21} />
+          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.9)]" />
+        </div>
+        <div>
+          <div className="flex items-center gap-2 text-[12px] font-black tracking-wide text-sky-200">
+            갈러그 미니게임
+            <span className="rounded-full border border-sky-400/30 px-1.5 py-0.5 text-[9px] font-bold text-sky-300">학생 전용</span>
+          </div>
+          <p className="mt-0.5 text-[10px] text-slate-400">잠깐 쉬면서 외계 편대를 격추하고 최고 점수를 갱신해보세요.</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-sky-200">
+        PLAY
+        <Rocket size={14} />
+      </div>
+    </Link>
+  );
+}
+
 function GraduationCalculator({ user }: { user: User }) {
   const [now, setNow] = useState(new Date());
 
@@ -490,6 +518,7 @@ export default function IntegratedView() {
         </div>
       </div>
       {isStudent && user && <GraduationCalculator user={user} />}
+      {isStudent && <StudentGalagaShortcut />}
 
       {/* SU-WINGs 연청색 격자형 조회 조건 테이블 */}
       <div className="border border-[#a6b9d0] mb-3">

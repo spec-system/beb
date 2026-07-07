@@ -339,12 +339,12 @@ input:focus, select:focus, textarea:focus, button:focus, summary:focus, a:focus 
   padding: 4px 12px !important;
 }
 
-.text-[11px], .text-xs, .text-sm, .text-[#666666], .text-[#999999], .text-slate-500, .text-slate-600 {
+.text-\[11px\], .text-xs, .text-sm, .text-\[\#666666\], .text-\[\#999999\], .text-slate-500, .text-slate-600 {
   font-size: 13px !important;
   font-weight: bold !important;
 }
 
-.text-[10px], .text-[9px], .text-xs-caption {
+.text-\[10px\], .text-\[9px\], .text-xs-caption {
   font-size: 12px !important;
   font-weight: bold !important;
 }

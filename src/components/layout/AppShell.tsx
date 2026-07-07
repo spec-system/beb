@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { canAccessView, ViewKey } from '../../auth/roles';
 import { ROLE_LABEL, Role } from '../../types';
-import { LayoutDashboard, BookOpen, Languages, HeartHandshake, BarChart3, LogOut, Menu, RotateCcw, ClipboardCheck, MessageSquare, Settings, Bell } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Languages, HeartHandshake, BarChart3, LogOut, Menu, RotateCcw, ClipboardCheck, MessageSquare, Settings, Bell, Gamepad2 } from 'lucide-react';
 import { useRecords } from '../../store/recordsStore';
 import { useToast } from '../ui/Toast';
 import { useSettings } from '../../store/settingsStore';
@@ -17,6 +17,7 @@ const ICONS = {
   stats: BarChart3,
   settings: Settings,
   board: MessageSquare,
+  galaga: Gamepad2,
 } satisfies Record<ViewKey, React.ComponentType<{ size?: number }>>;
 
 type NavItem = { key: ViewKey; to: string; label: string; icon: React.ComponentType<{ size?: number }> };
@@ -29,6 +30,7 @@ const roleNav = (role: Role): NavItem[] => {
         item('integrated', '/integrated', '내 현황'),
         item('submit', '/submit', '신청·제출'),
         item('board', '/board', '익명 게시판'),
+        item('galaga', '/galaga', '갈러그 게임'),
       ];
     case 'PROFESSOR':
       return [
