@@ -143,6 +143,15 @@ export default function AppShell() {
               {activeLabel} <span className="su-tab-close">✕</span>
             </div>
           </div>
+          
+          {/* 90년대 식 적-청 점멸 긴급 배너 */}
+          <div className="bg-yellow-100 border-b border-[#adadad] px-3 py-1.5 shrink-0 select-none flex items-center gap-2">
+            <span className="flash-warning shrink-0 text-xs font-bold">◆ 긴급 지침 ◆</span>
+            <marquee className="w-full text-[#b23b3b] font-bold text-xs" scrollamount="2.5">
+              [제출 마감] 2026학년도 비교과 결과보고서 최종 제출 마감 기한 엄수 바랍니다!!! 학과 사무실 공지사항 참조 요망!!! 전산 정보 점검 실시 예정!!!
+            </marquee>
+          </div>
+          
           {/* 실질적 화면 콘텐츠가 담기는 바닥 */}
           <main className="flex-1 overflow-auto p-3 bg-white border-t border-[#adadad]">
             <div className="mx-auto max-w-[1280px]">

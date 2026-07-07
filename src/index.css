@@ -2,16 +2,22 @@
 
 @layer base {
   body {
-    font-family: "Gungsuh", "GungsuhChe", "궁서", "궁서체", serif !important;
-    background-color: #ffffff !important;
-    color: #333333 !important;
-    font-size: 14px !important; /* 원래 11px에서 14px로 대폭 인상 */
+    font-family: "Comic Sans MS", "Chalkboard SE", "Gungsuh", "GungsuhChe", "궁서", "궁서체", serif !important;
+    background-color: #d4d0c8 !important; /* Windows 95 표준 회색 */
+    /* 90년대 모니터 망점 격자무늬 배경 */
+    background-image: 
+      radial-gradient(#b5b0a8 15%, transparent 15%), 
+      radial-gradient(#b5b0a8 15%, transparent 15%) !important;
+    background-size: 4px 4px !important;
+    background-position: 0 0, 2px 2px !important;
+    background-attachment: fixed;
+    font-size: 14px !important;
     letter-spacing: -0.05em;
     margin: 0;
     padding: 0;
   }
   
-  /* 모든 입체 효과나 모던한 둥글기 일체 제거 */
+  /* 테일윈드의 모든 둥근 모서리 강제 3D 직각화 */
   *, *::before, *::after {
     border-radius: 0px !important;
     box-shadow: none !important;
@@ -20,128 +26,254 @@
   }
 }
 
-/* SU-WINGs 레이아웃 테마 색상 */
-.su-header-blue {
-  background-color: #2b5597; /* SU-WINGs 메인 파란색 */
-  border-bottom: 2px solid #1a3c73;
+/* 윈도우 95 대화상자 입체 창 */
+.win7-window {
+  background: #d4d0c8 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  position: relative;
 }
 
-.su-header-tab {
-  background-color: #4b74b7;
-  color: white;
-  border: 1px solid #1a3c73;
-  border-bottom: none;
-}
-
-.su-header-tab-active {
-  background-color: #ffffff;
-  color: #1b3c67;
-  border: 1px solid #1a3c73;
-  border-bottom: 1px solid #ffffff;
+/* 입체 타이틀 바 */
+.win7-titlebar {
+  background: #000080 !important; /* Windows 95 표준 진회청색 */
+  color: #ffffff !important;
   font-weight: bold;
+  padding: 3px 4px !important;
+  border-bottom: 1px solid #d4d0c8;
 }
 
-/* SU-WINGs 우측 상단 플랫 버튼 */
-.su-btn-gray {
-  background-color: #e1e1e1;
-  border: 1px solid #adadad;
-  color: #333333;
-  font-size: 10px;
-  padding: 1px 4px;
-}
-.su-btn-gray:hover {
-  background-color: #d1d1d1;
-}
-
-.su-btn-blue {
-  background-color: #1a3c73;
-  border: 1px solid #11284d;
-  color: white;
+.win7-titlebar-mil {
+  background: #1b3c67 !important; /* 삼육대 청색 기반 입체바 */
+  color: #ffffff !important;
   font-weight: bold;
-  font-size: 11px;
-}
-.su-btn-blue:hover {
-  background-color: #2a5293;
+  padding: 3px 4px !important;
 }
 
-/* 탐색기 폴더 트리 스타일 */
-.su-tree-menu {
-  font-size: 11px;
-  color: #333;
+/* 윈도우 95 클래식 3D 입체 단추 */
+.win7-btn {
+  font-family: "Comic Sans MS", "Gungsuh", sans-serif !important;
+  background-color: #d4d0c8 !important;
+  border-top: 2px solid #ffffff !important;
+  border-left: 2px solid #ffffff !important;
+  border-right: 2px solid #808080 !important;
+  border-bottom: 2px solid #808080 !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
 }
-.su-tree-item {
+.win7-btn:hover {
+  background-color: #dcd8d0 !important;
+}
+/* 클릭 시 입체 버튼 1px 내려앉는 고증 효과 */
+.win7-btn:active:not(:disabled) {
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  padding-top: 5px !important;
+  padding-left: 10px !important;
+}
+
+.win7-btn-primary {
+  /* 수윙즈 블루 테마 단추 */
+  background-color: #2b5597 !important;
+  border-top: 2px solid #99bbee !important;
+  border-left: 2px solid #99bbee !important;
+  border-right: 2px solid #11284d !important;
+  border-bottom: 2px solid #11284d !important;
+  color: white !important;
+}
+.win7-btn-primary:active:not(:disabled) {
+  border-top: 2px solid #11284d !important;
+  border-left: 2px solid #11284d !important;
+  border-right: 2px solid #99bbee !important;
+  border-bottom: 2px solid #99bbee !important;
+  padding-top: 5px !important;
+  padding-left: 10px !important;
+}
+
+.win7-btn-secondary {
+  /* 실버 단추 */
+  background-color: #d4d0c8 !important;
+}
+
+.win7-btn-success {
+  /* 그린 단추 */
+  background-color: #466046 !important;
+  border-top: 2px solid #8ebd8e !important;
+  border-left: 2px solid #8ebd8e !important;
+  border-right: 2px solid #1b261b !important;
+  border-bottom: 2px solid #1b261b !important;
+  color: white !important;
+}
+.win7-btn-success:active:not(:disabled) {
+  border-top: 2px solid #1b261b !important;
+  border-left: 2px solid #1b261b !important;
+  border-right: 2px solid #8ebd8e !important;
+  border-bottom: 2px solid #8ebd8e !important;
+  padding-top: 5px !important;
+  padding-left: 10px !important;
+}
+
+.win7-btn-danger {
+  /* 적색 단추 */
+  background-color: #b23b3b !important;
+  border-top: 2px solid #ea8c8c !important;
+  border-left: 2px solid #ea8c8c !important;
+  border-right: 2px solid #590b0b !important;
+  border-bottom: 2px solid #590b0b !important;
+  color: white !important;
+}
+.win7-btn-danger:active:not(:disabled) {
+  border-top: 2px solid #590b0b !important;
+  border-left: 2px solid #590b0b !important;
+  border-right: 2px solid #ea8c8c !important;
+  border-bottom: 2px solid #ea8c8c !important;
+  padding-top: 5px !important;
+  padding-left: 10px !important;
+}
+
+/* 입체 3D Inset 테두리 (입력 필드용) */
+input, select, textarea {
+  border-top: 2px solid #808080 !important;
+  border-left: 2px solid #808080 !important;
+  border-right: 2px solid #ffffff !important;
+  border-bottom: 2px solid #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  padding: 4px !important;
+}
+
+/* 닫기 버튼 */
+.win7-close-btn {
+  background: #d4d0c8 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  color: black !important;
+  width: 16px;
+  height: 14px;
   display: flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 4px;
-  cursor: pointer;
-}
-.su-tree-item:hover {
-  background-color: transparent !important;
-  color: #0000ff !important;
-  text-decoration: underline !important;
-}
-.su-tree-item-active {
-  background-color: #b9d2ec;
-  color: #1b3c67;
+  justify-content: center;
+  font-size: 9px;
   font-weight: bold;
 }
+.win7-close-btn:active {
+  border-top: 1px solid #808080 !important;
+  border-left: 1px solid #808080 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+}
 
-/* SU-WINGs 폼 그리드 (행정 서식 입력용 연청색 배경 테이블) */
-.su-form-table {
+/* 고무인/결재 도장 */
+.stamp-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  font-family: "Gungsuh", "궁서", sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  text-align: center;
+  border: 1px solid;
+  transform: none !important;
+  white-space: nowrap;
+}
+.stamp-red { color: #a93232; border-color: #a93232; background-color: #fff5f5; }
+.stamp-blue { color: #2b4c6f; border-color: #2b4c6f; background-color: #f3f7fa; }
+.stamp-green { color: #3d4f41; border-color: #3d4f41; background-color: #f3f5f3; }
+.stamp-orange { color: #b56507; border-color: #b56507; background-color: #fffdf5; }
+
+/* 3D 입체 그리드 서식 테이블 */
+.mil-table {
+  border-collapse: collapse !important;
   width: 100%;
-  border-collapse: collapse;
-  border-top: 2px solid #2b5597;
-  border-bottom: 1px solid #cccccc;
 }
-.su-form-table th {
-  background-color: #cfe2f3 !important; /* SU-WINGs 라벨 연청색 */
-  border: 1px solid #a6b9d0 !important;
-  color: #1b3c67 !important;
+.mil-table th {
+  background-color: #d4d0c8 !important;
+  border-top: 1px solid #ffffff !important;
+  border-left: 1px solid #ffffff !important;
+  border-right: 1px solid #808080 !important;
+  border-bottom: 1px solid #808080 !important;
+  color: #000000 !important;
   font-weight: bold !important;
-  text-align: right !important;
-  padding: 4px 8px !important;
-  font-size: 11px;
-  width: 120px;
+  text-align: center !important;
+  font-size: 13px;
+  padding: 5px 8px !important;
 }
-.su-form-table td {
-  border: 1px solid #a6b9d0 !important;
-  padding: 4px 8px !important;
+.mil-table td {
+  border-top: 1px solid #808080 !important;
+  border-left: 1px solid #808080 !important;
+  border-right: 1px solid #ffffff !important;
+  border-bottom: 1px solid #ffffff !important;
+  padding: 5px 8px !important;
   background-color: #ffffff;
-  font-size: 11px;
+  font-size: 13px;
 }
 
-/* SU-WINGs 데이터 그리드 (결과 표) */
 .su-grid-table {
   width: 100%;
   border-collapse: collapse;
-  border-top: 2px solid #2b5597;
-  border-bottom: 1px solid #999999;
 }
 .su-grid-table th {
-  background-color: #dce6f1 !important; /* 데이터 그리드 헤더 회청색 */
-  border: 1px solid #a6b9d0 !important;
-  color: #1b3c67 !important;
+  background-color: #d4d0c8 !important; /* 입체 헤더 바닥 */
+  border-top: 1.5px solid #ffffff !important;
+  border-left: 1.5px solid #ffffff !important;
+  border-right: 1.5px solid #808080 !important;
+  border-bottom: 1.5px solid #808080 !important;
+  color: #000000 !important;
   font-weight: bold !important;
   text-align: center !important;
-  font-size: 11px;
-  padding: 4px 6px !important;
+  font-size: 14px !important;
+  padding: 6px 8px !important;
 }
 .su-grid-table td {
-  border: 1px solid #cccccc !important;
-  padding: 4px 6px !important;
+  border: 1px solid #808080 !important;
+  padding: 6px 8px !important;
   background-color: #ffffff;
-  font-size: 11px;
+  font-size: 13px !important;
 }
 .su-grid-table tr:nth-child(even) td {
-  background-color: #fafbfe;
+  background-color: #f0ede6; /* 약간 어두운 베이지색 */
 }
 .su-grid-table tr:hover td {
-  background-color: #ffff99 !important; /* 극단적인 형광 노란색 호버 */
+  background-color: #ffff99 !important; /* 형광 노란색 마우스 호버 */
   color: #000000 !important;
 }
 
-/* 필수 기재 항목 별표 */
+/* 연청색 입력용 표 서식 */
+.su-form-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.su-form-table th {
+  background-color: #d4d0c8 !important;
+  border-top: 1.5px solid #ffffff !important;
+  border-left: 1.5px solid #ffffff !important;
+  border-right: 1.5px solid #808080 !important;
+  border-bottom: 1.5px solid #808080 !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+  text-align: right !important;
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+}
+.su-form-table td {
+  border: 1px solid #808080 !important;
+  padding: 6px 8px !important;
+  background-color: #ffffff;
+}
+
+/* 깜빡이는 별표 및 공지 애니메이션 */
+@keyframes su-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
 .su-required::before {
   content: "* ";
   color: #ff0000;
@@ -149,165 +281,30 @@
   animation: su-blink 1s infinite step-end;
 }
 
-/* SU-WINGs 탭바 */
-.su-tab-bar {
-  display: flex;
-  background-color: #ffffff;
-  border-bottom: 1px solid #adadad;
-  padding-left: 10px;
-  padding-top: 5px;
+/* 90년대 원색 깜빡이 알림글 */
+@keyframes text-flash {
+  0%, 49% { color: #ff0000; }
+  50%, 100% { color: #0000ff; }
 }
-.su-tab {
-  padding: 3px 12px 2px 12px;
-  border: 1px solid #adadad;
-  border-bottom: none;
-  background-color: #f0f0f0;
-  color: #555555;
-  font-size: 11px;
-  margin-right: 2px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-}
-.su-tab-active {
-  background-color: #ffffff;
-  border: 1px solid #2b5597;
-  border-bottom: 1px solid #ffffff;
-  color: #1b3c67;
+.flash-warning {
+  animation: text-flash 0.8s infinite step-end;
   font-weight: bold;
-  position: relative;
-  z-index: 2;
-  margin-bottom: -1px;
-}
-.su-tab-close {
-  color: #999;
-  font-weight: normal;
-}
-.su-tab-close:hover {
-  color: #ff0000;
-}
-/* ==========================================
-   ★ 수윙즈 스타일 플랫 버튼 정의
-   ========================================== */
-.win7-btn {
-  font-family: "Gungsuh", "GungsuhChe", "궁서", "궁서체", serif !important;
-  border-radius: 0px !important;
-  font-weight: bold !important;
-  outline: none;
-  font-size: 11px !important;
 }
 
-.win7-btn-primary {
-  background-color: #1a3c73 !important;
-  border: 1px solid #11284d !important;
-  color: white !important;
-  padding: 3px 8px !important;
-}
-.win7-btn-primary:hover {
-  background-color: #2a5293 !important;
+/* IE6 포커스 안쪽 점선 */
+input:focus, select:focus, textarea:focus, button:focus, summary:focus, a:focus {
+  outline: 1px dotted #000000 !important;
+  outline-offset: -2px !important;
 }
 
-.win7-btn-secondary {
-  background-color: #e1e1e1 !important;
-  border: 1px solid #adadad !important;
-  color: #333333 !important;
-  padding: 3px 8px !important;
-}
-.win7-btn-secondary:hover {
-  background-color: #d1d1d1 !important;
-}
-
-.win7-btn-success {
-  background-color: #1a3c73 !important; /* 성공도 동일하게 수윙즈 블루 테마로 처리하여 군사 녹색 소거 */
-  border: 1px solid #11284d !important;
-  color: white !important;
-  padding: 3px 8px !important;
-}
-.win7-btn-success:hover {
-  background-color: #2a5293 !important;
-}
-
-.win7-btn-danger {
-  background-color: #b23b3b !important;
-  border: 1px solid #752323 !important;
-  color: white !important;
-  padding: 3px 8px !important;
-}
-.win7-btn-danger:hover {
-  background-color: #c94c4c !important;
-}
-/* ==========================================
-   ★ 가독성을 위한 전역 폰트 크기 및 두께(Bold) 대폭 증대 오버라이드
-   ========================================== */
-body {
-  font-size: 15px !important;
-}
-
-.su-grid-table th {
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  padding: 8px 6px !important;
-  background-color: #dce6f1 !important;
-  color: #1b3c67 !important;
-}
-
-.su-grid-table td {
-  font-size: 15px !important;
-  font-weight: 800 !important;
-  padding: 8px 6px !important;
-}
-
-.su-tree-menu a, .su-tree-item {
-  font-size: 14px !important;
-  font-weight: 800 !important;
-}
-
-.su-tab {
-  font-size: 14px !important;
-  font-weight: bold !important;
-  padding: 6px 16px !important;
-}
-
-.su-form-table th {
-  font-size: 14px !important;
-  font-weight: 900 !important;
-  padding: 6px 8px !important;
-}
-
-.su-form-table td {
-  font-size: 14px !important;
-  font-weight: 800 !important;
-  padding: 6px 8px !important;
-}
-
-/* 그 외 모든 작은 유틸리티 서체들 강제 스케일링 및 고대비화 */
-.text-[11px], .text-xs, .text-sm, .text-[#666666], .text-[#999999], .text-slate-500, .text-slate-600 {
-  font-size: 14px !important;
-  font-weight: bold !important;
-}
-
-.text-[10px], .text-[9px], .text-xs-caption {
-  font-size: 13px !important;
-  font-weight: bold !important;
-}
-
-input, select, textarea, button, .win7-btn {
-  font-size: 14px !important;
-  font-weight: bold !important;
-}
-/* ==========================================
-   ★ 고증 찐빠 전산 스타일 (스크롤바, 포커스 점선, 별표 점멸)
-   ========================================== */
-
-/* 1. 윈도우 95/98 감성 3D 회색 스크롤바 */
+/* 윈도우 95 클래식 회색 입체 스크롤바 */
 ::-webkit-scrollbar {
   width: 16px !important;
   height: 16px !important;
   background-color: #d4d0c8 !important;
 }
 ::-webkit-scrollbar-track {
-  background: #eaeaea !important;
+  background: #ece9d8 !important;
   border: 1px inset #808080 !important;
 }
 ::-webkit-scrollbar-thumb {
@@ -328,14 +325,68 @@ input, select, textarea, button, .win7-btn {
   height: 16px !important;
 }
 
-/* 3. 깜빡이는 별표 애니메이션 */
-@keyframes su-blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+/* ==========================================
+   ★ 가독성을 위한 전역 폰트 크기 및 두께(Bold) 대폭 증대 오버라이드
+   ========================================== */
+.su-tree-menu a, .su-tree-item {
+  font-size: 13px !important;
+  font-weight: bold !important;
 }
 
-/* 4. IE6 포커스 안쪽 점선 테두리 */
-input:focus, select:focus, textarea:focus, button:focus, summary:focus, a:focus {
-  outline: 1px dotted #000000 !important;
-  outline-offset: -2px !important;
+.su-tab {
+  font-size: 13px !important;
+  font-weight: bold !important;
+  padding: 4px 12px !important;
+}
+
+.text-[11px], .text-xs, .text-sm, .text-[#666666], .text-[#999999], .text-slate-500, .text-slate-600 {
+  font-size: 13px !important;
+  font-weight: bold !important;
+}
+
+.text-[10px], .text-[9px], .text-xs-caption {
+  font-size: 12px !important;
+  font-weight: bold !important;
+}
+
+/* 탐색기 나무 메뉴 호버 */
+.su-tree-item:hover {
+  background-color: transparent !important;
+  color: #0000ff !important;
+  text-decoration: underline !important;
+}
+
+/* SU-WINGs 탭바 */
+.su-tab-bar {
+  display: flex;
+  background-color: #d4d0c8 !important;
+  border-bottom: 1px solid #808080;
+  padding-left: 10px;
+  padding-top: 4px;
+}
+.su-tab {
+  padding: 3px 10px 2px 10px;
+  border-top: 1.5px solid #ffffff !important;
+  border-left: 1.5px solid #ffffff !important;
+  border-right: 1.5px solid #808080 !important;
+  border-bottom: none !important;
+  background-color: #d4d0c8 !important;
+  color: #333333;
+  margin-right: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.su-tab-active {
+  background-color: #ffffff !important;
+  border-top: 1.5px solid #ffffff !important;
+  border-left: 1.5px solid #ffffff !important;
+  border-right: 1.5px solid #808080 !important;
+  border-bottom: 1.5px solid #ffffff !important;
+  color: #1b3c67;
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+  margin-bottom: -1.5px;
 }

@@ -41,6 +41,11 @@ export default function LoginView() {
           </p>
         </div>
 
+        {/* 90년대 식 보안 경고 마키 */}
+        <marquee className="bg-black text-[#00ff00] border border-[#00ff00] p-1 font-mono text-[11px] select-none shrink-0" scrollamount="3">
+          ★★ [보안경고] 본 시스템은 삼육대학교 학사 전용 정보망입니다. 승인되지 않은 비인가자의 무단 접속 시도는 정보통신망법에 의거하여 로그가 기록되며 법적 책임이 따를 수 있습니다 ★★
+        </marquee>
+
         {/* 심플한 로그인 안내 */}
         <div className="border border-[#b23b3b] p-2.5 text-[11px] text-[#b23b3b] bg-[#fff5f5] leading-normal font-bold">
           <strong>[로그인 안내]</strong> 본 포탈은 삼육대학교 약학대학 비교과 프로그램 이수현황을 조회하고 신청하기 위한 전산 시스템입니다. 비인가 접근 및 개인 정보 유출 시 제재 대상이 될 수 있습니다.
