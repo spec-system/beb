@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { canAccessView, ViewKey } from '../../auth/roles';
@@ -168,6 +168,16 @@ function NotificationBell() {
   const { user } = useAuth();
   const { state, dispatch } = useRecords();
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    // 패널 바깥 클릭 시 닫기
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [open]);
   if (!user) return null;
 
   // 학생은 본인 수신분만, 그 외(교수/학과장/행정실)는 전체 발송 이력 열람
@@ -184,7 +194,7 @@ function NotificationBell() {
   };
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
         onClick={toggle}
         className="su-btn-gray font-bold relative flex items-center gap-1"

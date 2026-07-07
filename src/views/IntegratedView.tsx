@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { useRecords } from '../store/recordsStore';
 import { useAuth } from '../auth/AuthContext';
 import { canView } from '../auth/roles';
@@ -95,6 +95,9 @@ function compareRows(sort: SortKey, a: Row, b: Row) {
   }
 }
 
+let dropdownZSeq = 30;
+const nextDropdownZ = () => (dropdownZSeq += 1);
+
 function MultiSelectDropdown({
   options,
   selected,
@@ -106,6 +109,25 @@ function MultiSelectDropdown({
 }) {
   const allSelected = selected.length === 0;
   const summary = allSelected ? '전체' : `${selected.length}개 선택`;
+  const ref = useRef<HTMLDetailsElement>(null);
+  const [z, setZ] = useState(30);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    // 열릴 때마다 z-index를 올려 마지막에 연 드롭다운이 항상 위로 오게 함
+    const onToggle = () => { if (el.open) setZ(nextDropdownZ()); };
+    // 드롭다운 바깥을 클릭하면 닫기
+    const onDocMouseDown = (e: MouseEvent) => {
+      if (el.open && !el.contains(e.target as Node)) el.open = false;
+    };
+    el.addEventListener('toggle', onToggle);
+    document.addEventListener('mousedown', onDocMouseDown);
+    return () => {
+      el.removeEventListener('toggle', onToggle);
+      document.removeEventListener('mousedown', onDocMouseDown);
+    };
+  }, []);
 
   const toggle = (value: string) => {
     if (selected.includes(value)) {
@@ -116,7 +138,7 @@ function MultiSelectDropdown({
   };
 
   return (
-    <details className="group relative w-full">
+    <details ref={ref} style={{ zIndex: z }} className="group relative w-full">
       <summary className="flex h-5 cursor-pointer list-none items-center justify-between border border-slate-400 bg-white px-2 py-0 text-[11px] text-slate-800">
         <span className="truncate">{summary}</span>
         <span className="text-[9px] text-[#2b5597] group-open:rotate-180">▼</span>
