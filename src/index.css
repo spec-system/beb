@@ -184,3 +184,53 @@
 .su-tab-close:hover {
   color: #ff0000;
 }
+/* ==========================================
+   ★ 수윙즈 스타일 플랫 버튼 정의
+   ========================================== */
+.win7-btn {
+  font-family: "Gungsuh", "GungsuhChe", "궁서", "궁서체", serif !important;
+  border-radius: 0px !important;
+  font-weight: bold !important;
+  outline: none;
+  font-size: 11px !important;
+}
+
+.win7-btn-primary {
+  background-color: #1a3c73 !important;
+  border: 1px solid #11284d !important;
+  color: white !important;
+  padding: 3px 8px !important;
+}
+.win7-btn-primary:hover {
+  background-color: #2a5293 !important;
+}
+
+.win7-btn-secondary {
+  background-color: #e1e1e1 !important;
+  border: 1px solid #adadad !important;
+  color: #333333 !important;
+  padding: 3px 8px !important;
+}
+.win7-btn-secondary:hover {
+  background-color: #d1d1d1 !important;
+}
+
+.win7-btn-success {
+  background-color: #1a3c73 !important; /* 성공도 동일하게 수윙즈 블루 테마로 처리하여 군사 녹색 소거 */
+  border: 1px solid #11284d !important;
+  color: white !important;
+  padding: 3px 8px !important;
+}
+.win7-btn-success:hover {
+  background-color: #2a5293 !important;
+}
+
+.win7-btn-danger {
+  background-color: #b23b3b !important;
+  border: 1px solid #752323 !important;
+  color: white !important;
+  padding: 3px 8px !important;
+}
+.win7-btn-danger:hover {
+  background-color: #c94c4c !important;
+}

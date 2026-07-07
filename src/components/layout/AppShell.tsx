@@ -20,43 +20,37 @@ const ICONS = {
 
 type NavItem = { key: ViewKey; to: string; label: string; icon: React.ComponentType<{ size?: number }> };
 
-const MIL_ROLE_LABEL: Record<Role, string> = {
-  STUDENT: '학사생도',
-  PROFESSOR: '지도관(대위)',
-  HEAD: '대대장(중령)',
-  STAFF: '행정 준위',
-};
 const roleNav = (role: Role): NavItem[] => {
   const item = (key: ViewKey, to: string, label: string, icon = ICONS[key]): NavItem => ({ key, to, label, icon });
   switch (role) {
     case 'STUDENT':
       return [
-        item('integrated', '/integrated', '개인 자력대장 (통합 현황)'),
-        item('submit', '/submit', '지상작전 보고 (신청·제출)'),
+        item('integrated', '/integrated', '내 현황'),
+        item('submit', '/submit', '신청·제출'),
       ];
     case 'PROFESSOR':
       return [
-        item('integrated', '/integrated', '인사사령부 자력조회 (전체)'),
-        item('dept', '/dept', '지상작전 교육현황 (학과내)'),
-        item('toeic', '/toeic', '어학 전투력 대장 (토익)'),
-        item('volunteer', '/volunteer', '대민 지원 대장 (봉사)'),
+        item('integrated', '/integrated', '전체 목록'),
+        item('dept', '/dept', '학과내 목록'),
+        item('toeic', '/toeic', '토익 목록'),
+        item('volunteer', '/volunteer', '봉사 목록'),
       ];
     case 'HEAD':
       return [
-        item('integrated', '/integrated', '인사사령부 자력조회 (전체)'),
-        item('dept', '/dept', '지상작전 교육승인 (학과내)'),
-        item('toeic', '/toeic', '어학 전투력 승인 (토익)'),
-        item('volunteer', '/volunteer', '대민 지원 승인 (봉사)'),
-        item('stats', '/stats', '분석평가단 (통계 지표)'),
-        item('settings', '/settings', '정보체계관리단 (설정)'),
+        item('integrated', '/integrated', '전체조회'),
+        item('dept', '/dept', '학과내 최종승인'),
+        item('toeic', '/toeic', '토익 최종승인'),
+        item('volunteer', '/volunteer', '봉사 최종승인'),
+        item('stats', '/stats', '통계'),
+        item('settings', '/settings', '설정'),
       ];
     case 'STAFF':
       return [
-        item('integrated', '/integrated', '인사사령부 자력조회 (전체)'),
-        item('dept', '/dept', '지상작전 실무검토 (학과내)', MessageSquare),
-        item('toeic', '/toeic', '어학 전투력 실무검토 (토익)', MessageSquare),
-        item('volunteer', '/volunteer', '대민 지원 실무검토 (봉사)', MessageSquare),
-        item('settings', '/settings', '정보체계관리단 (설정)'),
+        item('integrated', '/integrated', '전체조회'),
+        item('dept', '/dept', '학과내 코멘트', MessageSquare),
+        item('toeic', '/toeic', '토익 코멘트', MessageSquare),
+        item('volunteer', '/volunteer', '봉사 코멘트', MessageSquare),
+        item('settings', '/settings', '설정'),
       ];
     default:
       return [];
@@ -143,11 +137,6 @@ export default function AppShell() {
               </NavLink>
             ))}
           </nav>
-          {/* 육군 교육통제지침 (고증 융합) */}
-          <div className="p-2 bg-[#f1f3f5] border-t border-[#adadad] font-mono text-[9px] text-[#555555] leading-normal text-left">
-            <strong>[육군교육지침-국군조직법]</strong><br />
-            지상작전을 주 임무로 하고, 이를 위하여 편성되고 장비를 갖추며 필요한 교육훈련을 한다.
-          </div>
         </aside>
 
         {/* 4. 우측 콘텐츠 패널 (상단 다중 탭 + 실제 뷰 화면) */}

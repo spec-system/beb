@@ -34,22 +34,22 @@ export default function LoginView() {
       <div className="w-full max-w-sm flex flex-col gap-4 border border-[#222222] bg-[#ffffff] p-6">
         <div className="text-center border-b border-[#222222] pb-3">
           <h1 className="text-sm font-black text-[#1a251e] tracking-tight">
-            국방 비교과 학사행정체계 (DELIS)
+            SU-WINGs 비교과 통합행정 포탈
           </h1>
           <p className="text-[10px] text-slate-500 font-bold mt-1">
-            [등급: II급 비밀 정보체계]
+            [삼육대학교 약학대학]
           </p>
         </div>
 
-        {/* 심플한 경고 알림 */}
+        {/* 심플한 로그인 안내 */}
         <div className="border border-[#b23b3b] p-2.5 text-[11px] text-[#b23b3b] bg-[#fff5f5] leading-normal font-bold">
-          <strong>[보안통제 경고]</strong> 본 망은 군 내부 전용망입니다. 허가받지 않은 모든 접근과 무단 정보 수집 행위는 군사보안 수칙에 의거 추적 및 엄벌합니다.
+          <strong>[로그인 안내]</strong> 본 포탈은 삼육대학교 약학대학 비교과 프로그램 이수현황을 조회하고 신청하기 위한 전산 시스템입니다. 비인가 접근 및 개인 정보 유출 시 제재 대상이 될 수 있습니다.
         </div>
 
         <form onSubmit={submit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] font-bold text-slate-700">군번 / ID</label>
-            <Input value={id} onChange={(e) => setId(e.target.value)} placeholder="군번 또는 ID" autoFocus />
+            <label className="text-[10px] font-bold text-slate-700">학번 또는 ID</label>
+            <Input value={id} onChange={(e) => setId(e.target.value)} placeholder="학번 또는 ID" autoFocus />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-[10px] font-bold text-slate-700">비밀번호 / PASSWORD</label>
@@ -61,19 +61,19 @@ export default function LoginView() {
             </div>
           )}
           <Button type="submit" variant="success" className="w-full text-xs py-2 mt-1">
-            보안 접속 요청
+            학사 시스템 로그인
           </Button>
         </form>
 
         {/* 간소화된 계정 리스트 */}
         <div className="border-t border-[#cccccc] pt-3 text-xs flex flex-col gap-2">
-          <div className="text-[10px] text-slate-500 font-bold">대원 로그인 정보 시뮬레이션 (원클릭 자동 입력)</div>
+          <div className="text-[10px] text-slate-500 font-bold">테스트 계정 빠른 로그인 (원클릭 자동 입력)</div>
           <div className="grid grid-cols-2 gap-1.5">
             {USERS.map((u) => {
-              const milRole =
-                u.role === 'STUDENT' ? '학사생도' :
-                u.role === 'PROFESSOR' ? '지도대위' :
-                u.role === 'HEAD' ? '대대장' : '행정 준위';
+              const academicRole =
+                u.role === 'STUDENT' ? '학생' :
+                u.role === 'PROFESSOR' ? '담당교수' :
+                u.role === 'HEAD' ? '학과장' : '행정실';
               return (
                 <button
                   key={u.id}
@@ -81,7 +81,7 @@ export default function LoginView() {
                   onClick={() => quick(u.id, u.pw)}
                   className="text-left border border-[#cccccc] bg-[#f8f9fa] p-2 hover:bg-[#e9ecef] cursor-pointer"
                 >
-                  <span className="block text-[11px] font-black text-slate-800">{milRole}: {u.name}</span>
+                  <span className="block text-[11px] font-black text-slate-800">{academicRole}: {u.name}</span>
                   <span className="block text-[10px] text-slate-500 font-mono">{u.id}</span>
                 </button>
               );
