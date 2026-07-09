@@ -639,7 +639,7 @@ function IntegratedDetailModal({ record: initialRecord, onClose }: { record: Any
     const list = [...state.dept, ...state.toeic, ...state.volunteer];
     return list.find(r => r.id === initialRecord.id) || initialRecord;
   }, [state, initialRecord]);
-  const latestRejectReason = [...record.history].reverse().find((h) => h.step === '반려' && h.reason)?.reason;
+  const latestRejectReason = [...record.history].reverse().find((h) => (h.step === '반려' || h.step === '(담당교수에게) 반려됨' || h.step === '(학과장에게) 반려됨') && h.reason)?.reason;
   const title = record.programType === '학과내 비교과'
     ? record.title
     : record.programType === '전공연계봉사활동'
@@ -650,7 +650,7 @@ function IntegratedDetailModal({ record: initialRecord, onClose }: { record: Any
   const isOwn = record.studentId === user?.studentId;
   const isPendingApproval =
     record.programType === '학과내 비교과'
-      ? (record.status === '계획서 접수' || record.status === '보고서 접수')
+      ? record.status === '신청 완료'
       : (record.status === '접수' || record.status === '검토중');
   const showReminderBtn = isStudent && isOwn && isPendingApproval;
   const alreadyNotified = record.history.some((h) => h.step === '교수 승인 리마인더 발송');
@@ -715,7 +715,8 @@ function IntegratedDetailModal({ record: initialRecord, onClose }: { record: Any
               </div>
               <DetailRow k="담당교수 코멘트" v={record.professorComment || '-'} />
               <DetailRow k="보고서 파일" v={record.reportFile ? `${record.reportFile.name} · ${Math.round(record.reportFile.size / 1024)}KB` : '미제출'} />
-              <DetailRow k="포스터 확인" v={record.posterSubmitted ? '확인됨' : '미확인'} />
+              <DetailRow k="포스터" v={record.posterFile ? (record.posterReviewed ? '심사 완료' : '심사 대기') : '미제출'} />
+              <DetailRow k="보고서 심사" v={record.reportFile ? (record.reportReviewed ? '심사 완료' : '심사 대기') : '미제출'} />
             </>
           )}
 

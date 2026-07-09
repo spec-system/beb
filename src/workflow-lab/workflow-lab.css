@@ -1,0 +1,145 @@
+/* Workflow Lab PPT 크롬 전용 스타일.
+   기본 레트로 스킨(win7/su/stamp, 폰트, 격자 배경)은 ../index.css 에서 상속한다.
+   전역 규칙(* { border-radius:0; box-shadow:none; transition:none })을 존중해
+   강조 효과는 outline + animation 으로만 처리한다. */
+
+/* 발표자 노트 (슬라이드 제목/설명) */
+.deck-note {
+  background: linear-gradient(180deg, #fdfbe8 0%, #f3eecb 100%);
+  border-bottom: 2px solid #808080;
+  border-top: 1px solid #ffffff;
+  padding: 8px 14px 10px;
+}
+.deck-note-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.deck-actor-chip {
+  background: #1b3c73;
+  color: #ffffff !important;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-top: 1.5px solid #6f8dc0;
+  border-left: 1.5px solid #6f8dc0;
+  border-right: 1.5px solid #10233f;
+  border-bottom: 1.5px solid #10233f;
+}
+.deck-step-count {
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  color: #b23b3b;
+}
+.deck-prog-title {
+  margin-left: auto;
+  font-weight: bold;
+  font-size: 12px;
+  color: #10489c;
+}
+.deck-note-caption {
+  font-size: 16px;
+  font-weight: bold;
+  color: #10233f;
+  line-height: 1.4;
+}
+.deck-note-body {
+  font-size: 13px;
+  font-weight: bold;
+  color: #3a3a3a;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+/* 하단 조작 바 */
+.deck-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #d4d0c8;
+  border-top: 2px solid #ffffff;
+  padding: 8px 14px;
+}
+.deck-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: center;
+}
+.deck-dot {
+  width: 13px;
+  height: 13px;
+  background: #ffffff;
+  border-top: 1.5px solid #808080;
+  border-left: 1.5px solid #808080;
+  border-right: 1.5px solid #ffffff;
+  border-bottom: 1.5px solid #ffffff;
+  cursor: pointer;
+  padding: 0;
+}
+.deck-dot.done {
+  background: #466046;
+}
+.deck-dot.active {
+  background: #2f6fd0;
+  outline: 2px solid #10336e;
+  outline-offset: 1px;
+}
+
+/* 다음 액션 강조 (버튼/체크박스) — 깜빡이는 주황 outline */
+@keyframes deck-hl-blink {
+  0%, 60% { outline-color: #ff8c00; }
+  61%, 100% { outline-color: #ffd59e; }
+}
+.deck-hl {
+  outline: 3px solid #ff8c00 !important;
+  outline-offset: 2px !important;
+  animation: deck-hl-blink 0.9s infinite step-end;
+}
+
+.no-underline { text-decoration: none !important; }
+
+/* 포탈(index) 카드 그리드 */
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.portal-card {
+  display: block;
+  text-decoration: none !important;
+  background: linear-gradient(180deg, #ffffff 0%, #eef2f7 100%);
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+  padding: 14px 16px;
+  color: #10233f !important;
+}
+.portal-card:hover {
+  background: #fff9d6;
+}
+.portal-card-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #10489c !important;
+  margin-bottom: 4px;
+}
+.portal-card-desc {
+  font-size: 12px;
+  font-weight: bold;
+  color: #3a3a3a !important;
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .portal-grid { grid-template-columns: 1fr; }
+  .deck-controls { justify-content: center; }
+}

@@ -158,13 +158,16 @@ function CreateModal({ onClose }: { onClose: () => void }) {
         recognizedHours: Number(hours) || 0,
         teamMembers: team,
         reportFile: null,
-        posterSubmitted: false,
+        posterFile: null,
+        posterReviewed: false,
+        reportReviewed: false,
+        draftSavedAt: '',
         professorComment: '',
         finalApprovalDate: '',
         adminComment: '',
       },
     });
-    toast('학과내 비교과를 등록했습니다. (계획서 접수)');
+    toast('학과내 비교과를 등록했습니다. (신청 완료)');
     onClose();
   };
 
@@ -231,14 +234,17 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
   const [professorComment, setProfessorComment] = useState(record.professorComment);
   const [reject, setReject] = useState(false);
   const [cancel, setCancel] = useState(false);
-  const [reportOpened, setReportOpened] = useState(false);
+
   const [professorEdit, setProfessorEdit] = useState(record.professor);
   const actor = user ? { name: user.name, role: user.role } : null;
   if (!user || !actor) return null;
 
   const isOwnerStudent = record.studentId === user.studentId;
-  const latestRejectReason = [...record.history].reverse().find((h) => h.step === '반려' && h.reason)?.reason;
-  const hasPoster = Boolean(record.posterSubmitted);
+  const latestRejectReason = [...record.history].reverse().find((h) => (h.step === '(담당교수에게) 반려됨' || h.step === '(학과장에게) 반려됨') && h.reason)?.reason;
+  const isCertPhase = ['신청 승인됨', '포스터 심사 중', '결과 보고서 검토 중', '최종 검토중'].includes(record.status);
+  const canCertUpload = isCertPhase && can(user, 'upload_poster', record) && isOwnerStudent;
+  const isRejected = record.status === '(담당교수에게) 반려됨' || record.status === '(학과장에게) 반려됨';
+  const canReject = !['최종 승인', '(담당교수에게) 반려됨', '(학과장에게) 반려됨'].includes(record.status);
 
   const act = (fn: () => void, msg: string) => { fn(); toast(msg); };
   const signature = settings.signatures.find((s) => s.professorName === record.professor);
@@ -298,91 +304,110 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
           )}
 
         <div className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {documentButton('application', '신청서')}
+            {documentButton('result', '결과보고서')}
+          </div>
+
           <div>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">보고서 (PDF)</p>
-            {(record.status === '계획서 승인' || record.status === '반려') && can(user, 'submit_report', record) && isOwnerStudent ? (
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">결과 포스터</p>
+            {canCertUpload ? (
+              <FileDropField
+                value={record.posterFile}
+                accept="application/pdf,image/*"
+                hint="전시한 결과 포스터 파일 (PDF/이미지)"
+                onSelect={(file) => act(() => dispatch({ type: 'UPLOAD_POSTER', id: record.id, file, actor }), '포스터를 업로드했습니다. (학과장 심사 대기)')}
+              />
+            ) : record.posterFile ? (
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 flex items-center justify-between gap-2">
+                <span className="truncate">{record.posterFile.name}</span>
+                <div className="flex gap-1 shrink-0">
+                  <Button variant="ghost" size="sm" data-testid="dept-poster-open" onClick={() => openFile(record.posterFile!)}>열기</Button>
+                  <Button variant="ghost" size="sm" onClick={() => downloadFile(record.posterFile!)}>다운로드</Button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-xs text-slate-400">아직 포스터가 업로드되지 않았습니다.</p>
+            )}
+          </div>
+
+          <div>
+            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">결과 보고서 (PDF)</p>
+            {canCertUpload ? (
               <FileDropField
                 value={record.reportFile}
                 accept="application/pdf"
-                hint="서명 페이지 1장 + 발표포스터 1장 합본 PDF"
+                hint="결과 보고서 PDF"
                 onSelect={(file) => {
                   if (!file.name.toLowerCase().endsWith('.pdf')) {
                     toast('결과보고서는 단일 PDF 파일만 업로드할 수 있습니다.', 'error');
                     return;
                   }
-                  act(
-                    () => dispatch({ type: 'SUBMIT_REPORT', id: record.id, file, actor }),
-                    '보고서를 제출했습니다. (보고서 접수)',
-                  );
+                  act(() => dispatch({ type: 'SUBMIT_REPORT', id: record.id, file, actor }), '결과 보고서를 제출했습니다. (학과장 심사 대기)');
                 }}
               />
             ) : record.reportFile ? (
               <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 flex items-center justify-between gap-2">
                 <span className="truncate">{record.reportFile.name}</span>
                 <div className="flex gap-1 shrink-0">
-                  <Button variant="ghost" size="sm" data-testid="dept-report-open"
-                    onClick={() => { openFile(record.reportFile!); setReportOpened(true); }}>열기</Button>
-                  <Button variant="ghost" size="sm" data-testid="dept-report-download"
-                    onClick={() => { downloadFile(record.reportFile!); setReportOpened(true); }}>다운로드</Button>
+                  <Button variant="ghost" size="sm" data-testid="dept-report-open" onClick={() => openFile(record.reportFile!)}>열기</Button>
+                  <Button variant="ghost" size="sm" data-testid="dept-report-download" onClick={() => downloadFile(record.reportFile!)}>다운로드</Button>
                 </div>
               </div>
             ) : (
-              <p className="text-xs text-slate-400">아직 보고서가 제출되지 않았습니다.</p>
+              <p className="text-xs text-slate-400">아직 결과 보고서가 제출되지 않았습니다.</p>
             )}
           </div>
 
+          {canCertUpload && (
+            <Button variant="secondary" size="sm" data-testid="dept-save-draft" onClick={() => act(() => dispatch({ type: 'SAVE_DRAFT_DEPT', id: record.id, actor }), '임시 저장했습니다.')}>임시 저장</Button>
+          )}
+
           <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 space-y-2">
-            <Row k="보고서 파일" v={record.reportFile ? `${record.reportFile.name} · ${Math.round(record.reportFile.size / 1024)}KB` : '미제출'} />
-            <Row k="포스터 확인" v={hasPoster ? '확인됨' : '미확인'} />
+            <Row k="포스터" v={record.posterFile ? (record.posterReviewed ? '심사 완료' : '심사 대기') : '미제출'} />
+            <Row k="결과 보고서" v={record.reportFile ? (record.reportReviewed ? '심사 완료' : '심사 대기') : '미제출'} />
             <Row k="최신 반려사유" v={latestRejectReason || '-'} />
           </div>
 
-          {/* 액션 버튼 (역할 게이팅) */}
           <div className="flex flex-wrap gap-2">
-            {documentButton('application', '신청서')}
-            {documentButton('result', '결과보고서')}
-            {record.status === '계획서 접수' && can(user, 'approve_plan', record) && (
-              <Button variant="success" size="sm" data-testid="approve-plan"
-                onClick={() => act(() => dispatch({ type: 'APPROVE_PLAN', id: record.id, actor }), '계획서를 승인했습니다.')}>
-                계획서 승인
+            {record.status === '신청 완료' && can(user, 'approve_application', record) && (
+              <Button variant="success" size="sm" data-testid="approve-application-professor"
+                onClick={() => act(() => dispatch({ type: 'APPROVE_APPLICATION_PROFESSOR', id: record.id, actor }), '담당교수 신청서 승인 완료.')}>
+                신청서 승인 (담당교수)
               </Button>
             )}
-            {record.status === '보고서 접수' && can(user, 'approve_report', record) && (
-              <>
-                {!reportOpened && (
-                  <p className="w-full text-xs text-amber-700" data-testid="dept-report-open-required">먼저 제출된 보고서 파일을 열람해야 포스터 확인 및 담당승인이 가능합니다.</p>
-                )}
-                <label className={`flex w-full items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-slate-700 ${!reportOpened ? 'opacity-50' : ''}`}>
-                  <input
-                    type="checkbox"
-                    checked={hasPoster}
-                    disabled={!reportOpened}
-                    data-testid="dept-poster-check"
-                    onChange={(e) => act(() => dispatch({ type: 'SET_POSTER_SUBMITTED', id: record.id, checked: e.target.checked, actor }), e.target.checked ? '포스터 제출을 확인했습니다.' : '포스터 제출 확인을 해제했습니다.')}
-                  />
-                  결과보고서 첫 페이지 포스터 제출 여부 확인
-                </label>
-                <Button variant="success" size="sm" data-testid="approve-report" disabled={!hasPoster || !reportOpened}
-                  onClick={() => act(() => dispatch({ type: 'APPROVE_REPORT_PROFESSOR', id: record.id, comment: professorComment, actor }), '보고서를 담당승인했습니다.')}>
-                  보고서 담당승인
-                </Button>
-              </>
+            {record.status === '담당교수 승인' && can(user, 'approve_application_head') && (
+              <Button variant="success" size="sm" data-testid="approve-application-head"
+                onClick={() => act(() => dispatch({ type: 'APPROVE_APPLICATION_HEAD', id: record.id, actor }), '학과장 신청서 승인 완료. (활동 시작)')}>
+                신청서 승인 (학과장)
+              </Button>
             )}
-            {record.status === '보고서 담당승인' && can(user, 'approve_final', record) && (
-              <Button variant="success" size="sm" data-testid="approve-final"
+            {record.posterFile && !record.posterReviewed && isCertPhase && can(user, 'review_poster') && (
+              <Button variant="success" size="sm" data-testid="review-poster"
+                onClick={() => act(() => dispatch({ type: 'REVIEW_POSTER_HEAD', id: record.id, actor }), '포스터 심사를 완료했습니다.')}>
+                포스터 심사 완료
+              </Button>
+            )}
+            {record.reportFile && !record.reportReviewed && isCertPhase && can(user, 'review_report') && (
+              <Button variant="success" size="sm" data-testid="review-report"
+                onClick={() => act(() => dispatch({ type: 'REVIEW_REPORT_HEAD', id: record.id, actor }), '결과 보고서 심사를 완료했습니다.')}>
+                결과 보고서 심사 완료
+              </Button>
+            )}
+            {record.status === '최종 검토중' && can(user, 'approve_final', record) && (
+              <Button variant="success" size="sm" data-testid="approve-final" disabled={!(record.posterReviewed && record.reportReviewed)}
                 onClick={() => act(() => dispatch({ type: 'APPROVE_FINAL_HEAD', id: record.id, actor }), '최종 승인했습니다.')}>
                 학과장 최종승인
               </Button>
             )}
-            {can(user, 'reject', record) && record.status !== '최종 승인' && record.status !== '반려' && (
+            {can(user, 'reject', record) && canReject && (
               <Button variant="danger" size="sm" onClick={() => setReject(true)}>반려</Button>
             )}
-            {can(user, 'cancel', record) && (record.status === '최종 승인' || record.status === '보고서 담당승인' || record.status === '계획서 승인' || record.status === '보고서 접수') && (
+            {can(user, 'cancel', record) && record.status === '최종 승인' && (
               <Button variant="secondary" size="sm" onClick={() => setCancel(true)}>승인 취소</Button>
             )}
-
-            {record.status === '반려' && canStudentEdit(user, record) && (
-              <Button variant="secondary" size="sm" onClick={() => act(() => dispatch({ type: 'RESUBMIT_DEPT', id: record.id, actor }), '재제출했습니다.')}>재제출</Button>
+            {isRejected && canStudentEdit(user, record) && (
+              <Button variant="secondary" size="sm" onClick={() => act(() => dispatch({ type: 'RESUBMIT_DEPT', id: record.id, actor }), '재신청했습니다.')}>재신청</Button>
             )}
             {can(user, 'admin_comment', record) && (
               <div className="w-full mt-2">
@@ -404,11 +429,6 @@ function DetailModal({ record, onClose }: { record: DeptProgramRecord; onClose: 
                   <Button size="sm" data-testid="dept-reassign-save" disabled={!professorEdit.trim() || professorEdit.trim() === record.professor}
                     onClick={() => act(() => dispatch({ type: 'REASSIGN_PROFESSOR', domain: 'dept', id: record.id, professor: professorEdit.trim(), actor }), '담당교수를 재지정했습니다.')}>저장</Button>
                 </div>
-              </div>
-            )}
-            {record.status === '보고서 접수' && can(user, 'approve_report', record) && (
-              <div className="w-full">
-                <Textarea rows={2} value={professorComment} onChange={(e) => setProfessorComment(e.target.value)} placeholder="담당교수 코멘트 (선택)" />
               </div>
             )}
           </div>

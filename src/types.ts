@@ -23,12 +23,15 @@ export type ProgramType = '학과내 비교과' | '토익' | '전공연계봉사
 
 // 학과내 비교과 다단계 승인 상태
 export type DeptStatus =
-  | '계획서 접수'
-  | '계획서 승인'
-  | '보고서 접수'
-  | '보고서 담당승인'
+  | '신청 완료'
+  | '담당교수 승인'
+  | '신청 승인됨'
+  | '포스터 심사 중'
+  | '결과 보고서 검토 중'
+  | '최종 검토중'
   | '최종 승인'
-  | '반려';
+  | '(담당교수에게) 반려됨'
+  | '(학과장에게) 반려됨';
 
 // 토익 / 봉사 승인 상태
 export type SimpleStatus = '접수' | '1차 승인' | '최종 승인' | '검토중' | '승인' | '반려';
@@ -105,7 +108,10 @@ export interface DeptProgramRecord extends RecordBase {
   status: DeptStatus;
   teamMembers: TeamMember[];
   reportFile: FileMeta | null; // 보고서 PDF (파일메타만)
-  posterSubmitted: boolean;     // 결과보고서 첫 페이지 포스터 제출 확인
+  posterFile: FileMeta | null;   // 결과 포스터 파일 (학과장 심사 대상)
+  posterReviewed: boolean;        // 학과장 포스터 심사 완료
+  reportReviewed: boolean;        // 학과장 결과보고서 심사 완료
+  draftSavedAt: string;           // 임시 저장 시각 (부가 기능)
   professorComment: string;
   finalApprovalDate: string;
 }

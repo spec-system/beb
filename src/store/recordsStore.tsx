@@ -50,10 +50,13 @@ export type Actor = { name: string; role: Role };
 
 export type Action =
   | { type: 'CREATE_DEPT'; payload: Omit<DeptProgramRecord, 'id' | 'history' | 'status' | 'lastUpdate'>; actor: Actor }
-  | { type: 'APPROVE_PLAN'; id: string; actor: Actor }
+  | { type: 'APPROVE_APPLICATION_PROFESSOR'; id: string; actor: Actor }
+  | { type: 'APPROVE_APPLICATION_HEAD'; id: string; actor: Actor }
+  | { type: 'UPLOAD_POSTER'; id: string; file: FileMeta; actor: Actor }
   | { type: 'SUBMIT_REPORT'; id: string; file: FileMeta; actor: Actor }
-  | { type: 'SET_POSTER_SUBMITTED'; id: string; checked: boolean; actor: Actor }
-  | { type: 'APPROVE_REPORT_PROFESSOR'; id: string; comment?: string; actor: Actor }
+  | { type: 'REVIEW_POSTER_HEAD'; id: string; actor: Actor }
+  | { type: 'REVIEW_REPORT_HEAD'; id: string; actor: Actor }
+  | { type: 'SAVE_DRAFT_DEPT'; id: string; actor: Actor }
   | { type: 'APPROVE_FINAL_HEAD'; id: string; actor: Actor }
   | { type: 'REJECT_DEPT'; id: string; reason: string; actor: Actor }
   | { type: 'CANCEL_DEPT'; id: string; actor: Actor }
@@ -91,14 +94,15 @@ const entry = (step: string, actor: Actor, reason?: string): HistoryEntry => ({
   reason,
 });
 
-const DEPT_PREV: Record<DeptStatus, DeptStatus | null> = {
-  '계획서 접수': null,
-  '계획서 승인': '계획서 접수',
-  '보고서 접수': '계획서 승인',
-  '보고서 담당승인': '보고서 접수',
-  '최종 승인': '보고서 담당승인',
-  '반려': null,
-};
+const DEPT_CERT_STATUSES = new Set<DeptStatus>(['신청 승인됨', '포스터 심사 중', '결과 보고서 검토 중', '최종 검토중']);
+function deptCertStatus(r: Pick<DeptProgramRecord, 'posterFile' | 'reportFile'>): DeptStatus {
+  const p = Boolean(r.posterFile);
+  const rep = Boolean(r.reportFile);
+  if (p && rep) return '최종 검토중';
+  if (p) return '포스터 심사 중';
+  if (rep) return '결과 보고서 검토 중';
+  return '신청 승인됨';
+}
 
 let seq = 1000;
 const nextId = (prefix: string) => `${prefix}${(seq += 1)}`;
@@ -112,7 +116,7 @@ function findRecord(state: RecordsState, id: string): AnyRecord | undefined {
 }
 
 const NOTIFY_ACTIONS = new Set([
-  'APPROVE_PLAN', 'APPROVE_REPORT_PROFESSOR', 'APPROVE_FINAL_HEAD', 'REJECT_DEPT',
+  'APPROVE_APPLICATION_PROFESSOR', 'APPROVE_APPLICATION_HEAD', 'APPROVE_FINAL_HEAD', 'REJECT_DEPT',
   'APPROVE_TOEIC_PROFESSOR', 'APPROVE_TOEIC_FINAL_HEAD', 'REJECT_TOEIC',
   'APPROVE_VOLUNTEER_PROFESSOR', 'APPROVE_VOLUNTEER_FINAL_HEAD', 'REJECT_VOLUNTEER',
 ]);
@@ -183,54 +187,71 @@ function coreReducer(state: RecordsState, action: Action): RecordsState {
       const rec: DeptProgramRecord = {
         ...action.payload,
         id: nextId('d'),
-        status: '계획서 접수',
+        status: '신청 완료',
         lastUpdate: now(),
-        history: [entry('계획서 접수', action.actor)],
+        history: [entry('신청 완료', action.actor)],
       };
       return { ...state, dept: [rec, ...state.dept] };
     }
-    case 'APPROVE_PLAN':
+    case 'APPROVE_APPLICATION_PROFESSOR':
       return mutDept(state, action.id, (r) =>
-        r.status === '계획서 접수'
-          ? { ...r, status: '계획서 승인', history: [...r.history, entry('계획서 승인', action.actor)] }
+        r.status === '신청 완료'
+          ? { ...r, status: '담당교수 승인', history: [...r.history, entry('담당교수 승인', action.actor)] }
+          : r,
+      );
+    case 'APPROVE_APPLICATION_HEAD':
+      return mutDept(state, action.id, (r) =>
+        r.status === '담당교수 승인'
+          ? { ...r, status: '신청 승인됨', history: [...r.history, entry('신청 승인됨', action.actor)] }
+          : r,
+      );
+    case 'UPLOAD_POSTER':
+      return mutDept(state, action.id, (r) =>
+        DEPT_CERT_STATUSES.has(r.status)
+          ? { ...r, posterFile: action.file, posterReviewed: false, status: deptCertStatus({ ...r, posterFile: action.file }), history: [...r.history, entry('포스터 업로드', action.actor)] }
           : r,
       );
     case 'SUBMIT_REPORT':
       return mutDept(state, action.id, (r) =>
-        r.status === '계획서 승인' || r.status === '반려'
-          ? { ...r, status: '보고서 접수', reportFile: action.file, posterSubmitted: false, history: [...r.history, entry('보고서 접수', action.actor)] }
+        DEPT_CERT_STATUSES.has(r.status)
+          ? { ...r, reportFile: action.file, reportReviewed: false, status: deptCertStatus({ ...r, reportFile: action.file }), history: [...r.history, entry('결과 보고서 제출', action.actor)] }
           : r,
       );
-    case 'SET_POSTER_SUBMITTED':
+    case 'REVIEW_POSTER_HEAD':
       return mutDept(state, action.id, (r) =>
-        r.status === '보고서 접수'
-          ? { ...r, posterSubmitted: action.checked, history: [...r.history, entry(action.checked ? '포스터 제출 확인' : '포스터 제출 확인 해제', action.actor)] }
+        r.posterFile && !r.posterReviewed && DEPT_CERT_STATUSES.has(r.status)
+          ? { ...r, posterReviewed: true, history: [...r.history, entry('포스터 심사 완료', action.actor)] }
           : r,
       );
-    case 'APPROVE_REPORT_PROFESSOR':
+    case 'REVIEW_REPORT_HEAD':
       return mutDept(state, action.id, (r) =>
-        r.status === '보고서 접수' && Boolean(r.posterSubmitted)
-          ? { ...r, status: '보고서 담당승인', professorComment: action.comment ?? r.professorComment, history: [...r.history, entry('보고서 담당승인', action.actor)] }
+        r.reportFile && !r.reportReviewed && DEPT_CERT_STATUSES.has(r.status)
+          ? { ...r, reportReviewed: true, history: [...r.history, entry('결과 보고서 심사 완료', action.actor)] }
           : r,
       );
     case 'APPROVE_FINAL_HEAD':
       return mutDept(state, action.id, (r) =>
-        r.status === '보고서 담당승인'
+        r.status === '최종 검토중' && r.posterReviewed && r.reportReviewed
           ? { ...r, status: '최종 승인', finalApprovalDate: nowDate(), history: [...r.history, entry('최종 승인', action.actor)] }
           : r,
       );
-    case 'REJECT_DEPT':
-      return mutDept(state, action.id, (r) => ({ ...r, status: '반려', history: [...r.history, entry('반려', action.actor, action.reason)] }));
+    case 'SAVE_DRAFT_DEPT':
+      return mutDept(state, action.id, (r) => ({ ...r, draftSavedAt: now(), history: [...r.history, entry('임시 저장', action.actor)] }));
+    case 'REJECT_DEPT': {
+      const rejectStatus: DeptStatus = action.actor.role === 'PROFESSOR' ? '(담당교수에게) 반려됨' : '(학과장에게) 반려됨';
+      return mutDept(state, action.id, (r) => ({ ...r, status: rejectStatus, history: [...r.history, entry(rejectStatus, action.actor, action.reason)] }));
+    }
     case 'CANCEL_DEPT':
-      return mutDept(state, action.id, (r) => {
-        if (r.status !== '최종 승인') return r;
-        const prev = DEPT_PREV[r.status];
-        if (!prev) return r;
-        return { ...r, status: prev, finalApprovalDate: '', history: [...r.history, entry(`최종 승인 취소 → ${prev}`, action.actor)] };
-      });
+      return mutDept(state, action.id, (r) =>
+        r.status === '최종 승인'
+          ? { ...r, status: '최종 검토중', finalApprovalDate: '', history: [...r.history, entry('최종 승인 취소 → 최종 검토중', action.actor)] }
+          : r,
+      );
     case 'RESUBMIT_DEPT':
       return mutDept(state, action.id, (r) =>
-        r.status === '반려' ? { ...r, status: '계획서 접수', finalApprovalDate: '', history: [...r.history, entry('재제출', action.actor)] } : r,
+        r.status === '(담당교수에게) 반려됨' || r.status === '(학과장에게) 반려됨'
+          ? { ...r, status: '신청 완료', finalApprovalDate: '', history: [...r.history, entry('재신청', action.actor)] }
+          : r,
       );
 
     case 'CREATE_TOEIC': {

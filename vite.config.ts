@@ -35,6 +35,16 @@ function hwpDevApi(): Plugin {
   };
 }
 
+const workflowLabPages = {
+  workflowLab: path.resolve(__dirname, 'workflow-lab/index.html'),
+  workflowLabDept: path.resolve(__dirname, 'workflow-lab/dept.html'),
+  workflowLabForm: path.resolve(__dirname, 'workflow-lab/form.html'),
+  workflowLabToeic: path.resolve(__dirname, 'workflow-lab/toeic.html'),
+  workflowLabVolunteer: path.resolve(__dirname, 'workflow-lab/volunteer.html'),
+  workflowLabLegacy: path.resolve(__dirname, 'workflow-lab/legacy.html'),
+  workflowLabBallpassing: path.resolve(__dirname, 'workflow-lab/ballpassing.html'),
+};
+
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss(), hwpDevApi()],
@@ -45,6 +55,10 @@ export default defineConfig(() => {
     },
     build: {
       rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, 'index.html'),
+          ...workflowLabPages,
+        },
         output: {
           manualChunks: {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],

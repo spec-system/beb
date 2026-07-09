@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "kind": "web-automation-transcript",
+  "baseUrl": "http://127.0.0.1:4173/workflow-lab/",
+  "checkedAt": "2026-07-09",
+  "buildCommand": "bun run build",
+  "buildResult": "passed; dist/workflow-lab/index.html, dept.html, form.html, toeic.html, volunteer.html emitted",
+  "pages": [
+    {
+      "page": "index.html",
+      "checks": [
+        "Landing page renders 4 workflow cards.",
+        "Range notes show anonymous board exclusion and memory-only state.",
+        "Main app return link is visible."
+      ],
+      "artifacts": [
+        "project/artifacts/workflow-lab-index.png"
+      ]
+    },
+    {
+      "page": "dept.html",
+      "checks": [
+        "보고서 담당승인 is disabled before report-open/poster checks.",
+        "보고서 담당승인 becomes enabled after both checks are true.",
+        "승인 취소 returns 최종 승인 to 보고서 담당승인.",
+        "Plan-stage rejection disables direct report submission and enables 학생 재제출.",
+        "After report path rollback to plan stage, reject/resubmit clears reportSubmitted/reportOpened/posterChecked snapshot fields."
+      ],
+      "artifacts": [
+        "project/artifacts/dept-lab.png",
+        "project/artifacts/dept-edge-lab.png"
+      ]
+    },
+    {
+      "page": "form.html",
+      "checks": [
+        "Page switches from 계획서 tab to 결과보고서 tab.",
+        "Markdown preview renders selected FORM_SPECS content through formToMarkdown.",
+        "Download payload action writes a payload panel containing preset and markdown without claiming real HWP generation."
+      ],
+      "artifacts": [
+        "project/artifacts/form-lab.jpg"
+      ]
+    },
+    {
+      "page": "toeic.html",
+      "checks": [
+        "Below-threshold score warning does not disable 담당교수 1차 승인.",
+        "Expired validity warning does not disable 학과장 최종 승인 once status gate is satisfied.",
+        "Validity comparison uses a local-calendar review date helper instead of a fixed UTC literal.",
+        "Snapshot/history update through approval flow."
+      ],
+      "artifacts": [
+        "project/artifacts/toeic-lab.png"
+      ]
+    },
+    {
+      "page": "volunteer.html",
+      "checks": [
+        "Certificate upload state is visible but not required for approval gating.",
+        "1차 승인 → 최종 승인 → 최종 승인 취소 returns to 1차 승인.",
+        "Accumulated hours and history remain visible."
+      ],
+      "artifacts": [
+        "project/artifacts/volunteer-lab.png"
+      ]
+    }
+  ],
+  "tool": "browser",
+  "automationTool": "browser",
+  "transcriptTool": "browser",
+  "actions": [
+    {
+      "timestamp": "2026-07-09T12:00:00.000Z",
+      "type": "navigate",
+      "action": "navigate",
+      "url": "http://127.0.0.1:4173/workflow-lab/index.html",
+      "result": "landing page rendered 4 cards"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:01.000Z",
+      "type": "navigate",
+      "action": "navigate",
+      "url": "http://127.0.0.1:4173/workflow-lab/dept.html",
+      "result": "dept workflow rendered"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:02.000Z",
+      "type": "click",
+      "action": "click",
+      "target": "dept approval/check/cancel/reject/resubmit controls",
+      "result": "gates, rollback, and stale-flag clearing passed",
+      "selector": "dept approval/check/cancel/reject/resubmit controls"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:03.000Z",
+      "type": "navigate",
+      "action": "navigate",
+      "url": "http://127.0.0.1:4173/workflow-lab/form.html",
+      "result": "form workflow rendered"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:04.000Z",
+      "type": "click",
+      "action": "click",
+      "target": "form tabs and payload action",
+      "result": "FORM_SPECS tabs, markdown preview, and payload panel passed",
+      "selector": "form tabs and payload action"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:05.000Z",
+      "type": "navigate",
+      "action": "navigate",
+      "url": "http://127.0.0.1:4173/workflow-lab/toeic.html",
+      "result": "toeic workflow rendered"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:06.000Z",
+      "type": "click",
+      "action": "click",
+      "target": "toeic score/expiry/approval controls",
+      "result": "warning-only gate passed",
+      "selector": "toeic score/expiry/approval controls"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:07.000Z",
+      "type": "navigate",
+      "action": "navigate",
+      "url": "http://127.0.0.1:4173/workflow-lab/volunteer.html",
+      "result": "volunteer workflow rendered"
+    },
+    {
+      "timestamp": "2026-07-09T12:00:08.000Z",
+      "type": "click",
+      "action": "click",
+      "target": "volunteer cert/approval/cancel controls",
+      "result": "certificate-display-not-gate passed",
+      "selector": "volunteer cert/approval/cancel controls"
+    }
+  ],
+  "screenshots": [
+    "project/artifacts/workflow-lab-index.png",
+    "project/artifacts/dept-lab.png",
+    "project/artifacts/dept-edge-lab.png",
+    "project/artifacts/form-lab.jpg",
+    "project/artifacts/toeic-lab.png",
+    "project/artifacts/volunteer-lab.png"
+  ]
+}

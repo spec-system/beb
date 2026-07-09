@@ -25,19 +25,17 @@ export default function PendingTasksPanel() {
 
     if (user.role === 'PROFESSOR') {
       const assigned = (r: AnyRecord) => isAssignedProfessor(user, r);
-      const deptPlan = state.dept.filter((r) => assigned(r) && r.status === '계획서 접수').length;
-      const deptReport = state.dept.filter((r) => assigned(r) && r.status === '보고서 접수').length;
+      const deptApp = state.dept.filter((r) => assigned(r) && r.status === '신청 완료').length;
       const toeic = state.toeic.filter((r) => assigned(r) && r.status === '접수').length;
       const vol = state.volunteer.filter((r) => assigned(r) && r.status === '접수').length;
-      list.push({ key: 'dept-plan', label: '계획서 1차 승인 대기', count: deptPlan, to: '/dept' });
-      list.push({ key: 'dept-report', label: '보고서 담당승인 대기', count: deptReport, to: '/dept' });
+      list.push({ key: 'dept-app', label: '신청서 담당 승인 대기', count: deptApp, to: '/dept' });
       list.push({ key: 'toeic', label: '토익 1차 승인 대기', count: toeic, to: '/toeic' });
       list.push({ key: 'vol', label: '봉사 1차 승인 대기', count: vol, to: '/volunteer' });
     } else if (user.role === 'HEAD') {
-      const deptFinal = state.dept.filter((r) => r.status === '보고서 담당승인').length;
+      const deptFinal = state.dept.filter((r) => ['담당교수 승인', '포스터 심사 중', '결과 보고서 검토 중', '최종 검토중'].includes(r.status)).length;
       const toeic = state.toeic.filter((r) => r.status === '1차 승인').length;
       const vol = state.volunteer.filter((r) => r.status === '1차 승인').length;
-      list.push({ key: 'dept-final', label: '학과장 최종승인 대기', count: deptFinal, to: '/dept' });
+      list.push({ key: 'dept-final', label: '학과장 승인·심사 대기', count: deptFinal, to: '/dept' });
       list.push({ key: 'toeic', label: '토익 최종승인 대기', count: toeic, to: '/toeic' });
       list.push({ key: 'vol', label: '봉사 최종승인 대기', count: vol, to: '/volunteer' });
     } else if (user.role === 'STAFF') {

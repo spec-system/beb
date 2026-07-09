@@ -178,7 +178,7 @@ function recordFieldRows(record: DocumentRecord, kind: DocumentKind, signature?:
       { label: '팀 구성원', value: fmt(record.teamMembers.map((m) => `${m.name}(${m.studentId})`).join(', ')) },
       { label: '계획서', value: fmt(record.plan) },
       { label: '보고서 파일', value: fmt(record.reportFile?.name) },
-      { label: '포스터 확인', value: record.posterSubmitted ? '제출' : '미제출' },
+      { label: '포스터 파일', value: record.posterFile ? '제출' : '미제출' },
     );
   } else {
     rows.push(

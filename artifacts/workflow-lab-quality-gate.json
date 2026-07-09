@@ -1,0 +1,308 @@
+{
+  "architectReview": {
+    "architectureStatus": "CLEAR",
+    "productStatus": "CLEAR",
+    "codeStatus": "CLEAR",
+    "recommendation": "APPROVE",
+    "evidence": "Final architect review agent://13-ArchFinalWorkflowLab reports no blockers. Standalone multipage Vite structure, memory-only lab state, form direct reuse, dept edge fix, form preview-only labeling, and TOEIC local-calendar helper are approved.",
+    "commands": [
+      "architect subagent review: agent://13-ArchFinalWorkflowLab"
+    ],
+    "blockers": []
+  },
+  "executorQa": {
+    "status": "passed",
+    "e2eStatus": "passed",
+    "redTeamStatus": "passed",
+    "evidence": "Executor QA/red-team agent://14-QAWorkflowLab passed all contract coverage and adversarial cases. Browser automation exercised index/dept/form/toeic/volunteer pages and saved screenshots/transcript artifacts.",
+    "e2eCommands": [
+      "browser automation against http://127.0.0.1:4173/workflow-lab/*.html",
+      "bun run build"
+    ],
+    "redTeamCommands": [
+      "executor subagent QA/red-team: agent://14-QAWorkflowLab"
+    ],
+    "artifactRefs": [
+      {
+        "id": "browser-transcript",
+        "kind": "web-browser-automation-transcript",
+        "path": "project/artifacts/workflow-lab-browser-check.json",
+        "description": "Workflow-lab browser automation transcript and per-page checks",
+        "tool": "browser",
+        "surface": "web"
+      },
+      {
+        "id": "index-screenshot",
+        "kind": "web-screenshot",
+        "path": "project/artifacts/workflow-lab-index.png",
+        "description": "Landing page screenshot"
+      },
+      {
+        "id": "dept-screenshot",
+        "kind": "web-screenshot",
+        "path": "project/artifacts/dept-lab.png",
+        "description": "Department workflow approval path screenshot"
+      },
+      {
+        "id": "dept-edge-screenshot",
+        "kind": "web-screenshot",
+        "path": "project/artifacts/dept-edge-lab.png",
+        "description": "Department rejection/resubmit edge path screenshot"
+      },
+      {
+        "id": "form-screenshot",
+        "kind": "web-screenshot",
+        "path": "project/artifacts/form-lab.jpg",
+        "description": "Form preview/payload workflow screenshot"
+      },
+      {
+        "id": "toeic-screenshot",
+        "kind": "web-screenshot",
+        "path": "project/artifacts/toeic-lab.png",
+        "description": "TOEIC workflow screenshot"
+      },
+      {
+        "id": "volunteer-screenshot",
+        "kind": "web-screenshot",
+        "path": "project/artifacts/volunteer-lab.png",
+        "description": "Volunteer workflow screenshot"
+      }
+    ],
+    "contractCoverage": [
+      {
+        "id": "C001",
+        "contractRef": "standalone-workflow-lab-pages",
+        "obligation": "Vite emits index plus four workflow HTML pages",
+        "status": "covered",
+        "surfaceEvidenceRefs": [
+          "S001"
+        ],
+        "adversarialCaseRefs": [
+          "A001"
+        ]
+      },
+      {
+        "id": "C002",
+        "contractRef": "form-direct-reuse",
+        "obligation": "Form lab imports FORM_SPECS and formToMarkdown from src/utils/planForm",
+        "status": "covered",
+        "surfaceEvidenceRefs": [
+          "S002"
+        ],
+        "adversarialCaseRefs": [
+          "A002"
+        ]
+      },
+      {
+        "id": "C003",
+        "contractRef": "dept-workflow-gates",
+        "obligation": "Dept lab gates report approval on report-open and poster check and clears stale fields on plan-stage resubmit",
+        "status": "covered",
+        "surfaceEvidenceRefs": [
+          "S003"
+        ],
+        "adversarialCaseRefs": [
+          "A003",
+          "A004"
+        ]
+      },
+      {
+        "id": "C004",
+        "contractRef": "toeic-warning-only-gate",
+        "obligation": "TOEIC score/expiry warnings do not disable status/role-gated approvals",
+        "status": "covered",
+        "surfaceEvidenceRefs": [
+          "S004"
+        ],
+        "adversarialCaseRefs": [
+          "A005"
+        ]
+      },
+      {
+        "id": "C005",
+        "contractRef": "volunteer-certificate-display",
+        "obligation": "Volunteer certificate upload is visible but not an approval gate",
+        "status": "covered",
+        "surfaceEvidenceRefs": [
+          "S005"
+        ],
+        "adversarialCaseRefs": [
+          "A006"
+        ]
+      },
+      {
+        "id": "C006",
+        "contractRef": "memory-only-lab-state",
+        "obligation": "Workflow-lab state is in-memory only and isolated from main app store",
+        "status": "covered",
+        "surfaceEvidenceRefs": [
+          "S006"
+        ],
+        "adversarialCaseRefs": [
+          "A007"
+        ]
+      }
+    ],
+    "surfaceEvidence": [
+      {
+        "id": "S001",
+        "contractRef": "standalone-workflow-lab-pages",
+        "surface": "web",
+        "invocation": "bun run build emitted dist/workflow-lab/index.html, dept.html, form.html, toeic.html, volunteer.html and browser opened landing page",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "index-screenshot"
+        ]
+      },
+      {
+        "id": "S002",
+        "contractRef": "form-direct-reuse",
+        "surface": "web",
+        "invocation": "form.html tab switch and payload preview browser automation",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "form-screenshot"
+        ]
+      },
+      {
+        "id": "S003",
+        "contractRef": "dept-workflow-gates",
+        "surface": "web",
+        "invocation": "dept.html approval gate and edge rejection/resubmit browser automation",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "dept-screenshot",
+          "dept-edge-screenshot"
+        ]
+      },
+      {
+        "id": "S004",
+        "contractRef": "toeic-warning-only-gate",
+        "surface": "web",
+        "invocation": "toeic.html under-score and expired-validity browser automation",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "toeic-screenshot"
+        ]
+      },
+      {
+        "id": "S005",
+        "contractRef": "volunteer-certificate-display",
+        "surface": "web",
+        "invocation": "volunteer.html certificate-display and approval/cancel browser automation",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "volunteer-screenshot"
+        ]
+      },
+      {
+        "id": "S006",
+        "contractRef": "memory-only-lab-state",
+        "surface": "web",
+        "invocation": "source inspection of core.ts memory state and browser evidence of reset-on-refresh note",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "index-screenshot"
+        ]
+      }
+    ],
+    "adversarialCases": [
+      {
+        "id": "A001",
+        "contractRef": "standalone-workflow-lab-pages",
+        "scenario": "Missing workflow HTML after build",
+        "expectedBehavior": "All five workflow-lab HTML files are emitted",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "index-screenshot"
+        ]
+      },
+      {
+        "id": "A002",
+        "contractRef": "form-direct-reuse",
+        "scenario": "Form tab change should use canonical spec and serializer",
+        "expectedBehavior": "Preview and payload reflect formToMarkdown over selected FORM_SPECS entry",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "form-screenshot"
+        ]
+      },
+      {
+        "id": "A003",
+        "contractRef": "dept-workflow-gates",
+        "scenario": "Attempt report approval before report-open/poster checks",
+        "expectedBehavior": "보고서 담당승인 stays disabled until both checks are true",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "dept-screenshot"
+        ]
+      },
+      {
+        "id": "A004",
+        "contractRef": "dept-workflow-gates",
+        "scenario": "Plan-stage rejection attempts direct report submission or carries stale report flags",
+        "expectedBehavior": "Direct report submission is disabled and plan-stage resubmit clears report flags",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "dept-edge-screenshot"
+        ]
+      },
+      {
+        "id": "A005",
+        "contractRef": "toeic-warning-only-gate",
+        "scenario": "Under-score or expired TOEIC values try approval",
+        "expectedBehavior": "Warnings render but approval remains controlled only by status/role",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "toeic-screenshot"
+        ]
+      },
+      {
+        "id": "A006",
+        "contractRef": "volunteer-certificate-display",
+        "scenario": "Approval without certificate upload",
+        "expectedBehavior": "Approval gate ignores certificate presence and follows status/role",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "volunteer-screenshot"
+        ]
+      },
+      {
+        "id": "A007",
+        "contractRef": "memory-only-lab-state",
+        "scenario": "Lab state persistence leak",
+        "expectedBehavior": "No localStorage/sessionStorage/network persistence for lab state",
+        "verdict": "passed",
+        "artifactRefs": [
+          "browser-transcript",
+          "index-screenshot"
+        ]
+      }
+    ],
+    "blockers": []
+  },
+  "iteration": {
+    "status": "passed",
+    "evidence": "Initial architect findings were fixed, build reran cleanly, browser edge checks passed, final architect review approved, and executor QA/red-team passed with no blockers.",
+    "fullRerun": true,
+    "rerunCommands": [
+      "bun run build",
+      "browser automation against workflow-lab pages",
+      "architect review agent://13-ArchFinalWorkflowLab",
+      "executor QA/red-team agent://14-QAWorkflowLab"
+    ],
+    "blockers": []
+  }
+}

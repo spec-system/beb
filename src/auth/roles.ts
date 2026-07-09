@@ -46,8 +46,13 @@ export type ActionKind =
   | 'create'
   | 'edit'
   | 'submit_report'
-  | 'approve_plan'
-  | 'approve_report'
+  | 'approve_application'
+  | 'approve_application_head'
+  | 'upload_poster'
+  | 'review_poster'
+  | 'review_report'
+  | 'save_draft'
+  | 'resubmit'
   | 'approve_first'
   | 'approve_final'
   | 'approve_simple'
@@ -65,11 +70,17 @@ export function can(user: User, action: ActionKind, record?: AnyRecord): boolean
       return user.role === 'STUDENT';
     case 'edit':
     case 'submit_report':
+    case 'upload_poster':
+    case 'save_draft':
+    case 'resubmit':
       return ownEditable;
-    case 'approve_plan':
-    case 'approve_report':
+    case 'approve_application':
     case 'approve_first':
       return assigned;
+    case 'approve_application_head':
+    case 'review_poster':
+    case 'review_report':
+      return user.role === 'HEAD';
     case 'approve_final':
     case 'approve_simple':
       return user.role === 'HEAD';
