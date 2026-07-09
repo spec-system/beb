@@ -41,11 +41,10 @@ const CARDS: Card[] = [
 ];
 
 function build(): HTMLElement {
-  const marquee = document.createElement('marquee');
-  marquee.setAttribute('scrollamount', '3');
-  marquee.className = 'bg-black text-[#00ff00] border border-[#00ff00] p-1 font-mono text-[11px] block';
-  marquee.textContent =
-    '★★ [검사 랩] 본 화면은 삼육대학교 약학대학 비교과 통합행정 포탈의 업무 흐름을 로그인 없이 PPT처럼 시연하는 검사용 사본입니다. 실제 데이터는 변경되지 않습니다 ★★';
+  const banner = el('div', { className: 'portal-banner' }, [
+    el('span', { className: 'portal-banner-pill', text: '검사 랩' }),
+    el('span', { text: '삼육대학교 약학대학 비교과 통합행정 포탈의 업무 흐름을 로그인 없이 시연하는 검사용 사본입니다. 실제 데이터는 변경되지 않습니다.' }),
+  ]);
 
   const cards = el(
     'div',
@@ -63,9 +62,9 @@ function build(): HTMLElement {
       el('h1', { className: 'text-sm font-black text-[#1a251e] tracking-tight', text: 'SU-WINGs 비교과 통합행정 포탈 · 워크플로우 검사 랩' }),
       el('p', { className: 'text-[10px] text-slate-500 font-bold mt-1', text: '[삼육대학교 약학대학]' }),
     ]),
-    marquee,
-    el('div', { className: 'border border-[#b23b3b] p-2.5 text-[11px] text-[#b23b3b] bg-[#fff5f5] leading-normal font-bold' }, [
-      el('strong', { text: '[안내] ' }),
+    banner,
+    el('div', { className: 'portal-guide' }, [
+      el('strong', { text: '안내 ' }),
       '아래 6개 업무 카드를 열면 각 흐름이 실제 화면 그대로, 담당자 계정을 전환하며 한 단계씩 진행됩니다. 방향키(←/→) 또는 하단 버튼으로 슬라이드를 넘기세요.',
     ]),
     cards,
@@ -74,7 +73,7 @@ function build(): HTMLElement {
     ]),
   ]);
 
-  return el('div', { className: 'min-h-screen flex items-center justify-center bg-[#e9ecef] px-4 py-8 font-mono select-none' }, [box]);
+  return el('div', { className: 'portal-shell min-h-screen flex items-center justify-center px-4 py-8 font-sans select-none' }, [box]);
 }
 
 const root = document.getElementById('deck-root') ?? document.body;

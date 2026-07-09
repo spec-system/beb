@@ -550,3 +550,135 @@ input:focus, select:focus, textarea:focus, button:focus, summary:focus, a:focus 
   88% { opacity: 0.45; }
   90% { opacity: 0.95; }
 }
+
+/* Workflow Lab modern skin ordering guard.
+   Vite can reorder extracted CSS chunks; keep the high-specificity visual overrides here too. */
+body .portal-shell .portal-card,
+body .portal-shell > div,
+body .portal-banner,
+body .portal-guide,
+body .deck-shell .win7-window,
+body .deck-shell .win7-btn,
+body .deck-shell input,
+body .deck-shell select,
+body .deck-shell textarea,
+body .deck-shell .stamp-badge,
+body .deck-shell .su-tree-item,
+body .deck-shell .su-tab,
+body .deck-shell .su-tab-active,
+body .deck-shell .su-header-tab-active,
+body .deck-shell .su-btn-gray,
+body .deck-shell .win7-close-btn,
+body .deck-shell .deck-dot {
+  border-radius: var(--modern-radius, 14px) !important;
+}
+
+body .portal-shell > div {
+  border-radius: 24px !important;
+  box-shadow: 0 24px 60px rgba(15, 47, 104, 0.16) !important;
+}
+
+body .portal-shell .portal-card {
+  border-radius: 18px !important;
+  box-shadow: 0 10px 28px rgba(15, 47, 104, 0.08) !important;
+}
+
+body .portal-shell .portal-card:hover {
+  box-shadow: 0 18px 36px rgba(15, 47, 104, 0.14) !important;
+}
+
+body .deck-shell .win7-window {
+  border-radius: 18px !important;
+  box-shadow: 0 18px 42px rgba(15, 47, 104, 0.14) !important;
+}
+
+body .deck-shell .win7-titlebar,
+body .deck-shell .win7-titlebar-mil {
+  border-radius: 18px 18px 0 0 !important;
+}
+
+body .deck-shell .win7-close-btn,
+body .deck-shell .deck-dot,
+body .deck-shell .deck-actor-chip,
+body .deck-shell .su-notice-pill,
+body .portal-banner-pill,
+body .deck-shell .stamp-badge {
+  border-radius: 999px !important;
+}
+
+body .deck-shell .su-tab,
+body .deck-shell .su-tab-active {
+  border-radius: 14px 14px 0 0 !important;
+}
+
+body .deck-shell .su-grid-table,
+body .deck-shell .mil-table,
+body .deck-shell .su-form-table {
+  border-radius: 14px !important;
+}
+
+@layer base {
+  body .portal-shell .portal-card,
+  body .portal-shell > div,
+  body .portal-banner,
+  body .portal-guide,
+  body .deck-shell .win7-window,
+  body .deck-shell .win7-btn,
+  body .deck-shell input,
+  body .deck-shell select,
+  body .deck-shell textarea,
+  body .deck-shell .stamp-badge,
+  body .deck-shell .su-tree-item,
+  body .deck-shell .su-tab,
+  body .deck-shell .su-tab-active,
+  body .deck-shell .su-header-tab-active,
+  body .deck-shell .su-btn-gray,
+  body .deck-shell .win7-close-btn,
+  body .deck-shell .deck-dot {
+    border-radius: var(--modern-radius, 14px) !important;
+  }
+
+  body .portal-shell > div {
+    border-radius: 24px !important;
+    box-shadow: 0 24px 60px rgba(15, 47, 104, 0.16) !important;
+  }
+
+  body .portal-shell .portal-card {
+    border-radius: 18px !important;
+    box-shadow: 0 10px 28px rgba(15, 47, 104, 0.08) !important;
+  }
+
+  body .portal-shell .portal-card:hover {
+    box-shadow: 0 18px 36px rgba(15, 47, 104, 0.14) !important;
+  }
+
+  body .deck-shell .win7-window {
+    border-radius: 18px !important;
+    box-shadow: 0 18px 42px rgba(15, 47, 104, 0.14) !important;
+  }
+
+  body .deck-shell .win7-titlebar,
+  body .deck-shell .win7-titlebar-mil {
+    border-radius: 18px 18px 0 0 !important;
+  }
+
+  body .deck-shell .win7-close-btn,
+  body .deck-shell .deck-dot,
+  body .deck-shell .deck-actor-chip,
+  body .deck-shell .su-notice-pill,
+  body .portal-banner-pill,
+  body .deck-shell .stamp-badge {
+    border-radius: 999px !important;
+  }
+
+  body .deck-shell .su-tab,
+  body .deck-shell .su-tab-active {
+    border-radius: 14px 14px 0 0 !important;
+  }
+
+  body .deck-shell .su-grid-table,
+  body .deck-shell .mil-table,
+  body .deck-shell .su-form-table {
+    border-radius: 14px !important;
+  }
+}

@@ -271,14 +271,9 @@ function tabBar(activeMenu: string): HTMLElement {
 }
 
 function urgentMarquee(): HTMLElement {
-  const m = document.createElement('marquee');
-  m.setAttribute('scrollamount', '2.5');
-  m.className = 'w-full text-[#b23b3b] font-bold text-xs';
-  m.textContent =
-    '[제출 마감] 2026학년도 비교과 결과보고서 최종 제출 마감 기한 엄수 바랍니다!!! 학과 사무실 공지사항 참조 요망!!! 전산 정보 점검 실시 예정!!!';
-  return el('div', { className: 'bg-yellow-100 border-b border-[#adadad] px-3 py-1.5 shrink-0 flex items-center gap-2' }, [
-    el('span', { className: 'flash-warning shrink-0 text-xs font-bold', text: '◆ 긴급 지침 ◆' }),
-    m,
+  return el('div', { className: 'su-notice-banner shrink-0' }, [
+    el('span', { className: 'su-notice-pill', text: '공지' }),
+    el('span', { className: 'su-notice-text', text: '2026학년도 비교과 결과보고서 최종 제출 마감 기한을 확인해 주세요. 학과 사무실 공지사항 및 전산 점검 일정을 참고 바랍니다.' }),
   ]);
 }
 
