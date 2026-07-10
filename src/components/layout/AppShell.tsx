@@ -83,7 +83,7 @@ export default function AppShell() {
       <header className="h-10 border-b border-[#adadad] bg-white flex items-center justify-between px-4 shrink-0 text-[11px] font-mono">
         <div className="flex items-center gap-6">
           {/* 로고 */}
-          <span className="text-[#10489c] font-black italic text-base tracking-tighter cursor-pointer">SU-WINGs</span>
+          <span className="text-[#10489c] font-black italic text-base tracking-tighter cursor-pointer">SPECs</span>
         </div>
       </header>
 
