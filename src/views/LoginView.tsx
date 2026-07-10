@@ -86,6 +86,13 @@ export default function LoginView() {
               );
             })}
           </div>
+        {/* Workflow Lab 진입 버튼 */}
+        <a
+          href="/workflow-lab/"
+          className="block text-center border border-[#222222] bg-[#1a251e] text-white p-2 hover:bg-[#2d3a2f] transition-colors text-[11px] font-black tracking-tight cursor-pointer"
+        >
+          📋 Workflow Lab (화면구성 시뮬레이터) 바로가기 →
+        </a>
         </div>
       </div>
     </div>
