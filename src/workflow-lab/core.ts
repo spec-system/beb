@@ -227,7 +227,7 @@ export function checkboxRow(label: string, checked: boolean, disabled: boolean, 
    ========================================================= */
 function topWhiteBar(): HTMLElement {
   return el('header', { className: 'h-10 border-b border-[#adadad] bg-white flex items-center px-4 shrink-0 text-[11px]' }, [
-    el('span', { className: 'text-[#10489c] font-black italic text-base tracking-tighter', text: 'SU-WINGs' }),
+    el('span', { className: 'text-[#10489c] font-black italic text-base tracking-tighter', text: 'SPECs' }),
   ]);
 }
 

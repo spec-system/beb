@@ -49,7 +49,7 @@ function build(): HTMLElement {
 
   const box = el('div', { className: 'w-full max-w-3xl flex flex-col gap-4 border border-[#222222] bg-white p-6' }, [
     el('div', { className: 'text-center border-b border-[#222222] pb-3' }, [
-      el('h1', { className: 'text-sm font-black text-[#1a251e] tracking-tight', text: 'SU-WINGs 비교과 통합행정 포탈 · 워크플로우 검사 랩' }),
+      el('h1', { className: 'text-sm font-black text-[#1a251e] tracking-tight', text: 'SPECs 비교과 통합행정 포탈 · 워크플로우 검사 랩' }),
       el('p', { className: 'text-[10px] text-slate-500 font-bold mt-1', text: '[삼육대학교 약학대학]' }),
     ]),
     banner,
