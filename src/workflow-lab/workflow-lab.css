@@ -321,9 +321,9 @@
   border-radius: 999px !important;
   background: var(--su-blue-800) !important;
   padding: 12px 28px !important;
-}
   font-size: 36px !important;
   line-height: 1.2;
+}
 .role-identity {
   display: inline-flex;
   align-items: center;
