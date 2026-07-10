@@ -80,7 +80,7 @@ export default function LoginView() {
                   onClick={() => quick(u.id, u.pw)}
                   className="text-left border border-[#cccccc] bg-[#f8f9fa] p-2 hover:bg-[#e9ecef] cursor-pointer"
                 >
-                  <span className="block text-[11px] font-black text-slate-800">{academicRole}: {u.name}</span>
+                  <span className="block text-[11px] font-black text-slate-800">{academicRole}</span>
                   <span className="block text-[10px] text-slate-500 font-mono">{u.id}</span>
                 </button>
               );
