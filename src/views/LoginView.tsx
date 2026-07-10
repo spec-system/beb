@@ -34,7 +34,7 @@ export default function LoginView() {
       <div className="w-full max-w-sm flex flex-col gap-4 border border-[#222222] bg-[#ffffff] p-6">
         <div className="text-center border-b border-[#222222] pb-3">
           <h1 className="text-sm font-black text-[#1a251e] tracking-tight">
-            SU-WINGs 비교과 통합행정 포탈
+            SPECs 비교과 통합행정 포탈
           </h1>
           <p className="text-[10px] text-slate-500 font-bold mt-1">
             [삼육대학교 약학대학]
