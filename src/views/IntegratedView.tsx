@@ -467,8 +467,8 @@ export default function IntegratedView() {
       {msgOpen && user && <MessageModal user={user} onClose={() => setMsgOpen(false)} />}
 
       {/* SU-WINGs 연청색 격자형 조회 조건 테이블 */}
-      <div className="border border-[#a6b9d0] mb-3">
-        <table className="su-form-table">
+      <div className="integrated-filter-panel border border-[#a6b9d0] mb-3">
+        <table className="su-form-table integrated-filter-table">
           <tbody>
             <tr>
               <th className="su-required">학년</th>

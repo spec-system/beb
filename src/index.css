@@ -1003,3 +1003,19 @@ tbody tr:hover td {
 }
 .bg-amber-50 { background: #f4f5f6 !important; }
 .border-amber-200 { border-color: #d4d4d8 !important; }
+
+/* 통합조회 필터 토글은 테이블 경계를 넘어 항상 위에 표시한다. */
+.integrated-filter-panel,
+.integrated-filter-table {
+  overflow: visible !important;
+}
+
+.integrated-filter-panel {
+  position: relative;
+  z-index: 30;
+}
+
+.integrated-filter-panel details[open] {
+  position: relative;
+  z-index: 1000 !important;
+}
