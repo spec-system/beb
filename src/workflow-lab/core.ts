@@ -20,13 +20,6 @@ const ROLE_ICON: Record<Role, string> = {
   STAFF: '🏢',
 };
 
-// 실제 seed.ts USERS 기준 계정 매핑
-export const ROLE_USER: Record<Role, { name: string; account: string }> = {
-  STUDENT: { name: '김민준', account: '20231234' },
-  PROFESSOR: { name: '박서준', account: 'professor' },
-  HEAD: { name: '이현우', account: 'head' },
-  STAFF: { name: '최은지', account: 'staff' },
-};
 
 // 실제 AppShell roleNav 를 축약해 재현한 좌측 트리 메뉴
 const ROLE_NAV: Record<Role, string[]> = {
@@ -239,13 +232,12 @@ function topWhiteBar(): HTMLElement {
 }
 
 function blueBar(actor: Role): HTMLElement {
-  const u = ROLE_USER[actor];
   return el('header', { className: 'su-header-blue h-11 flex items-center justify-between px-4 shrink-0 text-[11px]' }, [
     el('div', { className: 'flex items-end h-full' }, [
       el('div', { className: 'su-header-tab-active px-4 py-2 text-xs', text: '서비스' }),
     ]),
     el('div', { className: 'flex items-center gap-3 text-white' }, [
-      el('span', { className: 'font-semibold text-xs', text: `${u.name} · ${u.account}` }),
+      el('span', { className: 'font-semibold text-xs', text: ROLE_LABEL[actor] }),
       el('span', { className: 'role-identity', text: `${ROLE_ICON[actor]} ${ROLE_LABEL[actor]}` }),
       el('span', { className: 'su-btn-gray font-bold', text: '알림' }),
       el('span', { className: 'su-btn-gray font-bold', text: '로그아웃' }),
