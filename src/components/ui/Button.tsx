@@ -24,6 +24,7 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 export default function Button({ variant = 'primary', size = 'md', className = '', children, ...rest }: Props) {
   return (
     <button
+      type="button"
       {...rest}
       className={`inline-flex items-center justify-center gap-1.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none ${VARIANT[variant]} ${SIZE[size]} ${className}`}
     >
