@@ -9,7 +9,7 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import HistoryList from '../components/HistoryList';
-import { Eye, Gamepad2, Rocket } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { Table, THead, Th, Td, TableEmpty } from '../components/ui/Table';
 import { FieldGroup, Input, Select, Textarea } from '../components/ui/Field';
 import { matchText } from '../utils/filters';
@@ -183,32 +183,7 @@ function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }
     </button>
   );
 }
-function StudentGalagaShortcut() {
-  return (
-    <Link
-      to="/galaga"
-      className="group mb-3 flex items-center justify-between gap-4 overflow-hidden rounded border border-slate-800 bg-slate-950 px-4 py-3 text-slate-100 shadow-sm transition-all hover:border-sky-400 hover:shadow-[0_0_24px_rgba(56,189,248,0.18)]"
-    >
-      <div className="flex items-center gap-3">
-        <div className="relative flex h-10 w-10 items-center justify-center rounded bg-sky-500/10 text-sky-300 ring-1 ring-sky-400/30">
-          <Gamepad2 size={21} />
-          <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.9)]" />
-        </div>
-        <div>
-          <div className="flex items-center gap-2 text-[12px] font-black tracking-wide text-sky-200">
-            갈러그 미니게임
-            <span className="rounded-full border border-sky-400/30 px-1.5 py-0.5 text-[9px] font-bold text-sky-300">학생 전용</span>
-          </div>
-          <p className="mt-0.5 text-[10px] text-slate-400">잠깐 쉬면서 외계 편대를 격추하고 최고 점수를 갱신해보세요.</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 transition-transform group-hover:translate-x-1 group-hover:text-sky-200">
-        PLAY
-        <Rocket size={14} />
-      </div>
-    </Link>
-  );
-}
+
 
 function GraduationCalculator({ user }: { user: User }) {
   const [now, setNow] = useState(new Date());
@@ -254,27 +229,19 @@ function GraduationCalculator({ user }: { user: User }) {
   const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
   const remainingDays = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
 
-  // 약대 6년제 학년별 상태 이름 (학생 맞춤형 호칭)
-  let academicStatus = '약대생';
+  let academicStatus = '재학생';
   if (isGraduated) {
-    academicStatus = '약사님';
+    academicStatus = '졸업생';
   } else if (grade) {
-    if (grade.includes('1학년')) academicStatus = '새내기';
-    else if (grade.includes('2학년')) academicStatus = '헌내기';
-    else if (grade.includes('3학년')) academicStatus = '사망년';
-    else if (grade.includes('4학년')) academicStatus = '고인물';
-    else if (grade.includes('5학년')) academicStatus = '예비실습생';
-    else if (grade.includes('6학년')) academicStatus = '국시생';
-    else academicStatus = '화석';
+    if (grade.includes('1학년')) academicStatus = '1학년';
+    else if (grade.includes('2학년')) academicStatus = '2학년';
+    else if (grade.includes('3학년')) academicStatus = '3학년';
+    else if (grade.includes('4학년')) academicStatus = '4학년';
+    else if (grade.includes('5학년')) academicStatus = '5학년';
+    else if (grade.includes('6학년')) academicStatus = '6학년';
   } else {
     const diffYears = now.getFullYear() - startYear;
-    if (diffYears === 0) academicStatus = '새내기';
-    else if (diffYears === 1) academicStatus = '헌내기';
-    else if (diffYears === 2) academicStatus = '사망년';
-    else if (diffYears === 3) academicStatus = '고인물';
-    else if (diffYears === 4) academicStatus = '예비실습생';
-    else if (diffYears === 5) academicStatus = '국시생';
-    else academicStatus = '화석';
+    academicStatus = `${Math.min(Math.max(diffYears + 1, 1), 6)}학년`;
   }
 
   // 개월차 계산
@@ -288,43 +255,13 @@ function GraduationCalculator({ user }: { user: User }) {
   const minutes = Math.floor((diff / (1000 * 60)) % 60);
   const seconds = Math.floor((diff / 1000) % 60);
 
-  // 약대생 학년별 메시지 및 이모지
-  let statusEmoji = '🐻';
+  let statusEmoji = 'SY';
   let speechBubble = '';
   if (isGraduated) {
-    statusEmoji = '🎓🐻✨';
-    speechBubble = '빛나는 졸업과 약사 면허 취득을 진심으로 축하합니다! 자랑스러운 삼육대 출신 약사로서 세상을 따뜻하게 치유해주세요! 🎉';
+    statusEmoji = 'OK';
+    speechBubble = '졸업과 약사 면허 취득을 축하합니다. 앞으로의 활동을 응원합니다.';
   } else {
-    switch (academicStatus) {
-      case '새내기':
-        statusEmoji = '🐣👶';
-        speechBubble = '풋풋한 약대 새내기(1학년) 시절! 대학 생활 로망은 가슴에 품고, 기초 과목 공부와 비교과도 틈틈이 챙겨보세요! 🏃';
-        break;
-      case '헌내기':
-        statusEmoji = '✏️👦';
-        speechBubble = '전공 진입을 앞두고 긴장되는 헌내기(2학년)... 본격적인 약학 전공의 맛을 보며 한 걸음 더 성장해 봅시다! 🔥';
-        break;
-      case '사망년':
-        statusEmoji = '🔥💪';
-        speechBubble = '과제와 시험의 늪, 마의 3학년! 약대 전공 공부가 무척 매워지는 시기지만, 비교과 이수도 착실히 챙기며 힘내세요! ⚡';
-        break;
-      case '고인물':
-        statusEmoji = '🎒🍀';
-        speechBubble = '어느덧 든든한 약대 고학번(4학년) 선배님! 심화 전공 지식을 탄탄히 다지며 실습 전 전공 기초를 다잡을 때입니다. 📚';
-        break;
-      case '예비실습생':
-        statusEmoji = '🩺🐻';
-        speechBubble = '약무 실습을 코앞에 둔 5학년! 실제 현장으로 나아가 임상 약학을 몸소 배울 소중한 기회를 멋지게 준비해봐요! ✨';
-        break;
-      case '국시생':
-        statusEmoji = '👑🩺';
-        speechBubble = '대망의 약사 국가고시 준비생(6학년)! 졸업 자격 요건을 완비하고, 국시 합격을 향해 후회 없는 마지막 스퍼트를 올리세요! 🏁';
-        break;
-      default:
-        statusEmoji = '🦖🕵️‍♂️';
-        speechBubble = '삼육대 약학대학의 살아있는 역사, 화석 선배님! 배움을 멈추지 않는 그대의 뜨거운 열정에 깊은 경의를 표합니다. 🦕';
-        break;
-    }
+    speechBubble = `${academicStatus} 비교과 이수 현황을 확인하고 필요한 신청과 제출 일정을 차분히 관리하세요.`;
   }
 
   const formatNum = (num: number) => String(num).padStart(2, '0');
@@ -521,7 +458,6 @@ export default function IntegratedView() {
         </div>
       </div>
       {isStudent && user && <GraduationCalculator user={user} />}
-      {isStudent && <StudentGalagaShortcut />}
       {!isStudent && <PendingTasksPanel />}
       {isStudent && (
         <div className="flex justify-end mb-2">

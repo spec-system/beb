@@ -282,15 +282,6 @@ input, select, textarea {
   animation: su-blink 1s infinite step-end;
 }
 
-/* 90년대 원색 깜빡이 알림글 */
-@keyframes text-flash {
-  0%, 49% { color: #ff0000; }
-  50%, 100% { color: #0000ff; }
-}
-.flash-warning {
-  animation: text-flash 0.8s infinite step-end;
-  font-weight: bold;
-}
 
 /* IE6 포커스 안쪽 점선 */
 input:focus, select:focus, textarea:focus, button:focus, summary:focus, a:focus {
@@ -437,119 +428,6 @@ input:focus, select:focus, textarea:focus, button:focus, summary:focus, a:focus 
   font-weight: bold !important;
 }
 
-/* ==========================================
-   Napolitan hidden status-view easter egg
-   ========================================== */
-.napolitan-screen {
-  animation: napolitan-shatter 420ms steps(2, end), napolitan-breathe 2.4s ease-in-out infinite;
-}
-
-.napolitan-screen::before,
-.napolitan-screen::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-.napolitan-screen::before {
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 0, 0, 0.08) 0 1px, transparent 1px 4px),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.12), transparent 38%, rgba(0, 255, 255, 0.08));
-  animation: napolitan-scan 760ms linear infinite;
-}
-
-.napolitan-screen::after {
-  background:
-    linear-gradient(118deg, transparent 0 42%, rgba(127, 29, 29, 0.45) 42.2% 43%, transparent 43.2%),
-    linear-gradient(27deg, transparent 0 58%, rgba(185, 28, 28, 0.35) 58.3% 58.9%, transparent 59.2%);
-  animation: napolitan-split 1.1s steps(2, end) infinite;
-}
-
-.napolitan-noise {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.28;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.24) 0 1px, transparent 1px),
-    radial-gradient(circle at 80% 70%, rgba(255, 0, 0, 0.22) 0 1px, transparent 1px);
-  background-size: 3px 3px, 5px 5px;
-  animation: napolitan-noise 180ms steps(2, end) infinite;
-}
-
-.napolitan-crack {
-  position: fixed;
-  pointer-events: none;
-  width: 64vw;
-  height: 1px;
-  background: rgba(248, 113, 113, 0.7);
-  box-shadow: 0 0 18px rgba(248, 113, 113, 0.85);
-  transform-origin: left center;
-}
-
-.napolitan-crack-a {
-  top: 36%;
-  left: 12%;
-  transform: rotate(-11deg);
-}
-
-.napolitan-crack-b {
-  right: 8%;
-  bottom: 31%;
-  transform: rotate(17deg);
-}
-
-.napolitan-title {
-  text-shadow: 2px 0 #7f1d1d, -2px 0 #0f172a;
-  animation: napolitan-title 900ms steps(2, end) infinite;
-}
-
-.napolitan-rule {
-  animation: napolitan-rule-flicker 2.2s steps(2, end) infinite;
-}
-
-@keyframes napolitan-shatter {
-  0% { clip-path: inset(42% 0 44% 0); transform: translateX(-18px) skewX(4deg); }
-  30% { clip-path: inset(12% 0 70% 0); transform: translateX(14px) skewX(-8deg); }
-  60% { clip-path: inset(66% 0 10% 0); transform: translateX(-8px) skewX(10deg); }
-  100% { clip-path: inset(0); transform: translateX(0) skewX(0); }
-}
-
-@keyframes napolitan-breathe {
-  0%, 100% { filter: contrast(1.05) saturate(1); }
-  50% { filter: contrast(1.28) saturate(1.35); }
-}
-
-@keyframes napolitan-scan {
-  from { transform: translateY(-6px); }
-  to { transform: translateY(6px); }
-}
-
-@keyframes napolitan-split {
-  0%, 100% { transform: translate(0); opacity: 0.7; }
-  35% { transform: translate(8px, -3px); opacity: 0.45; }
-  70% { transform: translate(-5px, 2px); opacity: 0.9; }
-}
-
-@keyframes napolitan-noise {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(-2px, 1px); }
-  100% { transform: translate(2px, -1px); }
-}
-
-@keyframes napolitan-title {
-  0%, 100% { transform: translateX(0); }
-  35% { transform: translateX(2px); }
-  70% { transform: translateX(-3px); }
-}
-
-@keyframes napolitan-rule-flicker {
-  0%, 86%, 100% { opacity: 1; }
-  88% { opacity: 0.45; }
-  90% { opacity: 0.95; }
-}
 
 /* Workflow Lab modern skin ordering guard.
    Vite can reorder extracted CSS chunks; keep the high-specificity visual overrides here too. */
@@ -681,4 +559,235 @@ body .deck-shell .su-form-table {
   body .deck-shell .su-form-table {
     border-radius: 14px !important;
   }
+}
+
+/* =========================================================
+   Soft campus skin — 군대/레트로/고대비 느낌 제거
+   ========================================================= */
+:root {
+  --soft-bg: #f6f8fb;
+  --soft-surface: #ffffff;
+  --soft-surface-2: #f9fbff;
+  --soft-line: #dbe4f0;
+  --soft-line-strong: #c7d3e3;
+  --soft-ink: #172033;
+  --soft-muted: #64748b;
+  --soft-primary: #2563eb;
+  --soft-primary-dark: #1d4ed8;
+  --soft-primary-soft: #eff6ff;
+  --soft-success: #15803d;
+  --soft-danger: #dc2626;
+  --soft-radius: 16px;
+  --soft-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  --soft-shadow-sm: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+@layer base {
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 34rem),
+      linear-gradient(180deg, #fbfdff 0%, var(--soft-bg) 100%) !important;
+    background-size: auto !important;
+    background-position: 0 0 !important;
+    background-attachment: fixed !important;
+    color: var(--soft-ink) !important;
+    letter-spacing: -0.025em !important;
+  }
+
+  *, *::before, *::after {
+    text-shadow: none !important;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease, transform 160ms ease !important;
+  }
+}
+
+.win7-window,
+.mil-window,
+.su-window,
+[class*="shadow-[4px_4px_0"],
+[class*="border-slate-800"] {
+  border: 1px solid var(--soft-line) !important;
+  border-radius: var(--soft-radius) !important;
+  background: var(--soft-surface) !important;
+  box-shadow: var(--soft-shadow-sm) !important;
+}
+
+.win7-titlebar,
+.win7-titlebar-mil,
+.mil-titlebar,
+.su-titlebar {
+  border: none !important;
+  border-radius: var(--soft-radius) var(--soft-radius) 0 0 !important;
+  background: linear-gradient(90deg, var(--soft-primary-dark), var(--soft-primary)) !important;
+  color: #ffffff !important;
+  padding: 12px 16px !important;
+}
+
+.win7-btn,
+button,
+a[role="button"] {
+  border: 1px solid var(--soft-line-strong) !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: var(--soft-ink) !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.win7-btn:hover,
+button:hover,
+a[role="button"]:hover {
+  transform: translateY(-1px);
+  border-color: #93c5fd !important;
+  background: var(--soft-primary-soft) !important;
+  box-shadow: var(--soft-shadow-sm) !important;
+}
+
+.win7-btn:active:not(:disabled),
+.win7-btn-primary:active:not(:disabled),
+.win7-btn-success:active:not(:disabled),
+.win7-btn-danger:active:not(:disabled) {
+  padding: inherit !important;
+  transform: translateY(0);
+}
+
+.win7-btn-primary,
+.bg-\[\#1b3c67\],
+.bg-\[\#2b5597\] {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, var(--soft-primary-dark), var(--soft-primary)) !important;
+  color: #ffffff !important;
+}
+
+.win7-btn-success {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #16a34a, var(--soft-success)) !important;
+  color: #ffffff !important;
+}
+
+.win7-btn-danger {
+  border-color: transparent !important;
+  background: linear-gradient(135deg, #ef4444, var(--soft-danger)) !important;
+  color: #ffffff !important;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--soft-line) !important;
+  border-radius: 12px !important;
+  background: #ffffff !important;
+  color: var(--soft-ink) !important;
+  padding: 9px 11px !important;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus,
+a:focus {
+  outline: 3px solid rgba(37, 99, 235, 0.18) !important;
+  outline-offset: 2px !important;
+}
+
+.su-grid-table,
+.mil-table,
+.su-form-table,
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid var(--soft-line) !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.su-grid-table th,
+.mil-table th,
+.su-form-table th,
+thead th {
+  border: none !important;
+  border-bottom: 1px solid var(--soft-line) !important;
+  background: #f1f6ff !important;
+  color: #1e3a8a !important;
+  font-weight: 800 !important;
+}
+
+.su-grid-table td,
+.mil-table td,
+.su-form-table td,
+tbody td {
+  border: none !important;
+  border-bottom: 1px solid #eef2f7 !important;
+  background: #ffffff !important;
+}
+
+.su-grid-table tr:nth-child(even) td,
+.mil-table tr:nth-child(even) td {
+  background: #fbfdff !important;
+}
+
+.su-grid-table tr:hover td,
+.mil-table tr:hover td {
+  background: #eff6ff !important;
+}
+
+.stamp-badge,
+.badge,
+[class*="rounded-full"] {
+  border-radius: 999px !important;
+}
+
+.stamp-badge {
+  border: none !important;
+  padding: 4px 9px !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.stamp-red { color: #b91c1c !important; background-color: #fee2e2 !important; }
+.stamp-blue { color: #1d4ed8 !important; background-color: #dbeafe !important; }
+.stamp-green { color: #166534 !important; background-color: #dcfce7 !important; }
+.stamp-orange { color: #b45309 !important; background-color: #fef3c7 !important; }
+
+.text-\[\#3d4f41\],
+.text-\[\#466046\],
+.text-\[\#1a251e\] {
+  color: var(--soft-ink) !important;
+}
+
+.bg-\[\#edf4ee\],
+.bg-\[\#f3f5f3\],
+.bg-\[\#d4d0c8\],
+.bg-\[\#e1e6f2\] {
+  background: var(--soft-surface-2) !important;
+}
+
+.border-\[\#222222\],
+.border-\[\#adadad\],
+.border-\[\#808080\],
+.border-slate-800 {
+  border-color: var(--soft-line) !important;
+}
+
+a[class*="border-2"],
+div[class*="border-2"] {
+  border-width: 1px !important;
+}
+
+a[class*="hover:bg-"]:hover,
+button[class*="hover:bg-"]:hover {
+  background: var(--soft-primary-soft) !important;
+}
+
+::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+  background: #edf2f7 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  border: none !important;
+  border-radius: 999px !important;
+  background: #cbd5e1 !important;
 }

@@ -29,11 +29,6 @@ const CARDS: Card[] = [
     desc: '기존 대면·수기 서명·구글폼 스캔 프로세스(신청서 5단계 + 결과보고서 7단계)를 단계별로 정리합니다.',
   },
   {
-    href: './ballpassing.html',
-    title: '⑥ Ball Passing Model',
-    desc: "spec md §3의 [사용자] '행동' {state} 볼 패싱 흐름도를 노드별로 진행합니다. 비교과(3.1)·토익(3.2)·봉사(3.3)를 모두 포함합니다.",
-  },
-  {
     href: './form.html',
     title: '④ 양식 작성 (HWP)',
     desc: '실제 FORM_SPECS/formToMarkdown 을 그대로 재사용해 계획서·결과보고서 탭 입력과 Markdown 미리보기, HWPX 변환 payload를 확인합니다.',
@@ -65,11 +60,11 @@ function build(): HTMLElement {
     banner,
     el('div', { className: 'portal-guide' }, [
       el('strong', { text: '안내 ' }),
-      '아래 6개 업무 카드를 열면 각 흐름이 실제 화면 그대로, 담당자 계정을 전환하며 한 단계씩 진행됩니다. 방향키(←/→) 또는 하단 버튼으로 슬라이드를 넘기세요.',
+      '아래 5개 업무 카드를 열면 각 흐름이 실제 화면 그대로, 담당자 계정을 전환하며 한 단계씩 진행됩니다. 방향키(←/→) 또는 하단 버튼으로 슬라이드를 넘기세요.',
     ]),
     cards,
     el('div', { className: 'border-t border-[#cccccc] pt-3 text-[10px] text-slate-500 font-bold' }, [
-      '상태는 메모리 전용이며 새로고침 시 초기화됩니다. · 익명 게시판/통합조회/통계/설정은 검사 범위에서 제외됩니다.',
+      '상태는 메모리 전용이며 새로고침 시 초기화됩니다. · 통합조회/통계/설정은 검사 범위에서 제외됩니다.',
     ]),
   ]);
 

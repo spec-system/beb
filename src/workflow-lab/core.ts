@@ -8,22 +8,29 @@ export type Role = 'STUDENT' | 'PROFESSOR' | 'HEAD' | 'STAFF';
 
 export const ROLE_LABEL: Record<Role, string> = {
   STUDENT: '학생',
-  PROFESSOR: '담당교수',
-  HEAD: '학과장',
-  STAFF: '행정실',
+  PROFESSOR: '교수님',
+  HEAD: '학과장님',
+  STAFF: '행정실 담당자',
+};
+
+const ROLE_ICON: Record<Role, string> = {
+  STUDENT: '🎓',
+  PROFESSOR: '👨‍🏫',
+  HEAD: '🏛️',
+  STAFF: '🏢',
 };
 
 // 실제 seed.ts USERS 기준 계정 매핑
 export const ROLE_USER: Record<Role, { name: string; account: string }> = {
-  STUDENT: { name: '학생', account: '20231234' },
-  PROFESSOR: { name: '담당교수', account: 'professor' },
-  HEAD: { name: '학과장', account: 'head' },
-  STAFF: { name: '행정실', account: 'staff' },
+  STUDENT: { name: '김민준', account: '20231234' },
+  PROFESSOR: { name: '박서준', account: 'professor' },
+  HEAD: { name: '이현우', account: 'head' },
+  STAFF: { name: '최은지', account: 'staff' },
 };
 
 // 실제 AppShell roleNav 를 축약해 재현한 좌측 트리 메뉴
 const ROLE_NAV: Record<Role, string[]> = {
-  STUDENT: ['내 현황', '신청·제출', '양식 작성 (HWP)', '익명 게시판', '갈러그 게임'],
+  STUDENT: ['내 현황', '신청·제출', '양식 작성 (HWP)'],
   PROFESSOR: ['전체 목록', '학과내 목록', '토익 목록', '봉사 목록'],
   HEAD: ['전체조회', '학과내 최종승인', '토익 최종승인', '봉사 최종승인', '통계', '설정'],
   STAFF: ['전체조회', '학과내 코멘트', '토익 코멘트', '봉사 코멘트', '설정'],
@@ -233,12 +240,13 @@ function topWhiteBar(): HTMLElement {
 
 function blueBar(actor: Role): HTMLElement {
   const u = ROLE_USER[actor];
-  return el('header', { className: 'su-header-blue h-9 flex items-center justify-between px-4 shrink-0 text-[11px]' }, [
+  return el('header', { className: 'su-header-blue h-11 flex items-center justify-between px-4 shrink-0 text-[11px]' }, [
     el('div', { className: 'flex items-end h-full' }, [
-      el('div', { className: 'su-header-tab-active px-4 py-1.5 text-xs', text: '서비스' }),
+      el('div', { className: 'su-header-tab-active px-4 py-2 text-xs', text: '서비스' }),
     ]),
-    el('div', { className: 'flex items-center gap-2 text-white' }, [
-      el('span', { className: 'font-bold', text: `${u.name} (${u.account}) · ${ROLE_LABEL[actor]}` }),
+    el('div', { className: 'flex items-center gap-3 text-white' }, [
+      el('span', { className: 'font-semibold text-xs', text: `${u.name} · ${u.account}` }),
+      el('span', { className: 'role-identity', text: `${ROLE_ICON[actor]} ${ROLE_LABEL[actor]}` }),
       el('span', { className: 'su-btn-gray font-bold', text: '알림' }),
       el('span', { className: 'su-btn-gray font-bold', text: '로그아웃' }),
     ]),
@@ -253,9 +261,9 @@ function sidebar(actor: Role, activeMenu: string): HTMLElement {
     ]),
   );
   return el('aside', { className: 'w-56 border-r border-[#adadad] flex flex-col shrink-0 bg-white' }, [
-    el('div', { className: 'flex bg-[#e1e6f2] border-b border-[#adadad] text-[10px] font-black shrink-0 h-7 items-center' }, [
-      el('div', { className: 'bg-[#1b3c73] text-white px-3 py-2', text: '서비스' }),
-      el('div', { className: 'text-[#333] px-3 py-2', text: ROLE_LABEL[actor] }),
+    el('div', { className: 'flex bg-[#e1e6f2] border-b border-[#adadad] text-[10px] font-black shrink-0 h-9 items-center' }, [
+      el('div', { className: 'bg-[#1b3c73] text-white px-3 py-3', text: '서비스' }),
+      el('div', { className: 'role-sidebar-label', text: `${ROLE_ICON[actor]} ${ROLE_LABEL[actor]} 메뉴` }),
     ]),
     el('nav', { className: 'flex-1 py-2 px-1 overflow-y-auto space-y-1 bg-white font-mono text-[11px] su-tree-menu' }, items),
   ]);
@@ -270,12 +278,7 @@ function tabBar(activeMenu: string): HTMLElement {
   ]);
 }
 
-function urgentMarquee(): HTMLElement {
-  return el('div', { className: 'su-notice-banner shrink-0' }, [
-    el('span', { className: 'su-notice-pill', text: '공지' }),
-    el('span', { className: 'su-notice-text', text: '2026학년도 비교과 결과보고서 최종 제출 마감 기한을 확인해 주세요. 학과 사무실 공지사항 및 전산 점검 일정을 참고 바랍니다.' }),
-  ]);
-}
+
 
 /* =========================================================
    PPT 덱 엔진
@@ -306,10 +309,9 @@ interface NavApi {
 }
 
 function presenterPanel<S>(config: DeckConfig<S>, step: DeckStep<S>, nav: NavApi): HTMLElement {
-  const u = ROLE_USER[step.actor];
   return el('div', { className: 'deck-note shrink-0' }, [
     el('div', { className: 'deck-note-head' }, [
-      el('span', { className: 'deck-actor-chip', text: `${ROLE_LABEL[step.actor]} · ${u.name}` }),
+      el('span', { className: 'deck-actor-chip', text: `${ROLE_ICON[step.actor]} ${ROLE_LABEL[step.actor]} 화면` }),
       el('span', { className: 'deck-step-count', text: `STEP ${nav.index + 1} / ${nav.total}` }),
       el('span', { className: 'deck-prog-title', text: config.program }),
     ]),
@@ -365,7 +367,6 @@ function buildChrome<S>(config: DeckConfig<S>, step: DeckStep<S>, state: S, nav:
 
   const contentColumn = el('div', { className: 'flex-1 flex flex-col overflow-hidden bg-[#f4f4f4]' }, [
     tabBar(step.menu),
-    urgentMarquee(),
     presenterPanel(config, step, nav),
     content,
   ]);

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
@@ -8,22 +8,14 @@ import IntegratedView from './views/IntegratedView';
 import StudentSubmitView from './views/StudentSubmitView';
 import PlanFormView from './views/PlanFormView';
 import DeptProgramView from './views/DeptProgramView';
-import BoardView from './views/BoardView';
+
 import ToeicView from './views/ToeicView';
 import VolunteerView from './views/VolunteerView';
 import StatsView from './views/StatsView';
 import SettingsView from './views/SettingsView';
 import { canAccessView } from './auth/roles';
 
-const GalagaView = lazy(() => import('./views/GalagaView'));
 
-function GalagaRoute() {
-  return (
-    <Suspense fallback={<div className="p-6 text-sm text-slate-500">갈러그 게임을 불러오는 중입니다...</div>}>
-      <GalagaView />
-    </Suspense>
-  );
-}
 
 function HomeRedirect() {
   const { user } = useAuth();
@@ -43,14 +35,12 @@ export default function App() {
         <Route path="/integrated" element={<ProtectedRoute view="integrated"><IntegratedView /></ProtectedRoute>} />
         <Route path="/submit" element={<ProtectedRoute view="submit"><StudentSubmitView /></ProtectedRoute>} />
         <Route path="/form" element={<ProtectedRoute view="form"><PlanFormView /></ProtectedRoute>} />
-        <Route path="/board" element={<ProtectedRoute view="board"><BoardView /></ProtectedRoute>} />
+
         <Route path="/dept" element={<ProtectedRoute view="dept"><DeptProgramView /></ProtectedRoute>} />
         <Route path="/toeic" element={<ProtectedRoute view="toeic"><ToeicView /></ProtectedRoute>} />
         <Route path="/volunteer" element={<ProtectedRoute view="volunteer"><VolunteerView /></ProtectedRoute>} />
         <Route path="/stats" element={<ProtectedRoute view="stats"><StatsView /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute view="settings"><SettingsView /></ProtectedRoute>} />
-        <Route path="/galaga" element={<ProtectedRoute view="galaga"><GalagaRoute /></ProtectedRoute>} />
-        <Route path="/galage" element={<ProtectedRoute view="galaga"><GalagaRoute /></ProtectedRoute>} />
       </Route>
     </Routes>
   );

@@ -322,6 +322,27 @@
   background: var(--su-blue-800) !important;
   padding: 5px 12px !important;
 }
+.role-identity {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 3px 12px;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--su-blue-800);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.role-sidebar-label {
+  padding: 8px 12px;
+  color: var(--su-blue-800);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
 
 .deck-step-count {
   color: var(--su-green-600) !important;
@@ -611,4 +632,164 @@ a:focus {
   border: none !important;
   border-radius: 999px !important;
   background: #b7c7dc !important;
+}
+/* =========================================================
+   Angular neutral skin override — rounded blue style 제거
+   ========================================================= */
+:root {
+  --su-blue-900: #1f2933;
+  --su-blue-800: #2f3a45;
+  --su-blue-700: #4b5563;
+  --su-blue-100: #f1f3f5;
+  --su-green-600: #4b5563;
+  --su-ink: #18181b;
+  --su-muted: #6b7280;
+  --su-line: #d4d4d8;
+  --su-bg: #f3f4f6;
+  --su-card: #ffffff;
+}
+
+.deck-shell {
+  background: linear-gradient(180deg, #f6f7f8 0%, #eceff2 100%) !important;
+}
+
+.deck-shell .su-header-blue {
+  background: linear-gradient(90deg, #111827 0%, #2f3a45 100%) !important;
+  box-shadow: none !important;
+}
+
+.deck-shell > header:first-child span,
+.deck-prog-title,
+.deck-note-caption,
+.portal-shell h1,
+.portal-card-title {
+  color: #1f2933 !important;
+}
+
+.su-header-tab-active,
+.su-btn-gray,
+.deck-shell aside > div:first-child > div:first-child,
+.su-tree-item,
+.su-tree-item-active,
+.su-tab,
+.su-tab-active,
+.su-notice-pill,
+.portal-banner-pill,
+.deck-actor-chip,
+.win7-window,
+.win7-close-btn,
+.win7-btn,
+input,
+select,
+textarea,
+.su-grid-table,
+.mil-table,
+.su-form-table,
+.stamp-badge,
+.deck-dot,
+.portal-shell > div,
+.portal-banner,
+.portal-guide,
+.portal-card {
+  border-radius: 0 !important;
+}
+
+.su-header-tab-active {
+  color: #1f2933 !important;
+}
+
+.su-btn-gray {
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.deck-shell aside {
+  box-shadow: none !important;
+  background: #ffffff !important;
+}
+
+.deck-shell aside > div:first-child,
+.su-tab-bar,
+.deck-note,
+.su-notice-banner,
+.deck-controls {
+  background: #ffffff !important;
+}
+
+.deck-shell aside > div:first-child > div:first-child,
+.su-tree-item-active,
+.su-notice-pill,
+.portal-banner-pill,
+.deck-actor-chip,
+.win7-btn-primary,
+.win7-btn-success,
+.deck-dot.active {
+  background: #2f3a45 !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.su-tree-item:hover,
+.su-tab,
+.portal-guide,
+.portal-banner {
+  background: #f4f5f6 !important;
+  color: #1f2933 !important;
+}
+
+.su-tab-active {
+  background: #ffffff !important;
+}
+
+.win7-window,
+.portal-shell > div,
+.portal-card {
+  box-shadow: none !important;
+  border-color: #d4d4d8 !important;
+}
+
+.win7-titlebar,
+.win7-titlebar-mil {
+  background: #2f3a45 !important;
+  border-radius: 0 !important;
+}
+
+.win7-btn:hover,
+.portal-card:hover {
+  transform: none;
+  box-shadow: none !important;
+  background: #f4f5f6 !important;
+  border-color: #9ca3af !important;
+}
+
+.win7-btn-danger {
+  background: #7f1d1d !important;
+}
+
+.stamp-red { color: #7f1d1d !important; background-color: #f4f4f5 !important; }
+.stamp-blue { color: #1f2933 !important; background-color: #f4f4f5 !important; }
+.stamp-green { color: #365314 !important; background-color: #f4f4f5 !important; }
+.stamp-orange { color: #713f12 !important; background-color: #f4f4f5 !important; }
+
+.su-grid-table th,
+.mil-table th,
+.su-form-table th {
+  background: #f4f5f6 !important;
+  color: #1f2933 !important;
+}
+
+.su-grid-table tr:hover td {
+  background: #f4f5f6 !important;
+}
+
+.deck-hl {
+  outline-color: #52525b !important;
+  box-shadow: none !important;
+}
+
+.portal-shell {
+  background: linear-gradient(180deg, #f6f7f8 0%, #eceff2 100%) !important;
+}
+
+.portal-card {
+  background: #ffffff !important;
 }

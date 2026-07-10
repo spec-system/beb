@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Languages, HeartHandshake, MessageSquare, FilePen } from 'lucide-react';
+import { BookOpen, Languages, HeartHandshake, FilePen } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
 
 const CARDS = [
@@ -27,12 +27,6 @@ const CARDS = [
     title: '봉사 인증서 업로드',
     description: '전공연계봉사활동을 등록하고 담당교수 서명 인증서를 업로드합니다.',
     icon: HeartHandshake,
-  },
-  {
-    to: '/board',
-    title: '익명 게시판',
-    description: '비교과 및 대학 생활에 대해 자유롭고 익명으로 의견을 나누는 게시판입니다.',
-    icon: MessageSquare,
   },
 ];
 
