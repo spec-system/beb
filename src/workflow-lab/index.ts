@@ -24,11 +24,6 @@ const CARDS: Card[] = [
     desc: '접수 → 인증서 업로드 → 행정실 검토·승인/반려. 봉사 활동 기관, 인증서 열기/다운로드, 반려 사유/재등록 흐름을 확인합니다.',
   },
   {
-    href: './legacy.html',
-    title: '⑤ Legacy 오프라인 프로세스',
-    desc: '기존 대면·수기 서명·구글폼 스캔 프로세스(신청서 5단계 + 결과보고서 7단계)를 단계별로 정리합니다.',
-  },
-  {
     href: './form.html',
     title: '④ 양식 작성 (HWP)',
     desc: '실제 FORM_SPECS/formToMarkdown 을 그대로 재사용해 계획서·결과보고서 탭 입력과 Markdown 미리보기, HWPX 변환 payload를 확인합니다.',

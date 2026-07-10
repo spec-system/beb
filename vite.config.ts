@@ -41,7 +41,6 @@ const workflowLabPages = {
   workflowLabForm: path.resolve(__dirname, 'workflow-lab/form.html'),
   workflowLabToeic: path.resolve(__dirname, 'workflow-lab/toeic.html'),
   workflowLabVolunteer: path.resolve(__dirname, 'workflow-lab/volunteer.html'),
-  workflowLabLegacy: path.resolve(__dirname, 'workflow-lab/legacy.html'),
 };
 
 export default defineConfig(() => {
