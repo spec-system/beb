@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext';
 import { canAccessView, ViewKey } from '../../auth/roles';
-import { Role } from '../../types';
+import { Role, ROLE_LABEL } from '../../types';
 import { LayoutDashboard, BookOpen, Languages, HeartHandshake, BarChart3, ClipboardCheck, MessageSquare, Settings, Bell, FilePen } from 'lucide-react';
 import { useRecords } from '../../store/recordsStore';
 
@@ -96,7 +96,7 @@ export default function AppShell() {
         
         {/* 사용자 정보 및 제어 단추 */}
         <div className="flex items-center gap-2 text-white">
-          <span className="font-bold">{user.name} ({user.studentId ?? user.id})</span>
+          <span className="font-bold">{ROLE_LABEL[user.role]} ({user.studentId ?? user.id})</span>
           <NotificationBell />
           <button onClick={doLogout} className="su-btn-gray font-bold">로그아웃</button>
         </div>
