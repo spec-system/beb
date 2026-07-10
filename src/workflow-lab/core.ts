@@ -232,10 +232,7 @@ function topWhiteBar(): HTMLElement {
 }
 
 function blueBar(actor: Role): HTMLElement {
-  return el('header', { className: 'su-header-blue h-11 flex items-center justify-between px-4 shrink-0 text-[11px]' }, [
-    el('div', { className: 'flex items-end h-full' }, [
-      el('div', { className: 'su-header-tab-active px-4 py-2 text-xs', text: '서비스' }),
-    ]),
+  return el('header', { className: 'su-header-blue h-11 flex items-center justify-end px-4 shrink-0 text-[11px]' }, [
     el('div', { className: 'flex items-center gap-3 text-white' }, [
       el('span', { className: 'font-semibold text-xs', text: ROLE_LABEL[actor] }),
       el('span', { className: 'role-identity', text: `${ROLE_ICON[actor]} ${ROLE_LABEL[actor]}` }),

@@ -55,7 +55,7 @@ function build(): HTMLElement {
     banner,
     el('div', { className: 'portal-guide' }, [
       el('strong', { text: '안내 ' }),
-      '아래 5개 업무 카드를 열면 각 흐름이 실제 화면 그대로, 담당자 계정을 전환하며 한 단계씩 진행됩니다. 방향키(←/→) 또는 하단 버튼으로 슬라이드를 넘기세요.',
+      '아래 4개 업무 카드를 열면 각 흐름이 실제 화면 그대로, 담당자 계정을 전환하며 한 단계씩 진행됩니다. 방향키(←/→) 또는 하단 버튼으로 슬라이드를 넘기세요.',
     ]),
     cards,
     el('div', { className: 'border-t border-[#cccccc] pt-3 text-[10px] text-slate-500 font-bold' }, [

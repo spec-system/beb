@@ -270,16 +270,11 @@ input, select, textarea {
   background-color: #ffffff;
 }
 
-/* 깜빡이는 별표 및 공지 애니메이션 */
-@keyframes su-blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
+/* 필수 항목 별표 (깜빡임 제거, 무채색 고정) */
 .su-required::before {
   content: "* ";
-  color: #ff0000;
+  color: #6b7280;
   font-weight: bold;
-  animation: su-blink 1s infinite step-end;
 }
 
 
@@ -791,3 +786,220 @@ button[class*="hover:bg-"]:hover {
   border-radius: 999px !important;
   background: #cbd5e1 !important;
 }
+/* =========================================================
+   Workflow Lab 무채색(neutral) 스킨 이식
+   - workflow-lab.css "Angular neutral skin override" 미러링
+   - 파란색 → 차콜/그레이, 둥근모서리/그림자 제거(각진 스타일)
+   ========================================================= */
+:root {
+  --soft-bg: #eef0f2;
+  --soft-surface: #ffffff;
+  --soft-surface-2: #f4f5f6;
+  --soft-line: #d4d4d8;
+  --soft-line-strong: #c8ccd2;
+  --soft-ink: #1f2933;
+  --soft-muted: #6b7280;
+  --soft-primary: #2f3a45;
+  --soft-primary-dark: #1f2933;
+  --soft-primary-soft: #f4f5f6;
+  --soft-success: #4b5563;
+  --soft-danger: #7f1d1d;
+  --soft-radius: 0px;
+  --soft-shadow: none;
+  --soft-shadow-sm: none;
+}
+
+/* 각진 스타일: 앱 표면의 둥근모서리/그림자 제거 */
+body,
+.su-header-blue,
+.su-header-tab-active,
+.su-btn-gray,
+.su-btn-blue,
+.su-tree-item,
+.su-tree-item-active,
+.su-tab,
+.su-tab-active,
+.su-tab-bar,
+.win7-window,
+.win7-titlebar,
+.win7-titlebar-mil,
+.win7-btn,
+button,
+a[role="button"],
+input,
+select,
+textarea,
+summary,
+.su-grid-table,
+.mil-table,
+.su-form-table,
+table,
+.stamp-badge,
+.badge,
+[class*="rounded"] {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* 무채색 배경 */
+body {
+  background: linear-gradient(180deg, #f6f7f8 0%, #eceff2 100%) !important;
+  color: #1f2933 !important;
+}
+
+/* 상단 다크 차콜 헤더바 */
+.su-header-blue {
+  background: linear-gradient(90deg, #111827 0%, #2f3a45 100%) !important;
+  border-bottom: 1px solid #111827 !important;
+  color: #ffffff !important;
+}
+
+.su-header-tab-active {
+  background: #ffffff !important;
+  color: #1f2933 !important;
+  border: 1px solid #d4d4d8 !important;
+  border-bottom: none !important;
+}
+
+.su-btn-gray {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+}
+.su-btn-gray:hover { background: rgba(255, 255, 255, 0.22) !important; }
+
+.su-btn-blue {
+  background: #2f3a45 !important;
+  color: #ffffff !important;
+  border: 1px solid #1f2933 !important;
+}
+.su-btn-blue:hover { filter: none !important; background: #1f2933 !important; }
+
+/* 좌측 사이드바 트리 */
+.su-tree-item { color: #1f2933 !important; }
+.su-tree-item:hover {
+  background: #f4f5f6 !important;
+  color: #1f2933 !important;
+  text-decoration: none !important;
+}
+.su-tree-item-active {
+  background: #2f3a45 !important;
+  color: #ffffff !important;
+}
+
+/* 사이드바 탭 헤더 (서비스/학생) */
+.bg-\[\#1b3c73\] { background: #2f3a45 !important; }
+
+/* 상단 다중 탭 */
+.su-tab { background: #f4f5f6 !important; color: #1f2933 !important; }
+.su-tab-active { background: #ffffff !important; color: #1f2933 !important; }
+
+/* 버튼(win7 계열) 무채색 */
+.win7-btn-primary,
+.bg-\[\#1b3c67\],
+.bg-\[\#2b5597\] {
+  background: #2f3a45 !important;
+  color: #ffffff !important;
+  border-color: #1f2933 !important;
+}
+.win7-btn-success {
+  background: #4b5563 !important;
+  color: #ffffff !important;
+  border-color: #374151 !important;
+}
+.win7-btn-danger {
+  background: #7f1d1d !important;
+  color: #ffffff !important;
+  border-color: #641414 !important;
+}
+.win7-btn:hover,
+button:hover,
+a[role="button"]:hover {
+  transform: none !important;
+  border-color: #9ca3af !important;
+  background: #f4f5f6 !important;
+}
+.win7-btn-primary:hover,
+.win7-btn-success:hover,
+.win7-btn-danger:hover {
+  background: #1f2933 !important;
+  border-color: #1f2933 !important;
+  color: #ffffff !important;
+}
+
+/* 포커스 링 무채색 */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus,
+summary:focus,
+a:focus {
+  outline: 2px solid #52525b !important;
+  outline-offset: 1px !important;
+}
+
+/* 테이블 헤더/호버 무채색 */
+.su-grid-table th,
+.mil-table th,
+.su-form-table th,
+thead th {
+  background: #f4f5f6 !important;
+  color: #1f2933 !important;
+}
+.su-grid-table tr:hover td,
+.mil-table tr:hover td,
+tbody tr:hover td {
+  background: #f4f5f6 !important;
+}
+
+/* 상태 배지 무채색 */
+.stamp-red    { color: #7f1d1d !important; background-color: #f4f4f5 !important; }
+.stamp-blue   { color: #1f2933 !important; background-color: #f4f4f5 !important; }
+.stamp-green  { color: #365314 !important; background-color: #f4f4f5 !important; }
+.stamp-orange { color: #713f12 !important; background-color: #f4f4f5 !important; }
+
+/* 파란색 텍스트/배경 잔재 → 무채색 */
+.text-\[\#10489c\],
+.text-\[\#1b3c67\],
+.text-\[\#1b3c73\],
+.text-blue-950,
+.text-blue-900,
+.text-blue-800,
+.text-blue-700 {
+  color: #1f2933 !important;
+}
+.bg-blue-50 { background: #f4f5f6 !important; }
+.border-blue-200,
+.border-blue-100 { border-color: #d4d4d8 !important; }
+
+/* 졸업 진행바/파란 그라디언트 → 차콜 단색 */
+[class*="from-blue-500"] {
+  background-image: none !important;
+  background-color: #2f3a45 !important;
+}
+
+/* 남은 잔여 강조색(로즈/레드 텍스트) → 무채색 */
+.text-rose-600,
+.text-rose-500,
+.text-red-600,
+.text-red-500 {
+  color: #52525b !important;
+}
+
+/* 신청·제출 카드 아이콘 및 장식용 앰버/블루 액센트 → 무채색 */
+.text-\[\#3c6e91\],
+.text-\[\#3d6e91\] { color: #4b5563 !important; }
+
+.text-amber-700,
+.text-amber-600,
+.text-amber-500,
+.text-blue-600,
+.text-blue-500,
+.text-emerald-600,
+.text-teal-600,
+.text-cyan-600,
+.text-sky-600 {
+  color: #4b5563 !important;
+}
+.bg-amber-50 { background: #f4f5f6 !important; }
+.border-amber-200 { border-color: #d4d4d8 !important; }
