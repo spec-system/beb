@@ -519,21 +519,40 @@ a:focus {
 }
 
 .deck-dot {
-  width: 9px !important;
-  height: 9px !important;
+  position: relative;
+  flex: 0 0 28px;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
   border: none !important;
-  border-radius: 999px !important;
-  background: #cbd5e1 !important;
+  background: transparent !important;
+  cursor: pointer;
 }
 
-.deck-dot.done {
-  background: var(--su-green-600) !important;
+.deck-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  background: #9ca3af;
+}
+
+.deck-dot.done::after {
+  background: #6b7280;
 }
 
 .deck-dot.active {
-  width: 24px !important;
-  background: var(--su-blue-800) !important;
+  width: 28px !important;
+  background: transparent !important;
   outline: none !important;
+}
+
+.deck-dot.active::after {
+  width: 20px;
+  background: #2f3a45;
 }
 
 .deck-hl {
@@ -728,6 +747,11 @@ textarea,
   background: #2f3a45 !important;
   color: #ffffff !important;
   box-shadow: none !important;
+}
+
+.deck-dot.active {
+  background: transparent !important;
+  color: inherit !important;
 }
 
 .su-tree-item:hover,

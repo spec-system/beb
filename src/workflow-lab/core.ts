@@ -316,7 +316,7 @@ function controlBar<S>(config: DeckConfig<S>, nav: NavApi): HTMLElement {
     config.steps.map((_, i) =>
       el('button', {
         className: `deck-dot ${i === nav.index ? 'active' : ''} ${i < nav.index ? 'done' : ''}`,
-        attrs: { type: 'button', title: `${i + 1}` },
+        attrs: { type: 'button', title: `${i + 1}`, 'aria-label': `슬라이드 ${i + 1}` },
         onClick: () => nav.go(i),
       }),
     ),
