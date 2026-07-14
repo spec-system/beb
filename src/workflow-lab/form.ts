@@ -1,4 +1,3 @@
-import '../index.css';
 import { FORM_SPECS, formToMarkdown, type FormSpec, type FormValues } from '../utils/planForm';
 import { bootDeck, el, pageHeader, winButton, type DeckStep } from './core';
 
@@ -148,4 +147,6 @@ const steps: DeckStep<FormVM>[] = [
   },
 ];
 
-bootDeck<FormVM>({ program: '양식 작성 (HWP)', initial, steps });
+export function mount(root: HTMLElement): () => void {
+  return bootDeck<FormVM>(root, { program: '양식 작성 (HWP)', initial, steps });
+}

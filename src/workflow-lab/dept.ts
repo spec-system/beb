@@ -1,4 +1,3 @@
-import '../index.css';
 import {
   bootDeck,
   detailRow,
@@ -314,4 +313,6 @@ const steps: DeckStep<DeptVM>[] = [
   { actor: 'HEAD', menu: '학과내 최종승인', caption: '취소 가능 — 최종 검토중으로 복귀', note: '최종 승인은 취소할 수 있습니다. 취소하면 직전 「최종 검토중」 단계로 되돌아갑니다.', mutate: cancelFinal, render: (s) => detailScreen(s, 'HEAD', null) },
 ];
 
-bootDeck<DeptVM>({ program: '학과내 비교과 (신청→인증)', initial, steps });
+export function mount(root: HTMLElement): () => void {
+  return bootDeck<DeptVM>(root, { program: '학과내 비교과 (신청→인증)', initial, steps });
+}

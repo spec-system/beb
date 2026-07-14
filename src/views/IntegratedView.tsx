@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useRecords } from '../store/recordsStore';
 import { useAuth } from '../auth/AuthContext';
 import { canView } from '../auth/roles';

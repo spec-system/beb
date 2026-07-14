@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { BookOpen, Languages, HeartHandshake, FilePen } from 'lucide-react';
 import PageHeader from '../components/ui/PageHeader';
 
@@ -38,7 +38,7 @@ export default function StudentSubmitView() {
         {CARDS.map((card) => (
           <Link
             key={card.to}
-            to={card.to}
+            href={card.to}
             className="border-2 border-slate-800 bg-white p-5 shadow-[4px_4px_0_rgba(0,0,0,0.2)] hover:bg-[#edf4ee] block select-none cursor-pointer"
           >
             <card.icon size={20} className="mb-3 text-[#3c6e91]" />

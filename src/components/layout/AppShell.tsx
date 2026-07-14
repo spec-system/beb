@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '../../auth/AuthContext';
 import { canAccessView, ViewKey } from '../../auth/roles';
 import { Role, ROLE_LABEL } from '../../types';
@@ -60,21 +63,21 @@ const roleNav = (role: Role): NavItem[] => {
   }
 };
 
-export default function AppShell() {
+export default function AppShell({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
+  const pathname = usePathname();
 
   if (!user) return null;
   const items = roleNav(user.role).filter((n) => canAccessView(user.role, n.key));
 
   const doLogout = () => {
     logout();
-    navigate('/login');
+    router.push('/login');
   };
 
 
-  const location = useLocation();
-  const activeItem = items.find((item) => item.to === location.pathname);
+  const activeItem = items.find((item) => item.to === pathname);
   const activeLabel = activeItem ? activeItem.label : '서비스';
 
   return (
@@ -115,16 +118,14 @@ export default function AppShell() {
           {/* 트리 메뉴 */}
           <nav className="flex-1 py-2 px-1 overflow-y-auto space-y-1 select-none bg-white font-mono text-[11px] su-tree-menu">
             {items.map((item) => (
-              <NavLink
+              <Link
                 key={item.key}
-                to={item.to}
-                className={({ isActive }) =>
-                  `su-tree-item flex items-center gap-1 ${isActive ? 'su-tree-item-active' : ''}`
-                }
+                href={item.to}
+                className={`su-tree-item flex items-center gap-1 ${item.to === pathname ? 'su-tree-item-active' : ''}`}
               >
                 <span>📄</span>
                 {item.label}
-              </NavLink>
+              </Link>
             ))}
           </nav>
         </aside>
@@ -143,7 +144,7 @@ export default function AppShell() {
           {/* 실질적 화면 콘텐츠가 담기는 바닥 */}
           <main className="flex-1 overflow-auto p-3 bg-white border-t border-[#adadad]">
             <div className="mx-auto max-w-[1280px]">
-              <Outlet />
+              {children}
             </div>
           </main>
         </div>

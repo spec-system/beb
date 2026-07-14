@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import type { TooltipValueType } from 'recharts';
 import { useRecords } from '../store/recordsStore';
 import { STUDENTS } from '../data/seed';
 import { accumulatedApprovedHours, volunteerPercent } from '../utils/volunteer';
@@ -132,7 +133,7 @@ export default function StatsView() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#64748b' }} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#64748b' }} unit="%" />
-              <Tooltip formatter={(v: number) => [`${v}%`, '이수율']} />
+              <Tooltip formatter={(v: TooltipValueType | undefined) => [`${v ?? 0}%`, '이수율']} />
               <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={80}>
                 {individualChartData.map((c, i) => <Cell key={i} fill={c.fill} />)}
               </Bar>
@@ -148,7 +149,7 @@ export default function StatsView() {
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="grade" tick={{ fontSize: 12, fill: '#64748b' }} />
               <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: '#64748b' }} unit="%" />
-              <Tooltip formatter={(v: number) => [`${v}%`]} />
+              <Tooltip formatter={(v: TooltipValueType | undefined) => [`${v ?? 0}%`]} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar dataKey="비교과" fill={COLORS.dept} radius={[4, 4, 0, 0]} />
               <Bar dataKey="토익" fill={COLORS.toeic} radius={[4, 4, 0, 0]} />

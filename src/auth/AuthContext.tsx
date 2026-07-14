@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
 import { USERS } from '../data/seed';
@@ -6,6 +8,7 @@ const STORAGE_KEY = 'bigyogwa-auth-v1';
 
 interface AuthCtx {
   user: User | null;
+  hydrated: boolean;
   login: (id: string, pw: string) => { ok: boolean; error?: string };
   logout: () => void;
 }
@@ -24,16 +27,23 @@ function loadUser(): User | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(loadUser);
+  const [user, setUser] = useState<User | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    setUser(loadUser());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
     try {
       if (user) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
       else window.localStorage.removeItem(STORAGE_KEY);
     } catch {
       /* ignore */
     }
-  }, [user]);
+  }, [hydrated, user]);
 
   const login = (id: string, pw: string) => {
     const found = USERS.find((u) => u.id === id.trim());
@@ -45,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => setUser(null);
 
-  return <Ctx.Provider value={{ user, login, logout }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ user, hydrated, login, logout }}>{children}</Ctx.Provider>;
 }
 
 export function useAuth(): AuthCtx {

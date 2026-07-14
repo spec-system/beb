@@ -1,4 +1,3 @@
-import '../index.css';
 import {
   bootDeck,
   detailRow,
@@ -262,4 +261,6 @@ const steps: DeckStep<VolVM>[] = [
   },
 ];
 
-bootDeck<VolVM>({ program: '전공연계봉사활동', initial, steps });
+export function mount(root: HTMLElement): () => void {
+  return bootDeck<VolVM>(root, { program: '전공연계봉사활동', initial, steps });
+}

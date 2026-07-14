@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+'use client';
+
+import React, { createContext, useContext, useReducer, useEffect, useState, ReactNode } from 'react';
 import { STUDENTS } from '../data/seed';
 
 const STORAGE_KEY = 'bigyogwa-settings-v1';
@@ -83,7 +85,8 @@ export type SettingsAction =
   | { type: 'REMOVE_NOTICE'; id: string }
   | { type: 'SET_SIGNATURE'; signature: SignatureImg }
   | { type: 'REMOVE_SIGNATURE'; professorName: string }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'HYDRATE'; state: SettingsState };
 
 function reducer(state: SettingsState, action: SettingsAction): SettingsState {
   switch (action.type) {
@@ -104,6 +107,8 @@ function reducer(state: SettingsState, action: SettingsAction): SettingsState {
       };
     case 'REMOVE_SIGNATURE':
       return { ...state, signatures: state.signatures.filter((s) => s.professorName !== action.professorName) };
+    case 'HYDRATE':
+      return action.state;
     case 'RESET':
       return seed();
     default:
@@ -114,19 +119,29 @@ function reducer(state: SettingsState, action: SettingsAction): SettingsState {
 interface SettingsCtx {
   state: SettingsState;
   dispatch: React.Dispatch<SettingsAction>;
+  hydrated: boolean;
 }
 const Ctx = createContext<SettingsCtx | null>(null);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, undefined, loadInitial);
+  const [state, dispatch] = useReducer(reducer, undefined, seed);
+  const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
+    dispatch({ type: 'HYDRATE', state: loadInitial() });
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       /* ignore */
     }
-  }, [state]);
-  return <Ctx.Provider value={{ state, dispatch }}>{children}</Ctx.Provider>;
+  }, [hydrated, state]);
+
+  return <Ctx.Provider value={{ state, dispatch, hydrated }}>{children}</Ctx.Provider>;
 }
 
 export function useSettings(): SettingsCtx {

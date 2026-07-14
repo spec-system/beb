@@ -1,5 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../auth/AuthContext';
 import { USERS } from '../data/seed';
 import { ROLE_LABEL } from '../types';
@@ -11,7 +14,7 @@ import { AlertCircle } from 'lucide-react';
 export default function LoginView() {
   const { login } = useAuth();
   const { state: settings } = useSettings();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
   const [error, setError] = useState('');
@@ -19,7 +22,7 @@ export default function LoginView() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const res = login(id, pw);
-    if (res.ok) navigate('/');
+    if (res.ok) router.push('/');
     else setError(res.error ?? '로그인에 실패했습니다.');
   };
 
@@ -87,12 +90,12 @@ export default function LoginView() {
             })}
           </div>
         {/* Workflow Lab 진입 버튼 */}
-        <a
+        <Link
           href="/workflow-lab/"
           className="block text-center border border-[#222222] bg-[#1a251e] text-white p-2 hover:bg-[#2d3a2f] transition-colors text-[11px] font-black tracking-tight cursor-pointer"
         >
           📋 Workflow Lab (화면구성 시뮬레이터) 바로가기 →
-        </a>
+        </Link>
         </div>
       </div>
     </div>

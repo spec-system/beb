@@ -4,20 +4,20 @@
    강조 효과는 outline + animation 으로만 처리한다. */
 
 /* 발표자 노트 (슬라이드 제목/설명) */
-.deck-note {
+.deck-shell .deck-note {
   background: linear-gradient(180deg, #fdfbe8 0%, #f3eecb 100%);
   border-bottom: 2px solid #808080;
   border-top: 1px solid #ffffff;
   padding: 8px 14px 10px;
 }
-.deck-note-head {
+.deck-shell .deck-note-head {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 4px;
 }
-.deck-actor-chip {
+.deck-shell .deck-actor-chip {
   background: #1b3c73;
   color: #ffffff !important;
   font-weight: bold;
@@ -28,25 +28,25 @@
   border-right: 1.5px solid #10233f;
   border-bottom: 1.5px solid #10233f;
 }
-.deck-step-count {
+.deck-shell .deck-step-count {
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   font-weight: bold;
   font-size: 12px;
   color: #b23b3b;
 }
-.deck-prog-title {
+.deck-shell .deck-prog-title {
   margin-left: auto;
   font-weight: bold;
   font-size: 12px;
   color: #10489c;
 }
-.deck-note-caption {
+.deck-shell .deck-note-caption {
   font-size: 16px;
   font-weight: bold;
   color: #10233f;
   line-height: 1.4;
 }
-.deck-note-body {
+.deck-shell .deck-note-body {
   font-size: 13px;
   font-weight: bold;
   color: #3a3a3a;
@@ -55,7 +55,7 @@
 }
 
 /* 하단 조작 바 */
-.deck-controls {
+.deck-shell .deck-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -65,7 +65,7 @@
   border-top: 2px solid #ffffff;
   padding: 8px 14px;
 }
-.deck-dots {
+.deck-shell .deck-dots {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -73,7 +73,7 @@
   flex: 1;
   justify-content: center;
 }
-.deck-dot {
+.deck-shell .deck-dot {
   width: 13px;
   height: 13px;
   background: #ffffff;
@@ -84,10 +84,10 @@
   cursor: pointer;
   padding: 0;
 }
-.deck-dot.done {
+.deck-shell .deck-dot.done {
   background: #466046;
 }
-.deck-dot.active {
+.deck-shell .deck-dot.active {
   background: #2f6fd0;
   outline: 2px solid #10336e;
   outline-offset: 1px;
@@ -98,21 +98,21 @@
   0%, 60% { outline-color: #ff8c00; }
   61%, 100% { outline-color: #ffd59e; }
 }
-.deck-hl {
+.deck-shell .deck-hl {
   outline: 3px solid #ff8c00 !important;
   outline-offset: 2px !important;
   animation: deck-hl-blink 0.9s infinite step-end;
 }
 
-.no-underline { text-decoration: none !important; }
+.deck-shell .no-underline { text-decoration: none !important; }
 
 /* 포탈(index) 카드 그리드 */
-.portal-grid {
+.portal-shell .portal-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
-.portal-card {
+.portal-shell .portal-card {
   display: block;
   text-decoration: none !important;
   background: linear-gradient(180deg, #ffffff 0%, #eef2f7 100%);
@@ -123,16 +123,16 @@
   padding: 14px 16px;
   color: #10233f !important;
 }
-.portal-card:hover {
+.portal-shell .portal-card:hover {
   background: #fff9d6;
 }
-.portal-card-title {
+.portal-shell .portal-card-title {
   font-size: 15px;
   font-weight: bold;
   color: #10489c !important;
   margin-bottom: 4px;
 }
-.portal-card-desc {
+.portal-shell .portal-card-desc {
   font-size: 12px;
   font-weight: bold;
   color: #3a3a3a !important;
@@ -140,15 +140,15 @@
 }
 
 @media (max-width: 860px) {
-  .portal-grid { grid-template-columns: 1fr; }
-  .deck-controls { justify-content: center; }
+  .portal-shell .portal-grid { grid-template-columns: 1fr; }
+  .deck-shell .deck-controls { justify-content: center; }
 }
 
 /* =========================================================
    Modern SU-WINGs skin — 삼육대 블루/화이트 느낌은 유지하고
    눈 아픈 레트로 3D/깜빡임/고대비 요소를 부드럽게 정리한다.
    ========================================================= */
-:root {
+.deck-shell {
   --su-blue-900: #0f2f68;
   --su-blue-800: #16448f;
   --su-blue-700: #1f5fbf;
@@ -169,11 +169,7 @@
   letter-spacing: -0.025em !important;
 }
 
-.deck-shell *,
-.portal-shell *,
-.portal-card,
-.portal-banner,
-.portal-guide {
+.deck-shell * {
   text-shadow: none !important;
   transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease !important;
 }
@@ -198,21 +194,21 @@
   letter-spacing: -0.06em !important;
 }
 
-.su-header-tab-active,
-.su-btn-gray {
+.deck-shell .su-header-tab-active,
+.deck-shell .su-btn-gray {
   border: 1px solid rgba(255, 255, 255, 0.34) !important;
   border-radius: 999px !important;
   box-shadow: none !important;
 }
 
-.su-header-tab-active {
+.deck-shell .su-header-tab-active {
   background: rgba(255, 255, 255, 0.95) !important;
   color: var(--su-blue-800) !important;
   padding: 7px 18px !important;
   margin-top: 8px !important;
 }
 
-.su-btn-gray {
+.deck-shell .su-btn-gray {
   background: rgba(255, 255, 255, 0.14) !important;
   color: #ffffff !important;
   padding: 5px 12px !important;
@@ -238,38 +234,38 @@
   padding: 6px 12px !important;
 }
 
-.su-tree-menu {
+.deck-shell .su-tree-menu {
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
   padding: 14px 12px !important;
   background: transparent !important;
 }
 
-.su-tree-item {
+.deck-shell .su-tree-item {
   border-radius: 12px !important;
   padding: 10px 12px !important;
   color: #334155 !important;
 }
 
-.su-tree-item:hover {
+.deck-shell .su-tree-item:hover {
   background: var(--su-blue-100) !important;
   color: var(--su-blue-800) !important;
   text-decoration: none !important;
 }
 
-.su-tree-item-active {
+.deck-shell .su-tree-item-active {
   background: linear-gradient(135deg, var(--su-blue-800), var(--su-blue-700)) !important;
   color: #ffffff !important;
   box-shadow: 0 10px 20px rgba(31, 95, 191, 0.22) !important;
 }
 
-.su-tab-bar {
+.deck-shell .su-tab-bar {
   background: #ffffff !important;
   border-bottom: 1px solid var(--su-line) !important;
   padding: 10px 16px 0 !important;
 }
 
-.su-tab,
-.su-tab-active {
+.deck-shell .su-tab,
+.deck-shell .su-tab-active {
   border: 1px solid var(--su-line) !important;
   border-bottom: none !important;
   border-radius: 14px 14px 0 0 !important;
@@ -278,12 +274,12 @@
   padding: 9px 16px !important;
 }
 
-.su-tab-active {
+.deck-shell .su-tab-active {
   background: #ffffff !important;
   box-shadow: 0 -6px 18px rgba(15, 47, 104, 0.05) !important;
 }
 
-.su-notice-banner {
+.deck-shell .su-notice-banner {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -292,8 +288,8 @@
   padding: 10px 18px !important;
 }
 
-.su-notice-pill,
-.portal-banner-pill {
+.deck-shell .su-notice-pill,
+.portal-shell .portal-banner-pill {
   background: var(--su-blue-800) !important;
   color: #ffffff !important;
   border-radius: 999px !important;
@@ -303,20 +299,20 @@
   white-space: nowrap;
 }
 
-.su-notice-text {
+.deck-shell .su-notice-text {
   color: #475569 !important;
   font-size: 13px !important;
   font-weight: 700 !important;
 }
 
-.deck-note {
+.deck-shell .deck-note {
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%) !important;
   border-top: none !important;
   border-bottom: 1px solid var(--su-line) !important;
   padding: 16px 20px 18px !important;
 }
 
-.deck-actor-chip {
+.deck-shell .deck-actor-chip {
   border: none !important;
   border-radius: 999px !important;
   background: var(--su-blue-800) !important;
@@ -324,7 +320,7 @@
   font-size: 18px !important;
   line-height: 1.2;
 }
-.role-identity {
+.deck-shell .role-identity {
   display: inline-flex;
   align-items: center;
   min-height: 28px;
@@ -338,7 +334,7 @@
   letter-spacing: -0.02em;
 }
 
-.role-sidebar-label {
+.deck-shell .role-sidebar-label {
   padding: 8px 12px;
   color: var(--su-blue-800);
   font-size: 13px;
@@ -346,22 +342,22 @@
   white-space: nowrap;
 }
 
-.deck-step-count {
+.deck-shell .deck-step-count {
   color: var(--su-green-600) !important;
   font-weight: 900 !important;
 }
 
-.deck-prog-title {
+.deck-shell .deck-prog-title {
   color: var(--su-blue-800) !important;
 }
 
-.deck-note-caption {
+.deck-shell .deck-note-caption {
   color: var(--su-ink) !important;
   font-size: 20px !important;
   font-weight: 900 !important;
 }
 
-.deck-note-body {
+.deck-shell .deck-note-body {
   color: #475569 !important;
   font-size: 14px !important;
   font-weight: 650 !important;
@@ -373,7 +369,7 @@
   padding: 24px !important;
 }
 
-.win7-window {
+.deck-shell .win7-window {
   background: rgba(255, 255, 255, 0.98) !important;
   border: 1px solid var(--su-line) !important;
   border-radius: 18px !important;
@@ -381,15 +377,15 @@
   overflow: hidden !important;
 }
 
-.win7-titlebar,
-.win7-titlebar-mil {
+.deck-shell .win7-titlebar,
+.deck-shell .win7-titlebar-mil {
   background: linear-gradient(90deg, var(--su-blue-900), var(--su-blue-800)) !important;
   border: none !important;
   padding: 12px 16px !important;
   font-size: 14px !important;
 }
 
-.win7-close-btn {
+.deck-shell .win7-close-btn {
   width: 24px !important;
   height: 24px !important;
   border: none !important;
@@ -398,7 +394,7 @@
   color: #ffffff !important;
 }
 
-.win7-btn {
+.deck-shell .win7-btn {
   border: 1px solid var(--su-line) !important;
   border-radius: 10px !important;
   background: #ffffff !important;
@@ -407,41 +403,41 @@
   box-shadow: 0 1px 2px rgba(15, 47, 104, 0.08) !important;
 }
 
-.win7-btn:hover {
+.deck-shell .win7-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(15, 47, 104, 0.12) !important;
 }
 
-.win7-btn:active:not(:disabled),
-.win7-btn-primary:active:not(:disabled),
-.win7-btn-success:active:not(:disabled),
-.win7-btn-danger:active:not(:disabled) {
+.deck-shell .win7-btn:active:not(:disabled),
+.deck-shell .win7-btn-primary:active:not(:disabled),
+.deck-shell .win7-btn-success:active:not(:disabled),
+.deck-shell .win7-btn-danger:active:not(:disabled) {
   padding: 8px 14px !important;
   transform: translateY(0);
 }
 
-.win7-btn-primary,
-.win7-btn-success,
-.win7-btn-danger {
+.deck-shell .win7-btn-primary,
+.deck-shell .win7-btn-success,
+.deck-shell .win7-btn-danger {
   border: none !important;
   color: #ffffff !important;
 }
 
-.win7-btn-primary {
+.deck-shell .win7-btn-primary {
   background: linear-gradient(135deg, var(--su-blue-800), var(--su-blue-700)) !important;
 }
 
-.win7-btn-success {
+.deck-shell .win7-btn-success {
   background: linear-gradient(135deg, #15803d, var(--su-green-600)) !important;
 }
 
-.win7-btn-danger {
+.deck-shell .win7-btn-danger {
   background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
 }
 
-input,
-select,
-textarea {
+.deck-shell input,
+.deck-shell select,
+.deck-shell textarea {
   border: 1px solid var(--su-line) !important;
   border-radius: 10px !important;
   background: #f8fafc !important;
@@ -449,19 +445,19 @@ textarea {
   padding: 9px 11px !important;
 }
 
-input:focus,
-select:focus,
-textarea:focus,
-button:focus,
-summary:focus,
-a:focus {
+.deck-shell input:focus,
+.deck-shell select:focus,
+.deck-shell textarea:focus,
+.deck-shell button:focus,
+.deck-shell summary:focus,
+.deck-shell a:focus {
   outline: 3px solid rgba(31, 95, 191, 0.18) !important;
   outline-offset: 2px !important;
 }
 
-.su-grid-table,
-.mil-table,
-.su-form-table {
+.deck-shell .su-grid-table,
+.deck-shell .mil-table,
+.deck-shell .su-form-table {
   border-collapse: separate !important;
   border-spacing: 0 !important;
   overflow: hidden !important;
@@ -470,9 +466,9 @@ a:focus {
   background: #ffffff !important;
 }
 
-.su-grid-table th,
-.mil-table th,
-.su-form-table th {
+.deck-shell .su-grid-table th,
+.deck-shell .mil-table th,
+.deck-shell .su-form-table th {
   background: #f1f6ff !important;
   color: var(--su-blue-900) !important;
   border: none !important;
@@ -480,25 +476,25 @@ a:focus {
   padding: 11px 12px !important;
 }
 
-.su-grid-table td,
-.mil-table td,
-.su-form-table td {
+.deck-shell .su-grid-table td,
+.deck-shell .mil-table td,
+.deck-shell .su-form-table td {
   border: none !important;
   border-bottom: 1px solid #edf2f7 !important;
   background: #ffffff !important;
   padding: 11px 12px !important;
 }
 
-.su-grid-table tr:nth-child(even) td {
+.deck-shell .su-grid-table tr:nth-child(even) td {
   background: #fbfdff !important;
 }
 
-.su-grid-table tr:hover td {
+.deck-shell .su-grid-table tr:hover td {
   background: #eef6ff !important;
   color: var(--su-ink) !important;
 }
 
-.stamp-badge {
+.deck-shell .stamp-badge {
   border: none !important;
   border-radius: 999px !important;
   padding: 4px 9px !important;
@@ -506,19 +502,19 @@ a:focus {
   font-weight: 900 !important;
 }
 
-.stamp-red { color: #b91c1c !important; background-color: #fee2e2 !important; }
-.stamp-blue { color: var(--su-blue-800) !important; background-color: var(--su-blue-100) !important; }
-.stamp-green { color: #166534 !important; background-color: #dcfce7 !important; }
-.stamp-orange { color: #b45309 !important; background-color: #fef3c7 !important; }
+.deck-shell .stamp-red { color: #b91c1c !important; background-color: #fee2e2 !important; }
+.deck-shell .stamp-blue { color: var(--su-blue-800) !important; background-color: var(--su-blue-100) !important; }
+.deck-shell .stamp-green { color: #166534 !important; background-color: #dcfce7 !important; }
+.deck-shell .stamp-orange { color: #b45309 !important; background-color: #fef3c7 !important; }
 
-.deck-controls {
+.deck-shell .deck-controls {
   background: rgba(255, 255, 255, 0.96) !important;
   border-top: 1px solid var(--su-line) !important;
   padding: 12px 18px !important;
   box-shadow: 0 -10px 24px rgba(15, 47, 104, 0.06) !important;
 }
 
-.deck-dot {
+.deck-shell .deck-dot {
   position: relative;
   flex: 0 0 28px;
   width: 28px !important;
@@ -529,7 +525,7 @@ a:focus {
   cursor: pointer;
 }
 
-.deck-dot::after {
+.deck-shell .deck-dot::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -540,22 +536,22 @@ a:focus {
   background: #9ca3af;
 }
 
-.deck-dot.done::after {
+.deck-shell .deck-dot.done::after {
   background: #6b7280;
 }
 
-.deck-dot.active {
+.deck-shell .deck-dot.active {
   width: 28px !important;
   background: transparent !important;
   outline: none !important;
 }
 
-.deck-dot.active::after {
+.deck-shell .deck-dot.active::after {
   width: 20px;
   background: #2f3a45;
 }
 
-.deck-hl {
+.deck-shell .deck-hl {
   outline: 3px solid rgba(31, 95, 191, 0.35) !important;
   outline-offset: 3px !important;
   animation: none !important;
@@ -564,6 +560,16 @@ a:focus {
 
 /* Portal index */
 .portal-shell {
+  --su-blue-900: #1f2933;
+  --su-blue-800: #2f3a45;
+  --su-blue-700: #4b5563;
+  --su-blue-100: #f1f3f5;
+  --su-green-600: #4b5563;
+  --su-ink: #18181b;
+  --su-muted: #6b7280;
+  --su-line: #d4d4d8;
+  --su-bg: #f3f4f6;
+  --su-card: #ffffff;
   background:
     radial-gradient(circle at top left, rgba(31, 95, 191, 0.16), transparent 34rem),
     linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%) !important;
@@ -584,8 +590,8 @@ a:focus {
   font-weight: 900 !important;
 }
 
-.portal-banner,
-.portal-guide {
+.portal-shell .portal-banner,
+.portal-shell .portal-guide {
   border: 1px solid var(--su-line) !important;
   border-radius: 16px !important;
   background: #f8fbff !important;
@@ -596,22 +602,22 @@ a:focus {
   line-height: 1.6 !important;
 }
 
-.portal-banner {
+.portal-shell .portal-banner {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.portal-guide {
+.portal-shell .portal-guide {
   background: #eef6ff !important;
   color: var(--su-blue-900) !important;
 }
 
-.portal-grid {
+.portal-shell .portal-grid {
   gap: 16px !important;
 }
 
-.portal-card {
+.portal-shell .portal-card {
   border: 1px solid var(--su-line) !important;
   border-radius: 18px !important;
   background: #ffffff !important;
@@ -619,37 +625,37 @@ a:focus {
   box-shadow: 0 10px 28px rgba(15, 47, 104, 0.08) !important;
 }
 
-.portal-card:hover {
+.portal-shell .portal-card:hover {
   background: #f8fbff !important;
   border-color: #9cc2f4 !important;
   transform: translateY(-2px);
   box-shadow: 0 18px 36px rgba(15, 47, 104, 0.14) !important;
 }
 
-.portal-card-title {
+.portal-shell .portal-card-title {
   color: var(--su-blue-800) !important;
   font-size: 16px !important;
   font-weight: 900 !important;
 }
 
-.portal-card-desc {
+.portal-shell .portal-card-desc {
   color: #475569 !important;
   font-size: 13px !important;
   font-weight: 650 !important;
 }
 
-::-webkit-scrollbar {
+.deck-shell ::-webkit-scrollbar {
   width: 10px !important;
   height: 10px !important;
   background: #eef4fb !important;
 }
 
-::-webkit-scrollbar-track {
+.deck-shell ::-webkit-scrollbar-track {
   background: #eef4fb !important;
   border: none !important;
 }
 
-::-webkit-scrollbar-thumb {
+.deck-shell ::-webkit-scrollbar-thumb {
   border: none !important;
   border-radius: 999px !important;
   background: #b7c7dc !important;
@@ -657,7 +663,7 @@ a:focus {
 /* =========================================================
    Angular neutral skin override — rounded blue style 제거
    ========================================================= */
-:root {
+.deck-shell {
   --su-blue-900: #1f2933;
   --su-blue-800: #2f3a45;
   --su-blue-700: #4b5563;
@@ -680,46 +686,45 @@ a:focus {
 }
 
 .deck-shell > header:first-child span,
-.deck-prog-title,
-.deck-note-caption,
+.deck-shell .deck-prog-title,
+.deck-shell .deck-note-caption,
 .portal-shell h1,
-.portal-card-title {
+.portal-shell .portal-card-title {
   color: #1f2933 !important;
 }
 
-.su-header-tab-active,
-.su-btn-gray,
+.deck-shell .su-header-tab-active,
+.deck-shell .su-btn-gray,
 .deck-shell aside > div:first-child > div:first-child,
-.su-tree-item,
-.su-tree-item-active,
-.su-tab,
-.su-tab-active,
-.su-notice-pill,
-.portal-banner-pill,
-.deck-actor-chip,
-.win7-window,
-.win7-close-btn,
-.win7-btn,
-input,
-select,
-textarea,
-.su-grid-table,
-.mil-table,
-.su-form-table,
-.stamp-badge,
-.deck-dot,
+.deck-shell .su-tree-item,
+.deck-shell .su-tree-item-active,
+.deck-shell .su-tab,
+.deck-shell .su-tab-active,
+.deck-shell .su-notice-pill,
+.deck-shell .deck-actor-chip,
+.deck-shell .win7-window,
+.deck-shell .win7-close-btn,
+.deck-shell .win7-btn,
+.deck-shell input,
+.deck-shell select,
+.deck-shell textarea,
+.deck-shell .su-grid-table,
+.deck-shell .mil-table,
+.deck-shell .su-form-table,
+.deck-shell .stamp-badge,
+.deck-shell .deck-dot,
 .portal-shell > div,
-.portal-banner,
-.portal-guide,
-.portal-card {
+.portal-shell .portal-banner,
+.portal-shell .portal-guide,
+.portal-shell .portal-card {
   border-radius: 0 !important;
 }
 
-.su-header-tab-active {
+.deck-shell .su-header-tab-active {
   color: #1f2933 !important;
 }
 
-.su-btn-gray {
+.deck-shell .su-btn-gray {
   background: rgba(255, 255, 255, 0.12) !important;
 }
 
@@ -729,85 +734,84 @@ textarea,
 }
 
 .deck-shell aside > div:first-child,
-.su-tab-bar,
-.deck-note,
-.su-notice-banner,
-.deck-controls {
+.deck-shell .su-tab-bar,
+.deck-shell .deck-note,
+.deck-shell .su-notice-banner,
+.deck-shell .deck-controls {
   background: #ffffff !important;
 }
 
 .deck-shell aside > div:first-child > div:first-child,
-.su-tree-item-active,
-.su-notice-pill,
-.portal-banner-pill,
-.deck-actor-chip,
-.win7-btn-primary,
-.win7-btn-success,
-.deck-dot.active {
+.deck-shell .su-tree-item-active,
+.deck-shell .su-notice-pill,
+.deck-shell .deck-actor-chip,
+.deck-shell .win7-btn-primary,
+.deck-shell .win7-btn-success,
+.deck-shell .deck-dot.active {
   background: #2f3a45 !important;
   color: #ffffff !important;
   box-shadow: none !important;
 }
 
-.deck-dot.active {
+.deck-shell .deck-dot.active {
   background: transparent !important;
   color: inherit !important;
 }
 
-.su-tree-item:hover,
-.su-tab,
-.portal-guide,
-.portal-banner {
+.deck-shell .su-tree-item:hover,
+.deck-shell .su-tab,
+.portal-shell .portal-guide,
+.portal-shell .portal-banner {
   background: #f4f5f6 !important;
   color: #1f2933 !important;
 }
 
-.su-tab-active {
+.deck-shell .su-tab-active {
   background: #ffffff !important;
 }
 
-.win7-window,
+.deck-shell .win7-window,
 .portal-shell > div,
-.portal-card {
+.portal-shell .portal-card {
   box-shadow: none !important;
   border-color: #d4d4d8 !important;
 }
 
-.win7-titlebar,
-.win7-titlebar-mil {
+.deck-shell .win7-titlebar,
+.deck-shell .win7-titlebar-mil {
   background: #2f3a45 !important;
   border-radius: 0 !important;
 }
 
-.win7-btn:hover,
-.portal-card:hover {
+.deck-shell .win7-btn:hover,
+.portal-shell .portal-card:hover {
   transform: none;
   box-shadow: none !important;
   background: #f4f5f6 !important;
   border-color: #9ca3af !important;
 }
 
-.win7-btn-danger {
+.deck-shell .win7-btn-danger {
   background: #7f1d1d !important;
 }
 
-.stamp-red { color: #7f1d1d !important; background-color: #f4f4f5 !important; }
-.stamp-blue { color: #1f2933 !important; background-color: #f4f4f5 !important; }
-.stamp-green { color: #365314 !important; background-color: #f4f4f5 !important; }
-.stamp-orange { color: #713f12 !important; background-color: #f4f4f5 !important; }
+.deck-shell .stamp-red { color: #7f1d1d !important; background-color: #f4f4f5 !important; }
+.deck-shell .stamp-blue { color: #1f2933 !important; background-color: #f4f4f5 !important; }
+.deck-shell .stamp-green { color: #365314 !important; background-color: #f4f4f5 !important; }
+.deck-shell .stamp-orange { color: #713f12 !important; background-color: #f4f4f5 !important; }
 
-.su-grid-table th,
-.mil-table th,
-.su-form-table th {
+.deck-shell .su-grid-table th,
+.deck-shell .mil-table th,
+.deck-shell .su-form-table th {
   background: #f4f5f6 !important;
   color: #1f2933 !important;
 }
 
-.su-grid-table tr:hover td {
+.deck-shell .su-grid-table tr:hover td {
   background: #f4f5f6 !important;
 }
 
-.deck-hl {
+.deck-shell .deck-hl {
   outline-color: #52525b !important;
   box-shadow: none !important;
 }
@@ -816,6 +820,6 @@ textarea,
   background: linear-gradient(180deg, #f6f7f8 0%, #eceff2 100%) !important;
 }
 
-.portal-card {
+.portal-shell .portal-card {
   background: #ffffff !important;
 }

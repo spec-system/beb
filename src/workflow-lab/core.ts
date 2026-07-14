@@ -1,9 +1,6 @@
 // Workflow Lab — 실제 SU-WINGs 화면 스킨 위에서 각 업무 흐름을 PPT처럼 한 단계씩
 // 진행시키는 프레젠테이션 엔진. 실제 앱과 동일한 index.css(win7/su/stamp 스킨)를
 // 그대로 재사용해 디자인·상태 전이를 현행 제품과 동일하게 재현한다.
-import '../index.css';
-import './workflow-lab.css';
-
 export type Role = 'STUDENT' | 'PROFESSOR' | 'HEAD' | 'STAFF';
 
 export const ROLE_LABEL: Record<Role, string> = {
@@ -340,7 +337,7 @@ function controlBar<S>(config: DeckConfig<S>, nav: NavApi): HTMLElement {
     attrs: { type: 'button' },
     onClick: () => nav.toggleAuto(),
   });
-  const home = el('a', { className: 'win7-btn win7-btn-secondary px-4 py-1.5 text-sm no-underline', attrs: { href: './index.html' }, text: '⌂ 랩 홈' });
+  const home = el('a', { className: 'win7-btn win7-btn-secondary px-4 py-1.5 text-sm no-underline', attrs: { href: '/workflow-lab/' }, text: '⌂ 랩 홈' });
 
   return el('div', { className: 'deck-controls shrink-0' }, [
     el('div', { className: 'flex items-center gap-2' }, [prev, next, auto]),
@@ -368,7 +365,7 @@ function buildChrome<S>(config: DeckConfig<S>, step: DeckStep<S>, state: S, nav:
   ]);
 }
 
-export function bootDeck<S>(config: DeckConfig<S>): void {
+export function bootDeck<S>(root: HTMLElement, config: DeckConfig<S>): () => void {
   const states: S[] = [];
   let cur = clone(config.initial);
   config.steps.forEach((step, i) => {
@@ -378,7 +375,8 @@ export function bootDeck<S>(config: DeckConfig<S>): void {
 
   let index = 0;
   let timer: number | null = null;
-  const root = document.getElementById('deck-root') ?? document.body;
+  let disposed = false;
+  let rendered: HTMLElement | null = null;
 
   const stopAuto = () => {
     if (timer !== null) {
@@ -387,12 +385,17 @@ export function bootDeck<S>(config: DeckConfig<S>): void {
     }
   };
   const toggleAuto = () => {
+    if (disposed) return;
     if (timer !== null) {
       stopAuto();
       render();
       return;
     }
     timer = window.setInterval(() => {
+      if (disposed) {
+        stopAuto();
+        return;
+      }
       if (index >= config.steps.length - 1) {
         stopAuto();
         render();
@@ -405,22 +408,26 @@ export function bootDeck<S>(config: DeckConfig<S>): void {
   };
 
   function render() {
+    if (disposed) return;
     const nav: NavApi = {
       index,
       total: config.steps.length,
       auto: timer !== null,
       go: (i) => {
+        if (disposed) return;
         index = clamp(i, 0, config.steps.length - 1);
         stopAuto();
         render();
       },
       next: () => {
+        if (disposed) return;
         if (index < config.steps.length - 1) {
           index += 1;
           render();
         }
       },
       prev: () => {
+        if (disposed) return;
         if (index > 0) {
           index -= 1;
           render();
@@ -428,10 +435,12 @@ export function bootDeck<S>(config: DeckConfig<S>): void {
       },
       toggleAuto,
     };
-    root.replaceChildren(buildChrome(config, config.steps[index], states[index], nav));
+    rendered = buildChrome(config, config.steps[index], states[index], nav);
+    root.replaceChildren(rendered);
   }
 
-  document.addEventListener('keydown', (e) => {
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (disposed) return;
     if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
       e.preventDefault();
       stopAuto();
@@ -443,7 +452,17 @@ export function bootDeck<S>(config: DeckConfig<S>): void {
       if (index > 0) index -= 1;
       render();
     }
-  });
+  };
+  document.addEventListener('keydown', onKeyDown);
 
   render();
+
+  return () => {
+    if (disposed) return;
+    disposed = true;
+    document.removeEventListener('keydown', onKeyDown);
+    stopAuto();
+    if (rendered?.parentElement === root) rendered.remove();
+    rendered = null;
+  };
 }

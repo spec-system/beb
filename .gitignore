@@ -9,3 +9,7 @@ coverage/
 
 .vercel
 .gjc/
+.next/
+playwright-report/
+test-results/
+tsconfig.tsbuildinfo

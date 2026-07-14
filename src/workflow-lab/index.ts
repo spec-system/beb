@@ -1,4 +1,3 @@
-import '../index.css';
 import { el } from './core';
 
 interface Card {
@@ -9,22 +8,22 @@ interface Card {
 
 const CARDS: Card[] = [
   {
-    href: './dept.html',
+    href: '/workflow-lab/dept',
     title: '① 학과내 비교과 신청·제출',
     desc: '신청 완료 → 담당교수 승인 → 학과장 신청 승인 → 포스터 업로드 → 결과보고서 제출 → 학과장 포스터·보고서 심사 → 최종 승인. 담당교수/학과장 반려(2종)·재신청·임시저장·승인취소까지 spec md 흐름을 그대로 시연합니다.',
   },
   {
-    href: './toeic.html',
+    href: '/workflow-lab/toeic',
     title: '② 토익 정보 입력',
     desc: '접수 → 행정실 검토·승인/반려. 생년월일·발급번호 앞 6자리·학과 승인·비고 컬럼과 반려 사유/재등록 흐름을 확인합니다.',
   },
   {
-    href: './volunteer.html',
+    href: '/workflow-lab/volunteer',
     title: '③ 전공연계봉사활동',
     desc: '접수 → 인증서 업로드 → 행정실 검토·승인/반려. 봉사 활동 기관, 인증서 열기/다운로드, 반려 사유/재등록 흐름을 확인합니다.',
   },
   {
-    href: './form.html',
+    href: '/workflow-lab/form',
     title: '④ 양식 작성 (HWP)',
     desc: '실제 FORM_SPECS/formToMarkdown 을 그대로 재사용해 계획서·결과보고서 탭 입력과 Markdown 미리보기, HWPX 변환 payload를 확인합니다.',
   },
@@ -66,5 +65,13 @@ function build(): HTMLElement {
   return el('div', { className: 'portal-shell min-h-screen flex items-center justify-center px-4 py-8 font-sans select-none' }, [box]);
 }
 
-const root = document.getElementById('deck-root') ?? document.body;
-root.replaceChildren(build());
+export function mount(root: HTMLElement): () => void {
+  let disposed = false;
+  const rendered = build();
+  root.replaceChildren(rendered);
+  return () => {
+    if (disposed) return;
+    disposed = true;
+    if (rendered.parentElement === root) rendered.remove();
+  };
+}

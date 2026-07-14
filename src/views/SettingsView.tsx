@@ -204,7 +204,7 @@ export default function SettingsView() {
                 <Button variant="ghost" onClick={() => dispatch({ type: 'REMOVE_SIGNATURE', professorName: signature.professorName })}>삭제</Button>
               </div>
               <img src={signature.dataUrl} alt={`${signature.professorName} 서명`} className="h-20 max-w-full object-contain rounded bg-slate-50" />
-              <p className="text-xs text-slate-500">등록일: {new Date(signature.uploadedAt).toLocaleString('ko-KR')}</p>
+              <p className="text-xs text-slate-500">등록일: {signature.uploadedAt ? new Date(signature.uploadedAt).toLocaleString('ko-KR') : '-'}</p>
             </div>
           ))}
         </div>

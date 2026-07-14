@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useRecords } from '../store/recordsStore';
 import { useAuth } from '../auth/AuthContext';
 import { isAssignedProfessor, isFinalApproved } from '../auth/roles';
@@ -17,7 +19,7 @@ interface Card {
 export default function PendingTasksPanel() {
   const { state } = useRecords();
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const cards = useMemo<Card[]>(() => {
     if (!user || user.role === 'STUDENT') return [];
@@ -64,7 +66,7 @@ export default function PendingTasksPanel() {
         {cards.map((c) => (
           <button
             key={c.key}
-            onClick={() => navigate(c.to)}
+            onClick={() => router.push(c.to)}
             className={`text-left rounded-lg border p-3 transition-colors ${c.count > 0 ? 'border-amber-300 bg-amber-50 hover:bg-amber-100' : 'border-slate-200 bg-slate-50 hover:bg-slate-100'}`}
             data-testid={`pending-card-${c.key}`}
           >

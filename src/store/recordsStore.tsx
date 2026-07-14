@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+'use client';
+
+import React, { createContext, useContext, useReducer, useEffect, useState, ReactNode } from 'react';
 import {
   DeptProgramRecord,
   ToeicRecord,
@@ -81,7 +83,8 @@ export type Action =
   | { type: 'REASSIGN_PROFESSOR'; domain: 'dept' | 'toeic' | 'volunteer'; id: string; professor: string; actor: Actor }
   | { type: 'SEND_MESSAGE'; message: Message }
   | { type: 'MARK_MESSAGES_READ'; professor: string }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'HYDRATE'; state: RecordsState };
 
 const now = () => new Date().toISOString().slice(0, 19);
 const nowDate = () => new Date().toISOString().slice(0, 10);
@@ -350,6 +353,8 @@ function coreReducer(state: RecordsState, action: Action): RecordsState {
       return { ...state, messages: [action.message, ...state.messages] };
     case 'MARK_MESSAGES_READ':
       return { ...state, messages: state.messages.map((m) => (m.toProfessor === action.professor && !m.read ? { ...m, read: true } : m)) };
+    case 'HYDRATE':
+      return action.state;
     case 'RESET':
       return initialSeed();
     default:
@@ -385,20 +390,29 @@ function mutVol(state: RecordsState, id: string, fn: (r: VolunteerRecord) => Vol
 interface RecordsCtx {
   state: RecordsState;
   dispatch: React.Dispatch<Action>;
+  hydrated: boolean;
 }
 const Ctx = createContext<RecordsCtx | null>(null);
 
 export function RecordsProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, undefined, loadInitial);
+  const [state, dispatch] = useReducer(reducer, undefined, initialSeed);
+  const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
+    dispatch({ type: 'HYDRATE', state: loadInitial() });
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       /* ignore */
     }
-  }, [state]);
+  }, [hydrated, state]);
 
-  return <Ctx.Provider value={{ state, dispatch }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ state, dispatch, hydrated }}>{children}</Ctx.Provider>;
 }
 
 export function useRecords(): RecordsCtx {

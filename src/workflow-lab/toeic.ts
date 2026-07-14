@@ -1,4 +1,3 @@
-import '../index.css';
 import {
   bootDeck,
   detailRow,
@@ -255,4 +254,6 @@ const steps: DeckStep<ToeicVM>[] = [
   },
 ];
 
-bootDeck<ToeicVM>({ program: '토익 정보 입력', initial, steps });
+export function mount(root: HTMLElement): () => void {
+  return bootDeck<ToeicVM>(root, { program: '토익 정보 입력', initial, steps });
+}
