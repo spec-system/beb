@@ -1,3 +1,20 @@
+export const dynamic = 'force-static';
+
+export function generateStaticParams() {
+  return [
+    { slug: [] },
+    { slug: ['login'] },
+    { slug: ['integrated'] },
+    { slug: ['submit'] },
+    { slug: ['form'] },
+    { slug: ['dept'] },
+    { slug: ['toeic'] },
+    { slug: ['volunteer'] },
+    { slug: ['stats'] },
+    { slug: ['settings'] },
+  ];
+}
+
 import PortalApp, { type PortalRoute } from '../../src/next/PortalApp';
 import PortalHydrationGate from '../../src/next/PortalHydrationGate';
 import PortalProviders from '../../src/next/PortalProviders';
